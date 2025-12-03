@@ -2,9 +2,9 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,18 @@ Premium add-ons are available at [consulinfo.it](https://consulinfo.it/domilocus
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.5 =
+* Fixed: resolved "Cannot modify header information" error when deleting paid bookings
+* Fixed: booking form now fully translatable - all Italian hardcoded strings converted to English with proper i18n functions
+* Improved: paid booking deletion now shows proper confirmation screen before proceeding
+* Updated: tested and confirmed compatibility with WordPress 6.9
+
+= 1.0.4 =
+* Fixed: resolved "Cannot modify header information" error when deleting paid bookings
+* Fixed: booking form now fully translatable - all Italian hardcoded strings converted to English with proper i18n functions
+* Improved: paid booking deletion now shows proper confirmation screen before proceeding
+* Updated: tested and confirmed compatibility with WordPress 6.9
 
 = 1.0.4 =
 * Removed: legacy onboarding banner and dismiss logic so the notice no longer persists.

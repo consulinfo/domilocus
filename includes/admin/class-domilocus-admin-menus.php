@@ -881,17 +881,31 @@ class Domilocus_Admin_Menus {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $action = isset($_GET['action']) ? sanitize_key($_GET['action']) : 'list';
         
-        // Handle delete action
+        // Check if we need to show paid booking deletion confirmation
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($action === 'delete' && isset($_GET['booking_id'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $booking_id = intval($_GET['booking_id']);
-            if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'delete_booking_' . $booking_id)) {
-                self::delete_booking($booking_id);
-                // Redirect is now handled inside delete_booking()
-                return;
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $confirm_paid = isset($_GET['confirm_paid']) && $_GET['confirm_paid'] === '1';
+            
+            if (!$confirm_paid) {
+                global $wpdb;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $booking = $wpdb->get_row($wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                ));
+                
+                if ($booking && $booking->payment_status === 'paid') {
+                    // Show paid booking deletion warning
+                    self::render_paid_booking_deletion_warning($booking);
+                    return;
+                }
             }
         }
+        
+        // Delete action is now handled in handle_admin_actions() during admin_init
         
         // Handle add/edit actions
         if ($action === 'add' || $action === 'edit') {
@@ -914,7 +928,7 @@ class Domilocus_Admin_Menus {
         <div class="wrap">
             <h1 class="wp-heading-inline"><?php echo esc_html($translations['bookings'] ?? __('Bookings', 'domilocus')); ?></h1>
             <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings&action=add')); ?>" class="page-title-action">
-                <?php esc_html_e('Aggiungi nuova', 'domilocus'); ?>
+                <?php esc_html_e('Add New', 'domilocus'); ?>
             </a>
             <hr class="wp-header-end">
             
@@ -922,7 +936,7 @@ class Domilocus_Admin_Menus {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (isset($_GET['message']) && $_GET['message'] === 'deleted'): ?>
                 <div class="notice notice-success is-dismissible">
-                    <p><?php esc_html_e('Prenotazione eliminata con successo.', 'domilocus'); ?></p>
+                    <p><?php esc_html_e('Booking deleted successfully.', 'domilocus'); ?></p>
                 </div>
             <?php endif; ?>
             
@@ -952,96 +966,9 @@ class Domilocus_Admin_Menus {
         ));
         
         if (!$booking) {
-            wp_safe_redirect(admin_url('admin.php?page=domilocus-bookings&message=not_found'));
-            exit;
+            return;
         }
         
-        // SECURITY: Check if booking is paid - require double confirmation
-        if ($booking->status === 'confirmed' && $booking->payment_status === 'paid') {
-            // Check if user confirmed deletion of paid booking
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            if (!isset($_GET['confirm_paid']) || $_GET['confirm_paid'] !== '1') {
-                // Show warning page with confirmation
-                ?>
-                <div class="wrap">
-                    <h1><?php esc_html_e('Attenzione: Cancellazione Prenotazione Pagata', 'domilocus'); ?></h1>
-                    
-                    <div class="notice notice-error" style="padding: 20px; margin: 20px 0;">
-                        <h2 style="margin-top: 0;"><?php esc_html_e('⚠️ AVVISO IMPORTANTE', 'domilocus'); ?></h2>
-                        <p style="font-size: 16px;">
-                            <?php esc_html_e('Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>.', 'domilocus'); ?>
-                        </p>
-                        <p style="font-size: 14px;">
-                            <?php esc_html_e('Questa azione è irreversibile e comporta:', 'domilocus'); ?>
-                        </p>
-                        <ul style="font-size: 14px; margin-left: 20px;">
-                            <li><?php esc_html_e('Cancellazione permanente della prenotazione dal database', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Liberazione delle date nel calendario', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Perdita dello storico del pagamento ricevuto', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Necessità di gestire manualmente il rimborso al cliente', 'domilocus'); ?></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="notice notice-info" style="padding: 15px;">
-                        <h3><?php esc_html_e('Dettagli Prenotazione', 'domilocus'); ?></h3>
-                        <table class="widefat" style="max-width: 600px;">
-                            <tr>
-                                <th style="width: 200px;"><?php esc_html_e('ID Prenotazione:', 'domilocus'); ?></th>
-                                <td><strong>#<?php echo esc_html($booking->id); ?></strong></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Cliente:', 'domilocus'); ?></th>
-                                <td><?php echo esc_html($booking->customer_name); ?> (<?php echo esc_html($booking->customer_email); ?>)</td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Date:', 'domilocus'); ?></th>
-                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_in))); ?> - <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_out))); ?></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Importo:', 'domilocus'); ?></th>
-                                <td><strong style="color: #00a32a;"><?php echo wp_kses_post(Domilocus_Settings::format_price($booking->total_amount)); ?></strong></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Stato:', 'domilocus'); ?></th>
-                                <td><span style="color: #00a32a;">✓ <?php esc_html_e('PAGATA', 'domilocus'); ?></span></td>
-                            </tr>
-                        </table>
-                    </div>
-                    
-                    <div style="margin: 30px 0;">
-                        <h3><?php esc_html_e('Procedura Consigliata', 'domilocus'); ?></h3>
-                        <ol style="font-size: 14px; line-height: 1.8;">
-                            <li><?php esc_html_e('Contattare il cliente per confermare la cancellazione', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Gestire il rimborso tramite il metodo di pagamento utilizzato', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Documentare la cancellazione e il rimborso esternamente', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Solo dopo: confermare la cancellazione qui sotto', 'domilocus'); ?></li>
-                        </ol>
-                    </div>
-                    
-                    <p style="margin: 30px 0;">
-                        <a href="<?php echo esc_url(wp_nonce_url(
-                            admin_url('admin.php?page=domilocus-bookings&action=delete&booking_id=' . $booking_id . '&confirm_paid=1'),
-                            'delete_booking_' . $booking_id
-                        )); ?>" 
-                           class="button button-primary button-large" 
-                           style="background: #d63638; border-color: #d63638;"
-                           onclick="return confirm('<?php echo esc_js(__('ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?', 'domilocus')); ?>');">
-                            <?php esc_html_e('⚠️ CONFERMO: Cancella Prenotazione Pagata', 'domilocus'); ?>
-                        </a>
-                        
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings')); ?>" 
-                           class="button button-large" 
-                           style="margin-left: 10px;">
-                            <?php esc_html_e('← Annulla e Torna alle Prenotazioni', 'domilocus'); ?>
-                        </a>
-                    </p>
-                </div>
-                <?php
-                return; // Stop execution - wait for confirmation
-            }
-        }
-        
-        // Proceed with deletion
         // Unblock dates in calendar
         if (class_exists('Domilocus_Booking')) {
             Domilocus_Booking::unblock_dates(
@@ -1063,6 +990,78 @@ class Domilocus_Admin_Menus {
         // Redirect to bookings list with success message
         wp_safe_redirect(admin_url('admin.php?page=domilocus-bookings&message=deleted'));
         exit;
+    }
+    
+    /**
+     * Render paid booking deletion warning page
+     */
+    private static function render_paid_booking_deletion_warning($booking) {
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e('Delete Paid Booking - Confirmation Required', 'domilocus'); ?></h1>
+            
+            <div class="notice notice-error" style="padding: 20px; margin: 20px 0; border-left: 4px solid #d63638;">
+                <h2 style="margin-top: 0;"><?php esc_html_e('⚠️ WARNING: PAID BOOKING', 'domilocus'); ?></h2>
+                <p style="font-size: 16px;">
+                    <?php esc_html_e('You are attempting to delete a booking that has already been paid. This action requires additional confirmation.', 'domilocus'); ?>
+                </p>
+            </div>
+            
+            <div class="notice notice-info" style="padding: 15px;">
+                <h3><?php esc_html_e('Booking Details', 'domilocus'); ?></h3>
+                <table class="widefat" style="max-width: 600px;">
+                    <tr>
+                        <th style="width: 200px;"><?php esc_html_e('Booking ID:', 'domilocus'); ?></th>
+                        <td><strong>#<?php echo esc_html($booking->id); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Customer:', 'domilocus'); ?></th>
+                        <td><?php echo esc_html($booking->customer_name); ?> (<?php echo esc_html($booking->customer_email); ?>)</td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Dates:', 'domilocus'); ?></th>
+                        <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_in))); ?> - <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_out))); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Amount:', 'domilocus'); ?></th>
+                        <td><strong style="color: #00a32a;"><?php echo wp_kses_post(Domilocus_Settings::format_price($booking->total_amount)); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Status:', 'domilocus'); ?></th>
+                        <td><span style="color: #00a32a;">✓ <?php esc_html_e('PAID', 'domilocus'); ?></span></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div style="margin: 30px 0;">
+                <h3><?php esc_html_e('Recommended Procedure', 'domilocus'); ?></h3>
+                <ol style="font-size: 14px; line-height: 1.8;">
+                    <li><?php esc_html_e('Contact the customer to confirm the cancellation', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Process the refund through the original payment method', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Document the cancellation and refund externally', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Only then: confirm the deletion below', 'domilocus'); ?></li>
+                </ol>
+            </div>
+            
+            <p style="margin: 30px 0;">
+                <a href="<?php echo esc_url(wp_nonce_url(
+                    admin_url('admin.php?page=domilocus-bookings&action=delete&booking_id=' . $booking->id . '&confirm_paid=1'),
+                    'delete_booking_' . $booking->id
+                )); ?>" 
+                   class="button button-primary button-large" 
+                   style="background: #d63638; border-color: #d63638;"
+                   onclick="return confirm('<?php echo esc_js(__('FINAL CONFIRMATION: Are you absolutely sure you want to delete this paid booking?', 'domilocus')); ?>');">
+                    <?php esc_html_e('⚠️ I CONFIRM: Delete Paid Booking', 'domilocus'); ?>
+                </a>
+                
+                <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings')); ?>" 
+                   class="button button-large" 
+                   style="margin-left: 10px;">
+                    <?php esc_html_e('← Cancel and Return to Bookings', 'domilocus'); ?>
+                </a>
+            </p>
+        </div>
+        <?php
     }
     
     /**
@@ -1213,6 +1212,40 @@ class Domilocus_Admin_Menus {
      * Handle admin actions
      */
     public static function handle_admin_actions() {
+        // Handle booking deletion
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['booking_id'])) {
+            if (!current_user_can('manage_options')) {
+                wp_die(esc_html__('You do not have permission to delete bookings.', 'domilocus'));
+            }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $booking_id = intval($_GET['booking_id']);
+            if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'delete_booking_' . $booking_id)) {
+                // Check if this is a paid booking confirmation
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $confirm_paid = isset($_GET['confirm_paid']) && $_GET['confirm_paid'] === '1';
+                
+                // If it's a paid booking and not confirmed, show warning page (handled in bookings_page)
+                global $wpdb;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $booking = $wpdb->get_row($wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                ));
+                
+                if ($booking && $booking->payment_status === 'paid' && !$confirm_paid) {
+                    // Don't delete yet - let bookings_page() show confirmation screen
+                    return;
+                }
+                
+                // Proceed with deletion
+                self::delete_booking($booking_id);
+                // delete_booking() handles the redirect and exit
+                return;
+            }
+        }
+
         // Handle various admin actions here
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['domilocus_action'])) {
