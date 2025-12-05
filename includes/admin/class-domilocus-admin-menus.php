@@ -1077,24 +1077,49 @@ class Domilocus_Admin_Menus {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $selected_apartment = isset($_GET['apartment_id']) ? intval($_GET['apartment_id']) : ($apartments ? $apartments[0]->ID : 0);
         
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $calendar_view = isset($_GET['calendar_view']) ? sanitize_text_field($_GET['calendar_view']) : 'month';
+        
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Booking Calendar', 'domilocus'); ?></h1>
             
             <?php if ($apartments): ?>
-                <form method="get" style="margin-bottom: 20px;">
+                <form method="get" id="calendar-filters-form" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <input type="hidden" name="page" value="domilocus-calendar">
-                    <label for="apartment_id"><?php esc_html_e('Select Apartment:', 'domilocus'); ?></label>
-                    <select name="apartment_id" id="apartment_id" onchange="this.form.submit();">
-                        <?php foreach ($apartments as $apartment): ?>
-                            <option value="<?php echo esc_attr($apartment->ID); ?>" <?php selected($selected_apartment, $apartment->ID); ?>>
-                                <?php echo esc_html($apartment->post_title); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    
+                    <div>
+                        <label for="apartment_id"><?php esc_html_e('Select Apartment:', 'domilocus'); ?></label>
+                        <select name="apartment_id" id="apartment_id">
+                            <?php foreach ($apartments as $apartment): ?>
+                                <option value="<?php echo esc_attr($apartment->ID); ?>" <?php selected($selected_apartment, $apartment->ID); ?>>
+                                    <?php echo esc_html($apartment->post_title); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="calendar_view"><?php esc_html_e('View:', 'domilocus'); ?></label>
+                        <select name="calendar_view" id="calendar_view">
+                            <option value="month" <?php selected($calendar_view, 'month'); ?>><?php esc_html_e('Month', 'domilocus'); ?></option>
+                            <option value="week" <?php selected($calendar_view, 'week'); ?>><?php esc_html_e('Week', 'domilocus'); ?></option>
+                            <option value="day" <?php selected($calendar_view, 'day'); ?>><?php esc_html_e('Day', 'domilocus'); ?></option>
+                        </select>
+                    </div>
                 </form>
                 
-                <div id="domilocus-calendar-container" data-apartment-id="<?php echo esc_attr($selected_apartment); ?>">
+                <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('#apartment_id, #calendar_view').on('change', function() {
+                        $('#calendar-filters-form').submit();
+                    });
+                });
+                </script>
+                
+                <div id="domilocus-calendar-container" 
+                     data-apartment-id="<?php echo esc_attr($selected_apartment); ?>"
+                     data-view="<?php echo esc_attr($calendar_view); ?>">
                     <div class="calendar-loading">
                         <?php esc_html_e('Loading calendar...', 'domilocus'); ?>
                     </div>

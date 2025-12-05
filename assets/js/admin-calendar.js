@@ -9,9 +9,11 @@
         apartmentId: 0,
         currentDate: new Date(),
         calendarData: {},
+        viewMode: 'month', // month, week, day
         
         init: function() {
             this.apartmentId = $('#domilocus-calendar-container').data('apartment-id');
+            this.viewMode = $('#domilocus-calendar-container').data('view') || 'month';
             if (this.apartmentId) {
                 this.loadCalendar();
                 this.bindEvents();
@@ -105,6 +107,7 @@
             var i18n = domilocus_admin_vars.i18n;
             var year = this.currentDate.getFullYear();
             var month = this.currentDate.getMonth() + 1;
+            var day = this.currentDate.getDate();
             
             $('#domilocus-calendar-container').html('<div class="calendar-loading">' + i18n.loading_calendar + '</div>');
             
@@ -116,6 +119,8 @@
                     apartment_id: this.apartmentId,
                     year: year,
                     month: month,
+                    day: day,
+                    view: this.viewMode,
                     nonce: domilocus_admin_vars.nonce
                 },
                 success: function(response) {
@@ -133,10 +138,24 @@
         },
         
         navigateCalendar: function(direction) {
-            if (direction === 'prev') {
-                this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-            } else if (direction === 'next') {
-                this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+            if (this.viewMode === 'month') {
+                if (direction === 'prev') {
+                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                } else if (direction === 'next') {
+                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                }
+            } else if (this.viewMode === 'week') {
+                if (direction === 'prev') {
+                    this.currentDate.setDate(this.currentDate.getDate() - 7);
+                } else if (direction === 'next') {
+                    this.currentDate.setDate(this.currentDate.getDate() + 7);
+                }
+            } else if (this.viewMode === 'day') {
+                if (direction === 'prev') {
+                    this.currentDate.setDate(this.currentDate.getDate() - 1);
+                } else if (direction === 'next') {
+                    this.currentDate.setDate(this.currentDate.getDate() + 1);
+                }
             }
             this.loadCalendar();
         },

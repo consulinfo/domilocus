@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,13 @@ Premium add-ons are available at [consulinfo.it](https://consulinfo.it/domilocus
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.6 =
+* Added: calendar view selector - choose between Month, Week, or Day view
+* Added: week view showing 7-day grid with booking details
+* Added: day view with complete booking information for single day
+* Improved: calendar navigation now adapts to selected view (month/week/day)
+* Improved: responsive design for new calendar views on mobile and tablet
 
 = 1.0.5 =
 * Fixed: resolved "Cannot modify header information" error when deleting paid bookings

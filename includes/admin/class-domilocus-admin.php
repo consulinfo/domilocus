@@ -719,6 +719,13 @@ class Domilocus_Admin {
         $apartment_id = isset($_POST['apartment_id']) ? intval(wp_unslash($_POST['apartment_id'])) : 0;
         $year = isset($_POST['year']) ? intval(wp_unslash($_POST['year'])) : 0;
         $month = isset($_POST['month']) ? intval(wp_unslash($_POST['month'])) : 0;
+        $day = isset($_POST['day']) ? intval(wp_unslash($_POST['day'])) : 1;
+        $view = isset($_POST['view']) ? sanitize_text_field(wp_unslash($_POST['view'])) : 'month';
+        
+        // Validate view
+        if (!in_array($view, array('month', 'week', 'day'), true)) {
+            $view = 'month';
+        }
         
         if (!$apartment_id || !$year || !$month) {
             wp_send_json_error('Invalid parameters');
@@ -730,8 +737,19 @@ class Domilocus_Admin {
         }
         
         $calendar = new Domilocus_Calendar();
-        $calendar_data = $calendar->get_admin_calendar_data($apartment_id, $year, $month);
-        $calendar_html = $calendar->generate_admin_calendar_html($apartment_id, $year, $month, $calendar_data);
+        
+        // Generate calendar based on view
+        if ($view === 'week') {
+            $calendar_data = $calendar->get_admin_week_data($apartment_id, $year, $month, $day);
+            $calendar_html = $calendar->generate_admin_week_html($apartment_id, $year, $month, $day, $calendar_data);
+        } elseif ($view === 'day') {
+            $calendar_data = $calendar->get_admin_day_data($apartment_id, $year, $month, $day);
+            $calendar_html = $calendar->generate_admin_day_html($apartment_id, $year, $month, $day, $calendar_data);
+        } else {
+            // Default: month view
+            $calendar_data = $calendar->get_admin_calendar_data($apartment_id, $year, $month);
+            $calendar_html = $calendar->generate_admin_calendar_html($apartment_id, $year, $month, $calendar_data);
+        }
         
         wp_send_json_success(array(
             'html' => $calendar_html,
