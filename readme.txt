@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ Domilocus is a comprehensive booking management system designed for vacation ren
 
 = Premium Add-ons =
 
-Extend Domilocus with powerful premium add-ons available at [consulinfo.it](https://consulinfo.it/domilocus-premium):
+Extend Domilocus with powerful premium add-ons available at [domilocus.consulinfo.it](https://domilocus.consulinfo.it/premium):
 
 **Starter Plan (€19/month)**
 * Online booking forms for guests
@@ -94,7 +94,7 @@ Premium add-ons (sold separately) may connect to third-party services to provide
 4. Add your first property under Domilocus > Apartments
 
 **For Premium Features:**
-Purchase and install add-on plugins from [consulinfo.it](https://consulinfo.it/domilocus-premium)
+Purchase and install add-on plugins from [domilocus.consulinfo.it](https://domilocus.consulinfo.it/premium)
 
 == Frequently Asked Questions ==
 
@@ -167,7 +167,7 @@ Yes! The plugin includes translations for Italian, English, German, French, and 
 
 = Where can I get premium add-ons? =
 
-Premium add-ons are available at [consulinfo.it](https://consulinfo.it/domilocus-premium)
+Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.consulinfo.it/premium)
 
 == Screenshots ==
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [consulinfo.it](https://consulinfo.it/domilocus
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.7 =
+* Updated: all documentation and support links now point to domilocus.consulinfo.it subdomain
+* Updated: premium add-ons link updated to new subdomain
 
 = 1.0.6 =
 * Added: calendar view selector - choose between Month, Week, or Day view
@@ -241,8 +245,8 @@ This version separates free and premium features. Premium functionality now requ
 
 For support, feature requests, or bug reports:
 * Free version support: WordPress.org support forum
-* Premium support: https://consulinfo.it/support
-* Documentation: https://consulinfo.it/domilocus-docs
+* Premium support: https://domilocus.consulinfo.it/support
+* Documentation: https://domilocus.consulinfo.it/docs
 * GitHub: https://github.com/consulinfo/domilocus
 
 
