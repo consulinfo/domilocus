@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Domilocus
- * Plugin URI: https://www.consulinfo.it/domilocus
+ * Plugin URI: https://domilocus.consulinfo.it
  * Description: Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration.
  * Version: 1.0.7
  * Author: ConsulInfo
- * Author URI: https://www.consulinfo.it
+ * Author URI: https://domilocus.consulinfo.it
  * Support: dev@consulinfo.it
  * Text Domain: domilocus
  * Domain Path: /languages

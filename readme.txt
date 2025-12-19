@@ -228,7 +228,7 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 * Improved: Better upgrade prompts for premium features
 * Fixed: PHP version requirement aligned across all files
 * Fixed: Premium features now use filter-based activation (WordPress.org compliant)
-* Note: Premium features available via separate add-on plugins from consulinfo.it
+* Note: Premium features available via separate add-on plugins from domilocus.consulinfo.it
 
 = 1.0.1 =
 * Initial bug fixes and improvements
@@ -239,7 +239,7 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 == Upgrade Notice ==
 
 = 1.0.2 =
-This version separates free and premium features. Premium functionality now requires separate add-on plugins available at consulinfo.it.
+This version separates free and premium features. Premium functionality now requires separate add-on plugins available at domilocus.consulinfo.it.
 
 == Support ==
 
