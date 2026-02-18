@@ -729,6 +729,7 @@ class Domilocus_Calendar {
         // Navigation
         $html .= '<div class="calendar-header">';
         $html .= '<button class="button calendar-nav" data-direction="prev">&laquo; ' . __('Previous Week', 'domilocus') . '</button>';
+        /* translators: %s: formatted start date of the week */
         $html .= '<h2>' . sprintf(__('Week of %s', 'domilocus'), $date->format(get_option('date_format'))) . '</h2>';
         $html .= '<button class="button calendar-nav" data-direction="next">' . __('Next Week', 'domilocus') . ' &raquo;</button>';
         $html .= '</div>';
