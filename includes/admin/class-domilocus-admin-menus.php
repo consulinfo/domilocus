@@ -765,7 +765,7 @@ class Domilocus_Admin_Menus {
         $selected_apartment = isset($_GET['apartment_id']) ? intval($_GET['apartment_id']) : ($apartments ? $apartments[0]->ID : 0);
         
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $calendar_view = isset($_GET['calendar_view']) ? sanitize_text_field($_GET['calendar_view']) : 'month';
+        $calendar_view = isset($_GET['calendar_view']) ? sanitize_text_field(wp_unslash($_GET['calendar_view'])) : 'month';
         
         ?>
         <div class="wrap">
