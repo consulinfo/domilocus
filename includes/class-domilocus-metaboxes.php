@@ -917,7 +917,7 @@ class Domilocus_Metaboxes {
         $manual_state = ($manual_pricing_allowed && isset($_POST['domilocus_manual_pricing_enabled'])) ? '1' : '0';
         update_post_meta($post_id, '_domilocus_manual_pricing_enabled', $manual_state);
 
-        if (class_exists('Domilocus_Pricing_Manager')) {
+        if (class_exists('Domilocus_Pricing_Manager') && method_exists('Domilocus_Pricing_Manager', 'purge_pricing_cache')) {
             Domilocus_Pricing_Manager::purge_pricing_cache($post_id);
         }
     }

@@ -51,6 +51,15 @@ class Domilocus_Pricing_Manager {
         $subtotal = $final_price_per_night * $nights;
         $total = $subtotal;
 
+        // Apply Dynamic Pricing Filter (Pro Version hook)
+        // Args: Total, ID, Start, End, Guests, Base
+        $total = apply_filters('domilocus_calculated_price', $total, $apartment_id, $check_in, $check_out, $guests, $base_price);
+
+        // Recalculate average nightly price based on dynamic total
+        if ($nights > 0 && $total != $subtotal) {
+            $final_price_per_night = $total / $nights;
+        }
+
         return array(
             'nights' => $nights,
             'guests' => $guests,

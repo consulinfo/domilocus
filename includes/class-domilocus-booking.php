@@ -898,7 +898,9 @@ class Domilocus_Booking {
         $check_in_ts = strtotime($booking->check_in . ' 00:00:00');
         $today = current_time('timestamp');
 
-        return ($check_in_ts && $check_in_ts > $today);
+        $can_manage = ($check_in_ts && $check_in_ts > $today);
+        
+        return apply_filters('domilocus_can_manage_booking', $can_manage, $booking);
     }
 
     /**

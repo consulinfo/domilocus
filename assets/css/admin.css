@@ -519,6 +519,31 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Settings form field sizing */
+.domilocus-settings .form-table input[type="number"],
+.domilocus-settings .form-table input[type="text"],
+.domilocus-settings .form-table input[type="password"],
+.domilocus-settings .form-table select {
+    width: 220px;
+    max-width: 100%;
+}
+
+.domilocus-settings .form-table input[type="number"],
+.domilocus-settings .form-table input.small-text {
+    width: 90px;
+}
+
+.domilocus-settings .form-table input.regular-text {
+    width: 280px;
+    max-width: 100%;
+}
+
+.domilocus-settings .form-table textarea {
+    width: 320px;
+    max-width: 100%;
+    min-height: 90px;
+}
+
 /* Responsive design */
 @media (min-width: 1200px) {
     .calendar-day {
@@ -588,5 +613,197 @@
     .control-group {
         flex-direction: column;
         align-items: stretch;
+    }
+}
+
+/* Week View Styles */
+.domilocus-admin-calendar.week-view {
+    max-width: 100%;
+}
+
+.calendar-week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.calendar-week-grid .calendar-day {
+    min-height: 200px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+}
+
+.calendar-week-grid .calendar-day.today {
+    border-color: #2271b1;
+    box-shadow: 0 0 10px rgba(34, 113, 177, 0.3);
+}
+
+.calendar-week-grid .calendar-day.booked {
+    background-color: #ffebee;
+    border-color: #ef5350;
+}
+
+.calendar-week-grid .calendar-day.available {
+    background-color: #f1f8f4;
+    border-color: #46b450;
+}
+
+.calendar-week-grid .calendar-day.past {
+    background-color: #f9f9f9;
+    opacity: 0.6;
+}
+
+.calendar-week-grid .day-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.calendar-week-grid .day-name {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.calendar-week-grid .day-number {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #23282d;
+    margin-top: 5px;
+}
+
+.calendar-week-grid .day-booking {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.calendar-week-grid .day-booking strong {
+    color: #d63638;
+    font-size: 14px;
+}
+
+.calendar-week-grid .day-empty {
+    color: #46b450;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Day View Styles */
+.domilocus-admin-calendar.day-view {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.calendar-day-view {
+    margin-top: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.calendar-day-view .day-info h3 {
+    font-size: 24px;
+    color: #23282d;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #2271b1;
+}
+
+.calendar-day-view .booking-details {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 6px;
+    border-left: 4px solid #2271b1;
+}
+
+.calendar-day-view .booking-details h4 {
+    font-size: 18px;
+    color: #2271b1;
+    margin: 0 0 15px 0;
+}
+
+.calendar-day-view .booking-details p {
+    margin: 10px 0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.calendar-day-view .booking-details strong {
+    display: inline-block;
+    min-width: 140px;
+    color: #23282d;
+}
+
+.calendar-day-view .no-booking {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f1f8f4;
+    border-radius: 6px;
+    border: 2px dashed #46b450;
+}
+
+.calendar-day-view .no-booking p {
+    font-size: 16px;
+    color: #666;
+    margin: 15px 0;
+}
+
+.calendar-day-view .button-primary {
+    margin-top: 15px;
+    padding: 12px 24px;
+    font-size: 15px;
+}
+
+/* Responsive for week/day views */
+@media (max-width: 1200px) {
+    .calendar-week-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 782px) {
+    .calendar-week-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .calendar-week-grid .calendar-day {
+        min-height: 150px;
+        padding: 10px;
+    }
+    
+    .calendar-week-grid .day-number {
+        font-size: 16px;
+    }
+    
+    .calendar-day-view {
+        padding: 20px 15px;
+    }
+    
+    .calendar-day-view .day-info h3 {
+        font-size: 20px;
+    }
+    
+    .calendar-day-view .booking-details {
+        padding: 15px;
+    }
+    
+    .calendar-day-view .booking-details strong {
+        display: block;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 600px) {
+    .calendar-week-grid {
+        grid-template-columns: 1fr;
     }
 }

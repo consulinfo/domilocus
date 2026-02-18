@@ -671,6 +671,212 @@ class Domilocus_Calendar {
         
         return $html;
     }
+    
+    /**
+     * Get week data for admin calendar
+     */
+    public function get_admin_week_data($apartment_id, $year, $month, $day) {
+        global $wpdb;
+        
+        $date = new DateTime(sprintf('%04d-%02d-%02d', $year, $month, $day));
+        $date->modify('monday this week');
+        
+        $data = array();
+        for ($i = 0; $i < 7; $i++) {
+            $date_str = $date->format('Y-m-d');
+            $data[$date_str] = array(
+                'status' => 'available',
+                'booking_id' => null
+            );
+            $date->modify('+1 day');
+        }
+        
+        // Get bookings for the week
+        $date->modify('-7 days');
+        $start_date = $date->format('Y-m-d');
+        $date->modify('+6 days');
+        $end_date = $date->format('Y-m-d');
+        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $availability = $wpdb->get_results($wpdb->prepare(
+            "SELECT date, available, booking_id 
+             FROM {$wpdb->prefix}domilocus_availability 
+             WHERE apartment_id = %d AND date BETWEEN %s AND %s",
+            $apartment_id, $start_date, $end_date
+        ));
+        
+        foreach ($availability as $row) {
+            if (isset($data[$row->date])) {
+                $data[$row->date] = array(
+                    'status' => $row->available ? 'available' : 'booked',
+                    'booking_id' => $row->booking_id
+                );
+            }
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * Generate week HTML for admin calendar
+     */
+    public function generate_admin_week_html($apartment_id, $year, $month, $day, $week_data) {
+        $date = new DateTime(sprintf('%04d-%02d-%02d', $year, $month, $day));
+        $date->modify('monday this week');
+        
+        $html = '<div class="domilocus-admin-calendar week-view">';
+        
+        // Navigation
+        $html .= '<div class="calendar-header">';
+        $html .= '<button class="button calendar-nav" data-direction="prev">&laquo; ' . __('Previous Week', 'domilocus') . '</button>';
+        $html .= '<h2>' . sprintf(__('Week of %s', 'domilocus'), $date->format(get_option('date_format'))) . '</h2>';
+        $html .= '<button class="button calendar-nav" data-direction="next">' . __('Next Week', 'domilocus') . ' &raquo;</button>';
+        $html .= '</div>';
+        
+        // Week grid
+        $html .= '<div class="calendar-week-grid">';
+        
+        $today = gmdate('Y-m-d');
+        
+        for ($i = 0; $i < 7; $i++) {
+            $date_str = $date->format('Y-m-d');
+            $day_data = $week_data[$date_str] ?? array('status' => 'available', 'booking_id' => null);
+            
+            $classes = array('calendar-day', 'week-day');
+            if ($date_str < $today) {
+                $classes[] = 'past';
+            }
+            if ($date_str === $today) {
+                $classes[] = 'today';
+            }
+            $classes[] = $day_data['status'];
+            
+            $html .= '<div class="' . implode(' ', $classes) . '" data-date="' . $date_str . '">';
+            $html .= '<div class="day-header">';
+            $html .= '<span class="day-name">' . $date->format('l') . '</span>';
+            $html .= '<span class="day-number">' . $date->format('j M Y') . '</span>';
+            $html .= '</div>';
+            
+            if ($day_data['booking_id']) {
+                $booking = $this->get_booking_details($day_data['booking_id']);
+                if ($booking) {
+                    $html .= '<div class="day-booking">';
+                    $html .= '<strong>' . esc_html($booking->customer_name) . '</strong><br>';
+                    $html .= esc_html($booking->customer_email);
+                    $html .= '</div>';
+                }
+            } else {
+                $html .= '<div class="day-empty">' . __('Available', 'domilocus') . '</div>';
+            }
+            
+            $html .= '</div>';
+            $date->modify('+1 day');
+        }
+        
+        $html .= '</div>'; // calendar-week-grid
+        $html .= '</div>'; // domilocus-admin-calendar
+        
+        return $html;
+    }
+    
+    /**
+     * Get day data for admin calendar
+     */
+    public function get_admin_day_data($apartment_id, $year, $month, $day) {
+        global $wpdb;
+        
+        $date_str = sprintf('%04d-%02d-%02d', $year, $month, $day);
+        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $availability = $wpdb->get_row($wpdb->prepare(
+            "SELECT date, available, booking_id 
+             FROM {$wpdb->prefix}domilocus_availability 
+             WHERE apartment_id = %d AND date = %s",
+            $apartment_id, $date_str
+        ));
+        
+        $data = array(
+            $date_str => array(
+                'status' => $availability && !$availability->available ? 'booked' : 'available',
+                'booking_id' => $availability ? $availability->booking_id : null
+            )
+        );
+        
+        return $data;
+    }
+    
+    /**
+     * Generate day HTML for admin calendar
+     */
+    public function generate_admin_day_html($apartment_id, $year, $month, $day, $day_data) {
+        $date = new DateTime(sprintf('%04d-%02d-%02d', $year, $month, $day));
+        $date_str = $date->format('Y-m-d');
+        
+        $html = '<div class="domilocus-admin-calendar day-view">';
+        
+        // Navigation
+        $html .= '<div class="calendar-header">';
+        $html .= '<button class="button calendar-nav" data-direction="prev">&laquo; ' . __('Previous Day', 'domilocus') . '</button>';
+        $html .= '<h2>' . $date->format(get_option('date_format')) . '</h2>';
+        $html .= '<button class="button calendar-nav" data-direction="next">' . __('Next Day', 'domilocus') . ' &raquo;</button>';
+        $html .= '</div>';
+        
+        // Day details
+        $data = $day_data[$date_str] ?? array('status' => 'available', 'booking_id' => null);
+        
+        $html .= '<div class="calendar-day-view">';
+        $html .= '<div class="day-info">';
+        $html .= '<h3>' . $date->format('l, j F Y') . '</h3>';
+        
+        if ($data['booking_id']) {
+            $booking = $this->get_booking_details($data['booking_id']);
+            if ($booking) {
+                $html .= '<div class="booking-details">';
+                $html .= '<h4>' . __('Booking Details', 'domilocus') . '</h4>';
+                $html .= '<p><strong>' . __('Customer:', 'domilocus') . '</strong> ' . esc_html($booking->customer_name) . '</p>';
+                $html .= '<p><strong>' . __('Email:', 'domilocus') . '</strong> ' . esc_html($booking->customer_email) . '</p>';
+                if ($booking->customer_phone) {
+                    $html .= '<p><strong>' . __('Phone:', 'domilocus') . '</strong> ' . esc_html($booking->customer_phone) . '</p>';
+                }
+                $html .= '<p><strong>' . __('Check-in:', 'domilocus') . '</strong> ' . esc_html(gmdate(get_option('date_format'), strtotime($booking->check_in))) . '</p>';
+                $html .= '<p><strong>' . __('Check-out:', 'domilocus') . '</strong> ' . esc_html(gmdate(get_option('date_format'), strtotime($booking->check_out))) . '</p>';
+                $html .= '<p><strong>' . __('Guests:', 'domilocus') . '</strong> ' . esc_html($booking->guests) . '</p>';
+                $html .= '<p><strong>' . __('Total:', 'domilocus') . '</strong> ' . esc_html(Domilocus_Settings::format_price($booking->total_amount)) . '</p>';
+                $html .= '<p><strong>' . __('Payment Status:', 'domilocus') . '</strong> ' . esc_html(ucfirst($booking->payment_status)) . '</p>';
+                
+                $html .= '<p><a href="' . admin_url('admin.php?page=domilocus-bookings&action=edit&booking_id=' . $booking->id) . '" class="button button-primary">' . __('View Booking', 'domilocus') . '</a></p>';
+                $html .= '</div>';
+            }
+        } else {
+            $html .= '<div class="no-booking">';
+            $html .= '<p>' . __('This date is available.', 'domilocus') . '</p>';
+            $html .= '<p><a href="' . admin_url('admin.php?page=domilocus-bookings&action=new') . '" class="button button-primary">' . __('Add New Booking', 'domilocus') . '</a></p>';
+            $html .= '</div>';
+        }
+        
+        $html .= '</div>'; // day-info
+        $html .= '</div>'; // calendar-day-view
+        $html .= '</div>'; // domilocus-admin-calendar
+        
+        return $html;
+    }
+    
+    /**
+     * Get booking details helper
+     */
+    private function get_booking_details($booking_id) {
+        global $wpdb;
+        
+        if (!$booking_id) {
+            return null;
+        }
+        
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        return $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+            $booking_id
+        ));
+    }
 }
 
 

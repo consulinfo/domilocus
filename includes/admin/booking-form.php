@@ -38,7 +38,7 @@ class Domilocus_Booking_Form {
             ));
             
             if (!$booking) {
-                wp_die(esc_html__('Prenotazione non trovata.', 'domilocus'));
+                wp_die(esc_html__('Booking not found.', 'domilocus'));
             }
         }
         
@@ -89,8 +89,8 @@ class Domilocus_Booking_Form {
         <div class="wrap">
             <h1>
                 <?php echo $is_edit 
-                    ? esc_html(__('Modifica Prenotazione', 'domilocus'))
-                    : esc_html(__('Aggiungi Prenotazione', 'domilocus')); ?>
+                    ? esc_html__('Edit Booking', 'domilocus')
+                    : esc_html__('Add Booking', 'domilocus'); ?>
             </h1>
             
             <?php 
@@ -102,9 +102,9 @@ class Domilocus_Booking_Form {
                         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                         $message = sanitize_text_field(wp_unslash($_GET['message']));
                         if ($message === 'saved') {
-                            esc_html_e('Prenotazione salvata con successo.', 'domilocus');
+                            esc_html_e('Booking saved successfully.', 'domilocus');
                         } elseif ($message === 'updated') {
-                            esc_html_e('Prenotazione aggiornata con successo.', 'domilocus');
+                            esc_html_e('Booking updated successfully.', 'domilocus');
                         }
                         ?>
                     </p>
@@ -120,17 +120,17 @@ class Domilocus_Booking_Form {
                         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                         $error = sanitize_text_field(wp_unslash($_GET['error']));
                         if ($error === 'apartment_required') {
-                            esc_html_e('Seleziona un appartamento.', 'domilocus');
+                            esc_html_e('Please select an apartment.', 'domilocus');
                         } elseif ($error === 'customer_required') {
-                            esc_html_e('Il nome del cliente è obbligatorio.', 'domilocus');
+                            esc_html_e('Customer name is required.', 'domilocus');
                         } elseif ($error === 'email_required') {
-                            esc_html_e('L\'email del cliente è obbligatoria.', 'domilocus');
+                            esc_html_e('Customer email is required.', 'domilocus');
                         } elseif ($error === 'dates_required') {
-                            esc_html_e('Le date di check-in e check-out sono obbligatorie.', 'domilocus');
+                            esc_html_e('Check-in and check-out dates are required.', 'domilocus');
                         } elseif ($error === 'invalid_dates') {
-                            esc_html_e('La data di check-out deve essere successiva al check-in.', 'domilocus');
+                            esc_html_e('Check-out date must be after check-in date.', 'domilocus');
                         } else {
-                            esc_html_e('Errore durante il salvataggio della prenotazione.', 'domilocus');
+                            esc_html_e('Error saving booking.', 'domilocus');
                         }
                         ?>
                     </p>
@@ -153,13 +153,13 @@ class Domilocus_Booking_Form {
                             <!-- Customer Information -->
                             <div class="postbox">
                                 <div class="postbox-header">
-                                    <h2><?php esc_html_e('Informazioni Cliente', 'domilocus'); ?></h2>
+                                    <h2><?php esc_html_e('Customer Information', 'domilocus'); ?></h2>
                                 </div>
                                 <div class="inside">
                                     <table class="form-table">
                                         <tr>
                                             <th scope="row">
-                                                <label for="customer_name"><?php esc_html_e('Nome Cliente', 'domilocus'); ?> <span class="required">*</span></label>
+                                                <label for="customer_name"><?php esc_html_e('Customer Name', 'domilocus'); ?> <span class="required">*</span></label>
                                             </th>
                                             <td>
                                                 <input type="text" id="customer_name" name="customer_name" 
@@ -179,7 +179,7 @@ class Domilocus_Booking_Form {
                                         </tr>
                                         <tr>
                                             <th scope="row">
-                                                <label for="customer_phone"><?php esc_html_e('Telefono', 'domilocus'); ?></label>
+                                                <label for="customer_phone"><?php esc_html_e('Phone', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <input type="tel" id="customer_phone" name="customer_phone" 
@@ -194,7 +194,7 @@ class Domilocus_Booking_Form {
                             <!-- Booking Details -->
                             <div class="postbox">
                                 <div class="postbox-header">
-                                    <h2><?php esc_html_e('Dettagli Prenotazione', 'domilocus'); ?></h2>
+                                    <h2><?php esc_html_e('Booking Details', 'domilocus'); ?></h2>
                                 </div>
                                 <div class="inside">
                                     <table class="form-table">
@@ -204,7 +204,7 @@ class Domilocus_Booking_Form {
                                             </th>
                                             <td>
                                                 <select id="apartment_id" name="apartment_id" class="regular-text" required>
-                                                    <option value=""><?php esc_html_e('-- Seleziona Appartamento --', 'domilocus'); ?></option>
+                                                    <option value=""><?php esc_html_e('-- Select Apartment --', 'domilocus'); ?></option>
                                                     <?php foreach ($apartments as $apartment): ?>
                                                         <option value="<?php echo esc_attr($apartment->ID); ?>" 
                                                                 <?php selected($defaults['apartment_id'], $apartment->ID); ?>>
@@ -236,7 +236,7 @@ class Domilocus_Booking_Form {
                                         </tr>
                                         <tr>
                                             <th scope="row">
-                                                <label for="guests"><?php esc_html_e('Numero Ospiti', 'domilocus'); ?></label>
+                                                <label for="guests"><?php esc_html_e('Number of Guests', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <input type="number" id="guests" name="guests" 
@@ -246,7 +246,7 @@ class Domilocus_Booking_Form {
                                         </tr>
                                         <tr>
                                             <th scope="row">
-                                                <label for="total_amount"><?php esc_html_e('Importo Totale', 'domilocus'); ?></label>
+                                                <label for="total_amount"><?php esc_html_e('Total Amount', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <input type="number" id="total_amount" name="total_amount" 
@@ -261,28 +261,28 @@ class Domilocus_Booking_Form {
                             <!-- Notes -->
                             <div class="postbox">
                                 <div class="postbox-header">
-                                    <h2><?php esc_html_e('Note', 'domilocus'); ?></h2>
+                                    <h2><?php esc_html_e('Notes', 'domilocus'); ?></h2>
                                 </div>
                                 <div class="inside">
                                     <table class="form-table">
                                         <tr>
                                             <th scope="row">
-                                                <label for="booking_notes"><?php esc_html_e('Note Prenotazione', 'domilocus'); ?></label>
+                                                <label for="booking_notes"><?php esc_html_e('Booking Notes', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <textarea id="booking_notes" name="booking_notes" 
                                                           rows="4" class="large-text"><?php echo esc_textarea($defaults['booking_notes']); ?></textarea>
-                                                <p class="description"><?php esc_html_e('Note visibili al cliente', 'domilocus'); ?></p>
+                                                <p class="description"><?php esc_html_e('Notes visible to customer', 'domilocus'); ?></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <th scope="row">
-                                                <label for="notes"><?php esc_html_e('Note Interne', 'domilocus'); ?></label>
+                                                <label for="notes"><?php esc_html_e('Internal Notes', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <textarea id="notes" name="notes" 
                                                           rows="4" class="large-text"><?php echo esc_textarea($defaults['notes']); ?></textarea>
-                                                <p class="description"><?php esc_html_e('Note private, non visibili al cliente', 'domilocus'); ?></p>
+                                                <p class="description"><?php esc_html_e('Private notes, not visible to customer', 'domilocus'); ?></p>
                                             </td>
                                         </tr>
                                     </table>
@@ -301,7 +301,7 @@ class Domilocus_Booking_Form {
                                 </div>
                                 <div class="inside">
                                     <div class="misc-pub-section">
-                                        <label for="status"><?php esc_html_e('Stato Prenotazione', 'domilocus'); ?></label>
+                                        <label for="status"><?php esc_html_e('Booking Status', 'domilocus'); ?></label>
                                         <select id="status" name="status" class="widefat" style="margin-top: 5px;">
                                             <option value="pending" <?php selected($defaults['status'], 'pending'); ?>>
                                                 <?php esc_html_e('Pending', 'domilocus'); ?>
@@ -319,19 +319,19 @@ class Domilocus_Booking_Form {
                                     </div>
                                     
                                     <div class="misc-pub-section" style="margin-top: 15px;">
-                                        <label for="payment_status"><?php esc_html_e('Stato Pagamento', 'domilocus'); ?></label>
+                                        <label for="payment_status"><?php esc_html_e('Payment Status', 'domilocus'); ?></label>
                                         <select id="payment_status" name="payment_status" class="widefat" style="margin-top: 5px;">
                                             <option value="unpaid" <?php selected($defaults['payment_status'], 'unpaid'); ?>>
-                                                <?php esc_html_e('Non pagato', 'domilocus'); ?>
+                                                <?php esc_html_e('Unpaid', 'domilocus'); ?>
                                             </option>
                                             <option value="paid" <?php selected($defaults['payment_status'], 'paid'); ?>>
-                                                <?php esc_html_e('Pagato', 'domilocus'); ?>
+                                                <?php esc_html_e('Paid', 'domilocus'); ?>
                                             </option>
                                             <option value="partial" <?php selected($defaults['payment_status'], 'partial'); ?>>
-                                                <?php esc_html_e('Parziale', 'domilocus'); ?>
+                                                <?php esc_html_e('Partial', 'domilocus'); ?>
                                             </option>
                                             <option value="refunded" <?php selected($defaults['payment_status'], 'refunded'); ?>>
-                                                <?php esc_html_e('Rimborsato', 'domilocus'); ?>
+                                                <?php esc_html_e('Refunded', 'domilocus'); ?>
                                             </option>
                                         </select>
                                     </div>
@@ -341,21 +341,21 @@ class Domilocus_Booking_Form {
                             <!-- Payment Details -->
                             <div class="postbox">
                                 <div class="postbox-header">
-                                    <h2><?php esc_html_e('Dettagli Pagamento', 'domilocus'); ?></h2>
+                                    <h2><?php esc_html_e('Payment Details', 'domilocus'); ?></h2>
                                 </div>
                                 <div class="inside">
                                     <div class="misc-pub-section">
-                                        <label for="payment_method"><?php esc_html_e('Metodo Pagamento', 'domilocus'); ?></label>
+                                        <label for="payment_method"><?php esc_html_e('Payment Method', 'domilocus'); ?></label>
                                         <select id="payment_method" name="payment_method" class="widefat" style="margin-top: 5px;">
-                                            <option value=""><?php esc_html_e('-- Seleziona --', 'domilocus'); ?></option>
+                                            <option value=""><?php esc_html_e('-- Select --', 'domilocus'); ?></option>
                                             <option value="cash" <?php selected($defaults['payment_method'], 'cash'); ?>>
-                                                <?php esc_html_e('Contanti', 'domilocus'); ?>
+                                                <?php esc_html_e('Cash', 'domilocus'); ?>
                                             </option>
                                             <option value="bank_transfer" <?php selected($defaults['payment_method'], 'bank_transfer'); ?>>
                                                 <?php esc_html_e('Bank Transfer', 'domilocus'); ?>
                                             </option>
                                             <option value="credit_card" <?php selected($defaults['payment_method'], 'credit_card'); ?>>
-                                                <?php esc_html_e('Carta di credito', 'domilocus'); ?>
+                                                <?php esc_html_e('Credit Card', 'domilocus'); ?>
                                             </option>
                                             <option value="paypal" <?php selected($defaults['payment_method'], 'paypal'); ?>>
                                                 PayPal
@@ -364,17 +364,17 @@ class Domilocus_Booking_Form {
                                                 Stripe
                                             </option>
                                             <option value="other" <?php selected($defaults['payment_method'], 'other'); ?>>
-                                                <?php esc_html_e('Altro', 'domilocus'); ?>
+                                                <?php esc_html_e('Other', 'domilocus'); ?>
                                             </option>
                                         </select>
                                     </div>
                                     
                                     <div class="misc-pub-section" style="margin-top: 15px;">
-                                        <label for="payment_id"><?php esc_html_e('ID Transazione', 'domilocus'); ?></label>
+                                        <label for="payment_id"><?php esc_html_e('Transaction ID', 'domilocus'); ?></label>
                                         <input type="text" id="payment_id" name="payment_id" 
                                                value="<?php echo esc_attr($defaults['payment_id']); ?>" 
                                                class="widefat" style="margin-top: 5px;">
-                                        <p class="description"><?php esc_html_e('Riferimento pagamento esterno', 'domilocus'); ?></p>
+                                        <p class="description"><?php esc_html_e('External payment reference', 'domilocus'); ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -382,14 +382,14 @@ class Domilocus_Booking_Form {
                             <!-- Publish -->
                             <div class="postbox">
                                 <div class="postbox-header">
-                                    <h2><?php esc_html_e('Salva', 'domilocus'); ?></h2>
+                                    <h2><?php esc_html_e('Save', 'domilocus'); ?></h2>
                                 </div>
                                 <div class="inside">
                                     <div id="major-publishing-actions">
                                         <div id="publishing-action">
                                             <input type="submit" name="save" id="publish" 
                                                    class="button button-primary button-large" 
-                                                   value="<?php echo $is_edit ? esc_attr(__('Aggiorna Prenotazione', 'domilocus')) : esc_attr(__('Salva Prenotazione', 'domilocus')); ?>">
+                                                   value="<?php echo $is_edit ? esc_attr__('Update Booking', 'domilocus') : esc_attr__('Save Booking', 'domilocus'); ?>">
                                         </div>
                                         <div class="clear"></div>
                                     </div>

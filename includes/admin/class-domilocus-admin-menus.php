@@ -9,43 +9,6 @@ if (!defined('ABSPATH')) {
 }
 
 class Domilocus_Admin_Menus {
-    /**
-     * Premium-only page definitions.
-     *
-     * @var array
-     */
-    protected static $premium_pages = array(
-        'domilocus-pricing' => array(
-            'feature' => 'basic_pricing_rules',
-            'translation_key' => 'pricing_management',
-            'fallback' => 'Gestione Prezzi',
-        ),
-        'domilocus-tariffs' => array(
-            'feature' => 'advanced_tariffs',
-            'translation_key' => 'tariff_management',
-            'fallback' => 'Gestione Tariffe',
-        ),
-        'domilocus-automatic-pricing' => array(
-            'feature' => 'dynamic_pricing',
-            'translation_key' => 'automatic_pricing',
-            'fallback' => 'Prezzi Dinamici Automatici',
-        ),
-        'domilocus-statistics' => array(
-            'feature' => 'statistics_basic',
-            'translation_key' => 'statistics_reports',
-            'fallback' => 'Statistiche e Report',
-        ),
-        'domilocus-ical' => array(
-            'feature' => 'ical_sync',
-            'translation_key' => 'platform_integration',
-            'fallback' => 'Integrazione Piattaforme',
-        ),
-        'domilocus-tools' => array(
-            'feature' => 'api_access',
-            'translation_key' => 'tools',
-            'fallback' => 'Strumenti',
-        ),
-    );
     
     /**
      * Initialize
@@ -142,120 +105,59 @@ class Domilocus_Admin_Menus {
             array(__CLASS__, 'calendar_page')
         );
         
-        // Pricing Management
-        $pricing_title = $translations['pricing_management'] ?? __('Pricing Management', 'domilocus');
-        if (self::should_render_premium_menu('basic_pricing_rules')) {
-            add_submenu_page(
-                'domilocus',
-                $pricing_title,
-                self::get_menu_title_with_badge($pricing_title, 'basic_pricing_rules'),
-                'manage_options',
-                'domilocus-pricing',
-                Domilocus_License::is_feature_enabled('basic_pricing_rules')
-                    ? array(__CLASS__, 'pricing_management_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
-        
-        // Tariffs Management  
-        $tariffs_title = $translations['tariff_management'] ?? __('Tariff Management', 'domilocus');
-        if (self::should_render_premium_menu('advanced_tariffs')) {
-            add_submenu_page(
-                'domilocus',
-                $tariffs_title,
-                self::get_menu_title_with_badge($tariffs_title, 'advanced_tariffs'),
-                'manage_options',
-                'domilocus-tariffs',
-                Domilocus_License::is_feature_enabled('advanced_tariffs')
-                    ? array(__CLASS__, 'tariffs_management_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
-        
-        // Automatic Dynamic Pricing
-        $dynamic_pricing_title = $translations['automatic_pricing'] ?? __('Automatic Pricing', 'domilocus');
-        if (self::should_render_premium_menu('dynamic_pricing')) {
-            add_submenu_page(
-                'domilocus',
-                $dynamic_pricing_title,
-                self::get_menu_title_with_badge($dynamic_pricing_title, 'dynamic_pricing'),
-                'manage_options',
-                'domilocus-automatic-pricing',
-                Domilocus_License::is_feature_enabled('dynamic_pricing')
-                    ? array(__CLASS__, 'automatic_pricing_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
-        
-        // Statistics & Reports
-        $statistics_title = $translations['statistics_reports'] ?? __('Statistics & Reports', 'domilocus');
-        if (self::should_render_premium_menu('statistics_basic')) {
-            add_submenu_page(
-                'domilocus',
-                $statistics_title,
-                self::get_menu_title_with_badge($statistics_title, 'statistics_basic'),
-                'manage_options',
-                'domilocus-statistics',
-                Domilocus_License::is_feature_enabled('statistics_basic')
-                    ? array(__CLASS__, 'statistics_reports_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
-        
-        // Platform Integration
-        $integration_title = $translations['platform_integration'] ?? __('Platform Integration', 'domilocus');
-        if (self::should_render_premium_menu('ical_sync')) {
-            add_submenu_page(
-                'domilocus',
-                $integration_title,
-                self::get_menu_title_with_badge($integration_title, 'ical_sync'),
-                'manage_options',
-                'domilocus-ical',
-                Domilocus_License::is_feature_enabled('ical_sync')
-                    ? array(__CLASS__, 'ical_synchronization_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
-        
-        // Shortcodes Reference (premium only)
-        if (Domilocus_License::is_feature_enabled('frontend_booking')) {
-            add_submenu_page(
-                'domilocus',
-                $translations['shortcodes_reference'] ?? __('Shortcodes Reference', 'domilocus'),
-                $translations['shortcodes_reference'] ?? __('Shortcodes Reference', 'domilocus'),
-                'manage_options',
-                'domilocus-shortcodes',
-                array(__CLASS__, 'shortcodes_reference_page')
-            );
-        }
 
-        // Dynamic Pricing Help (premium only)
-        if (Domilocus_License::is_feature_enabled('dynamic_pricing')) {
-            add_submenu_page(
-                'domilocus',
-                $translations['dynamic_pricing_help'] ?? __('Dynamic Pricing Help', 'domilocus'),
-                $translations['dynamic_pricing_help'] ?? __('Dynamic Pricing Help', 'domilocus'),
-                'manage_options',
-                'domilocus-pricing-help',
-                array(__CLASS__, 'dynamic_pricing_help_page')
-            );
-        }
 
-        // Events Management
-        $events_title = $translations['events_management'] ?? __('Events Management', 'domilocus');
-        if (self::should_render_premium_menu('events_management')) {
-            add_submenu_page(
-                'domilocus',
-                $events_title,
-                self::get_menu_title_with_badge($events_title, 'events_management'),
-                'manage_options',
-                'domilocus-events',
-                Domilocus_License::is_feature_enabled('events_management')
-                    ? array(__CLASS__, 'events_management_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
 
+
+
+
+        /**
+         * Allow add-ons to register their own menu items.
+         * Add-ons should hook into this action to add premium menu items.
+         * 
+         * @param array $translations Current translations
+         * @param string $current_language Current language code
+         * 
+         * Example usage in add-on:
+         * add_action('domilocus_admin_menu', function($translations) {
+         *     add_submenu_page(
+         *         'domilocus',
+         *         __('Statistics', 'domilocus-statistics'),
+         *         __('Statistics', 'domilocus-statistics'),
+         *         'manage_options',
+         *         'domilocus-statistics',
+         *         array('Domilocus_Statistics_Admin', 'render_page')
+         *     );
+         * });
+         */
+        do_action('domilocus_admin_menu', $translations, $current_language);
+
+        // Hidden fallback pages for add-ons (avoid 404 if add-on is missing).
+        add_submenu_page(
+            null,
+            __('Funzionalità non disponibile', 'domilocus'),
+            '',
+            'manage_options',
+            'domilocus-statistics',
+            array(__CLASS__, 'addon_missing_page')
+        );
+        add_submenu_page(
+            null,
+            __('Funzionalità non disponibile', 'domilocus'),
+            '',
+            'manage_options',
+            'domilocus-frontend-license',
+            array(__CLASS__, 'addon_missing_page')
+        );
+        add_submenu_page(
+            null,
+            __('Funzionalità non disponibile', 'domilocus'),
+            '',
+            'manage_options',
+            'domilocus-license',
+            array(__CLASS__, 'addon_missing_page')
+        );
+        
         // Settings
         add_submenu_page(
             'domilocus',
@@ -266,83 +168,14 @@ class Domilocus_Admin_Menus {
             array(__CLASS__, 'settings_page')
         );
 
-        // NOTE: License management UI intentionally hidden in the free public
-        // distribution to avoid exposing purchase/activation flows. The
-        // internal license page is kept in the codebase but not added to the
-        // public admin menu. Site administrators can still configure
-        // settings via the Settings page if needed.
-
-        // Tools
-        $tools_title = __('Tools', 'domilocus');
-        if (self::should_render_premium_menu('api_access')) {
-            add_submenu_page(
-                'domilocus',
-                $tools_title,
-                self::get_menu_title_with_badge($tools_title, 'api_access'),
-                'manage_options',
-                'domilocus-tools',
-                Domilocus_License::is_feature_enabled('api_access')
-                    ? array(__CLASS__, 'tools_page')
-                    : array(__CLASS__, 'premium_placeholder_page')
-            );
-        }
+        // NOTE: Premium features (Statistics, Pricing, iCal, Tools, etc.) are
+        // intentionally not registered here. They should be added by their
+        // respective add-on plugins using the 'domilocus_admin_menu' action hook.
+        // This keeps the base plugin clean and avoids license issues with the
+        // public distribution on WordPress.org and GitHub.
     }
     
-    /**
-     * Get menu title with plan badge if feature is not enabled
-     */
-    private static function get_menu_title_with_badge($title, $feature_key) {
-        if (!Domilocus_License::is_feature_enabled($feature_key)) {
-            $required_plan = self::get_required_plan_for_feature($feature_key);
-            $badge = ' <span style="color: #d63638; font-size: 0.85em;">🔒 ' . $required_plan . '</span>';
-            return $title . $badge;
-        }
-        return $title;
-    }
-
-    /**
-     * Decide whether a premium submenu should be registered.
-     */
-    private static function should_render_premium_menu($feature_key) {
-        if (Domilocus_License::is_feature_enabled($feature_key)) {
-            return true;
-        }
-
-        // Allow developers to expose locked menus for debugging by defining
-        // DOMILOCUS_SHOW_PREMIUM_MENUS or via the filter hook.
-        $show_locked = defined('DOMILOCUS_SHOW_PREMIUM_MENUS') && DOMILOCUS_SHOW_PREMIUM_MENUS;
-        $show_locked = apply_filters('domilocus_show_premium_menu', $show_locked, $feature_key);
-
-        return (bool) $show_locked;
-    }
     
-    /**
-     * Get the required plan for a specific feature
-     */
-    private static function get_required_plan_for_feature($feature_key) {
-        $feature_definitions = Domilocus_License::get_feature_definitions();
-        if (isset($feature_definitions[$feature_key])) {
-            $plan_key = $feature_definitions[$feature_key]['plan_required'] ?? '';
-            $plan_key = is_string($plan_key) ? strtolower($plan_key) : '';
-
-            if ($plan_key === '') {
-                return 'Premium';
-            }
-
-            // Translate plan names to Italian abbreviations
-            $plan_labels = array(
-                'free' => 'Free',
-                'starter' => 'Starter',
-                'professional' => 'Pro',
-                'premium' => 'Premium',
-                'enterprise' => 'Enterprise'
-            );
-
-            return $plan_labels[$plan_key] ?? ucfirst($plan_key);
-        }
-        return 'Premium';
-    }
-
     /**
      * License management page.
      */
@@ -466,147 +299,6 @@ class Domilocus_Admin_Menus {
         <?php
     }
 
-    /**
-     * Upsell placeholder for premium features.
-     */
-    public static function premium_placeholder_page() {
-        $current_plan = Domilocus_License::get_current_plan();
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
-        $meta = self::get_premium_page_meta($page);
-        $license_url = admin_url('admin.php?page=domilocus-license');
-        
-        // Get feature info for current page
-        $feature_info = array(
-            'domilocus-pricing' => array(
-                'title' => __('Gestione Prezzi', 'domilocus'),
-                'description' => __('Configura regole di prezzo avanzate, sconti automatici e prezzi dinamici.', 'domilocus'),
-                'required_plan' => 'starter',
-                'features' => array(
-                    __('Regole di prezzo per periodo', 'domilocus'),
-                    __('Sconti per soggiorni lunghi', 'domilocus'),
-                    __('Supplementi automatici', 'domilocus'),
-                    __('Prezzi per numero ospiti', 'domilocus')
-                )
-            ),
-            'domilocus-tariffs' => array(
-                'title' => __('Gestione Tariffe Avanzate', 'domilocus'),
-                'description' => __('Crea tariffe complesse con variazioni stagionali, weekend e festivi.', 'domilocus'),
-                'required_plan' => 'professional',
-                'features' => array(
-                    __('Tariffe stagionali', 'domilocus'),
-                    __('Supplementi weekend', 'domilocus'),
-                    __('Prezzi per festivi', 'domilocus'),
-                    __('Tariffe per tipo camera', 'domilocus')
-                )
-            ),
-            'domilocus-automatic-pricing' => array(
-                'title' => __('Prezzi Dinamici Automatici', 'domilocus'),
-                'description' => __('Algoritmi intelligenti che ottimizzano automaticamente i prezzi.', 'domilocus'),
-                'required_plan' => 'professional',
-                'features' => array(
-                    __('Ottimizzazione automatica prezzi', 'domilocus'),
-                    __('Analisi della concorrenza', 'domilocus'),
-                    __('Revenue management', 'domilocus'),
-                    __('Previsioni di occupazione', 'domilocus')
-                )
-            ),
-            'domilocus-statistics' => array(
-                'title' => __('Statistiche e Report', 'domilocus'),
-                'description' => __('Dashboard avanzata con metriche dettagliate per monitorare le performance.', 'domilocus'),
-                'required_plan' => 'starter',
-                'features' => array(
-                    __('Report di occupazione', 'domilocus'),
-                    __('Analisi ricavi', 'domilocus'),
-                    __('Statistiche clienti', 'domilocus'),
-                    __('Export dati', 'domilocus')
-                )
-            ),
-            'domilocus-events' => array(
-                'title' => __('Gestione Eventi', 'domilocus'),
-                'description' => __('Integra eventi locali e nazionali per ottimizzare automaticamente i prezzi e gestire le prenotazioni.', 'domilocus'),
-                'required_plan' => 'professional',
-                'features' => array(
-                    __('Integrazione Ticketmaster', 'domilocus'),
-                    __('Integrazione Eventbrite', 'domilocus'),
-                    __('Integrazione PredictHQ', 'domilocus'),
-                    __('Ottimizzazione prezzi basata su eventi', 'domilocus'),
-                    __('Gestione impatto eventi sulle tariffe', 'domilocus')
-                )
-            )
-        );
-        
-        $info = $feature_info[$page] ?? array(
-            'title' => $meta['title'],
-            'description' => __('Questa funzionalità richiede una licenza premium attiva.', 'domilocus'),
-            'required_plan' => 'starter',
-            'features' => array()
-        );
-        
-        ?>
-        <div class="wrap">
-            <h1><?php echo esc_html($info['title']); ?></h1>
-            
-            <div class="domilocus-premium-placeholder">
-                <h2>🚀 <?php echo esc_html($info['title']); ?></h2>
-                <p><?php echo esc_html($info['description']); ?></p>
-                
-                <?php if (!empty($info['features'])): ?>
-                <div style="text-align: left; max-width: 400px; margin: 20px auto;">
-                    <h4><?php esc_html_e('Funzionalità incluse:', 'domilocus'); ?></h4>
-                    <ul style="margin: 10px 0;">
-                        <?php foreach ($info['features'] as $feature): ?>
-                            <li style="margin: 5px 0;">✅ <?php echo esc_html($feature); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-                <?php endif; ?>
-                
-                <div style="background: #f0f0f1; padding: 15px; border-radius: 5px; margin: 20px 0; font-size: 14px;">
-                    <strong><?php esc_html_e('Il tuo piano attuale:', 'domilocus'); ?></strong> 
-                    <span style="text-transform: uppercase;"><?php echo esc_html($current_plan); ?></span>
-                    <br>
-                    <strong><?php esc_html_e('Piano richiesto:', 'domilocus'); ?></strong> 
-                    <span style="text-transform: uppercase; color: #0073aa;"><?php echo esc_html($info['required_plan']); ?></span>
-                </div>
-                
-                <p style="margin: 30px 0;">
-                    <?php esc_html_e('Questa funzionalità non è disponibile nella versione gratuita pubblica del plugin. Verrà reintegrata in una futura versione.', 'domilocus'); ?>
-                </p>
-                <p>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings')); ?>" class="button">
-                        <?php esc_html_e('Vai alle Impostazioni', 'domilocus'); ?>
-                    </a>
-                </p>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
-     * Returns metadata for premium placeholder pages.
-     */
-    protected static function get_premium_page_meta($page_slug) {
-        $defaults = array(
-            'title' => __('Funzionalità Premium', 'domilocus'),
-        );
-
-        if (isset(self::$premium_pages[$page_slug])) {
-            $default_language = Domilocus_Translations::get_default_language();
-            $stored_language = Domilocus_Settings::get('domilocus_manager_language', $default_language);
-            $current_language = Domilocus_Translations::sanitize_language($stored_language);
-            $translations = Domilocus_Translations::get_translations($current_language);
-            $translation_key = self::$premium_pages[$page_slug]['translation_key'];
-
-            if (!empty($translations[$translation_key])) {
-                $defaults['title'] = $translations[$translation_key];
-            } elseif (!empty(self::$premium_pages[$page_slug]['fallback'])) {
-                $defaults['title'] = self::$premium_pages[$page_slug]['fallback'];
-            }
-        }
-
-        return $defaults;
-    }
     
     /**
      * Dashboard page
@@ -843,18 +535,13 @@ class Domilocus_Admin_Menus {
                                 <?php esc_html_e('View Calendar', 'domilocus'); ?>
                             </a>
                             
-                            <?php if (Domilocus_License::is_feature_enabled('statistics_reports')): ?>
-                                <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-statistics')); ?>" class="button">
-                                    <span class="dashicons dashicons-chart-line" style="margin-right: 5px;"></span>
-                                    <?php esc_html_e('View Statistics & Reports', 'domilocus'); ?>
-                                </a>
-                            <?php else: ?>
-                                <!-- In the free public build we avoid showing purchase/activation flows. Link to Settings instead. -->
-                                <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings')); ?>" class="button">
-                                    <span class="dashicons dashicons-admin-settings" style="margin-right: 5px;"></span>
-                                    <?php esc_html_e('Statistics & Reports (Premium)', 'domilocus'); ?>
-                                </a>
-                            <?php endif; ?>
+                            <?php
+                            /**
+                             * Allow add-ons to add quick action buttons.
+                             * This is useful for premium features to add their own quick actions.
+                             */
+                            do_action('domilocus_dashboard_quick_actions');
+                            ?>
                             
                             <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings')); ?>" class="button">
                                 <span class="dashicons dashicons-admin-settings" style="margin-right: 5px;"></span>
@@ -881,17 +568,31 @@ class Domilocus_Admin_Menus {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $action = isset($_GET['action']) ? sanitize_key($_GET['action']) : 'list';
         
-        // Handle delete action
+        // Check if we need to show paid booking deletion confirmation
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ($action === 'delete' && isset($_GET['booking_id'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $booking_id = intval($_GET['booking_id']);
-            if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'delete_booking_' . $booking_id)) {
-                self::delete_booking($booking_id);
-                // Redirect is now handled inside delete_booking()
-                return;
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $confirm_paid = isset($_GET['confirm_paid']) && $_GET['confirm_paid'] === '1';
+            
+            if (!$confirm_paid) {
+                global $wpdb;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $booking = $wpdb->get_row($wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                ));
+                
+                if ($booking && $booking->payment_status === 'paid') {
+                    // Show paid booking deletion warning
+                    self::render_paid_booking_deletion_warning($booking);
+                    return;
+                }
             }
         }
+        
+        // Delete action is now handled in handle_admin_actions() during admin_init
         
         // Handle add/edit actions
         if ($action === 'add' || $action === 'edit') {
@@ -914,7 +615,7 @@ class Domilocus_Admin_Menus {
         <div class="wrap">
             <h1 class="wp-heading-inline"><?php echo esc_html($translations['bookings'] ?? __('Bookings', 'domilocus')); ?></h1>
             <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings&action=add')); ?>" class="page-title-action">
-                <?php esc_html_e('Aggiungi nuova', 'domilocus'); ?>
+                <?php esc_html_e('Add New', 'domilocus'); ?>
             </a>
             <hr class="wp-header-end">
             
@@ -922,7 +623,7 @@ class Domilocus_Admin_Menus {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (isset($_GET['message']) && $_GET['message'] === 'deleted'): ?>
                 <div class="notice notice-success is-dismissible">
-                    <p><?php esc_html_e('Prenotazione eliminata con successo.', 'domilocus'); ?></p>
+                    <p><?php esc_html_e('Booking deleted successfully.', 'domilocus'); ?></p>
                 </div>
             <?php endif; ?>
             
@@ -952,96 +653,9 @@ class Domilocus_Admin_Menus {
         ));
         
         if (!$booking) {
-            wp_safe_redirect(admin_url('admin.php?page=domilocus-bookings&message=not_found'));
-            exit;
+            return;
         }
         
-        // SECURITY: Check if booking is paid - require double confirmation
-        if ($booking->status === 'confirmed' && $booking->payment_status === 'paid') {
-            // Check if user confirmed deletion of paid booking
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            if (!isset($_GET['confirm_paid']) || $_GET['confirm_paid'] !== '1') {
-                // Show warning page with confirmation
-                ?>
-                <div class="wrap">
-                    <h1><?php esc_html_e('Attenzione: Cancellazione Prenotazione Pagata', 'domilocus'); ?></h1>
-                    
-                    <div class="notice notice-error" style="padding: 20px; margin: 20px 0;">
-                        <h2 style="margin-top: 0;"><?php esc_html_e('⚠️ AVVISO IMPORTANTE', 'domilocus'); ?></h2>
-                        <p style="font-size: 16px;">
-                            <?php esc_html_e('Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>.', 'domilocus'); ?>
-                        </p>
-                        <p style="font-size: 14px;">
-                            <?php esc_html_e('Questa azione è irreversibile e comporta:', 'domilocus'); ?>
-                        </p>
-                        <ul style="font-size: 14px; margin-left: 20px;">
-                            <li><?php esc_html_e('Cancellazione permanente della prenotazione dal database', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Liberazione delle date nel calendario', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Perdita dello storico del pagamento ricevuto', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Necessità di gestire manualmente il rimborso al cliente', 'domilocus'); ?></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="notice notice-info" style="padding: 15px;">
-                        <h3><?php esc_html_e('Dettagli Prenotazione', 'domilocus'); ?></h3>
-                        <table class="widefat" style="max-width: 600px;">
-                            <tr>
-                                <th style="width: 200px;"><?php esc_html_e('ID Prenotazione:', 'domilocus'); ?></th>
-                                <td><strong>#<?php echo esc_html($booking->id); ?></strong></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Cliente:', 'domilocus'); ?></th>
-                                <td><?php echo esc_html($booking->customer_name); ?> (<?php echo esc_html($booking->customer_email); ?>)</td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Date:', 'domilocus'); ?></th>
-                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_in))); ?> - <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_out))); ?></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Importo:', 'domilocus'); ?></th>
-                                <td><strong style="color: #00a32a;"><?php echo wp_kses_post(Domilocus_Settings::format_price($booking->total_amount)); ?></strong></td>
-                            </tr>
-                            <tr>
-                                <th><?php esc_html_e('Stato:', 'domilocus'); ?></th>
-                                <td><span style="color: #00a32a;">✓ <?php esc_html_e('PAGATA', 'domilocus'); ?></span></td>
-                            </tr>
-                        </table>
-                    </div>
-                    
-                    <div style="margin: 30px 0;">
-                        <h3><?php esc_html_e('Procedura Consigliata', 'domilocus'); ?></h3>
-                        <ol style="font-size: 14px; line-height: 1.8;">
-                            <li><?php esc_html_e('Contattare il cliente per confermare la cancellazione', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Gestire il rimborso tramite il metodo di pagamento utilizzato', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Documentare la cancellazione e il rimborso esternamente', 'domilocus'); ?></li>
-                            <li><?php esc_html_e('Solo dopo: confermare la cancellazione qui sotto', 'domilocus'); ?></li>
-                        </ol>
-                    </div>
-                    
-                    <p style="margin: 30px 0;">
-                        <a href="<?php echo esc_url(wp_nonce_url(
-                            admin_url('admin.php?page=domilocus-bookings&action=delete&booking_id=' . $booking_id . '&confirm_paid=1'),
-                            'delete_booking_' . $booking_id
-                        )); ?>" 
-                           class="button button-primary button-large" 
-                           style="background: #d63638; border-color: #d63638;"
-                           onclick="return confirm('<?php echo esc_js(__('ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?', 'domilocus')); ?>');">
-                            <?php esc_html_e('⚠️ CONFERMO: Cancella Prenotazione Pagata', 'domilocus'); ?>
-                        </a>
-                        
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings')); ?>" 
-                           class="button button-large" 
-                           style="margin-left: 10px;">
-                            <?php esc_html_e('← Annulla e Torna alle Prenotazioni', 'domilocus'); ?>
-                        </a>
-                    </p>
-                </div>
-                <?php
-                return; // Stop execution - wait for confirmation
-            }
-        }
-        
-        // Proceed with deletion
         // Unblock dates in calendar
         if (class_exists('Domilocus_Booking')) {
             Domilocus_Booking::unblock_dates(
@@ -1066,6 +680,78 @@ class Domilocus_Admin_Menus {
     }
     
     /**
+     * Render paid booking deletion warning page
+     */
+    private static function render_paid_booking_deletion_warning($booking) {
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e('Delete Paid Booking - Confirmation Required', 'domilocus'); ?></h1>
+            
+            <div class="notice notice-error" style="padding: 20px; margin: 20px 0; border-left: 4px solid #d63638;">
+                <h2 style="margin-top: 0;"><?php esc_html_e('⚠️ WARNING: PAID BOOKING', 'domilocus'); ?></h2>
+                <p style="font-size: 16px;">
+                    <?php esc_html_e('You are attempting to delete a booking that has already been paid. This action requires additional confirmation.', 'domilocus'); ?>
+                </p>
+            </div>
+            
+            <div class="notice notice-info" style="padding: 15px;">
+                <h3><?php esc_html_e('Booking Details', 'domilocus'); ?></h3>
+                <table class="widefat" style="max-width: 600px;">
+                    <tr>
+                        <th style="width: 200px;"><?php esc_html_e('Booking ID:', 'domilocus'); ?></th>
+                        <td><strong>#<?php echo esc_html($booking->id); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Customer:', 'domilocus'); ?></th>
+                        <td><?php echo esc_html($booking->customer_name); ?> (<?php echo esc_html($booking->customer_email); ?>)</td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Dates:', 'domilocus'); ?></th>
+                        <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_in))); ?> - <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($booking->check_out))); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Amount:', 'domilocus'); ?></th>
+                        <td><strong style="color: #00a32a;"><?php echo wp_kses_post(Domilocus_Settings::format_price($booking->total_amount)); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Status:', 'domilocus'); ?></th>
+                        <td><span style="color: #00a32a;">✓ <?php esc_html_e('PAID', 'domilocus'); ?></span></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div style="margin: 30px 0;">
+                <h3><?php esc_html_e('Recommended Procedure', 'domilocus'); ?></h3>
+                <ol style="font-size: 14px; line-height: 1.8;">
+                    <li><?php esc_html_e('Contact the customer to confirm the cancellation', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Process the refund through the original payment method', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Document the cancellation and refund externally', 'domilocus'); ?></li>
+                    <li><?php esc_html_e('Only then: confirm the deletion below', 'domilocus'); ?></li>
+                </ol>
+            </div>
+            
+            <p style="margin: 30px 0;">
+                <a href="<?php echo esc_url(wp_nonce_url(
+                    admin_url('admin.php?page=domilocus-bookings&action=delete&booking_id=' . $booking->id . '&confirm_paid=1'),
+                    'delete_booking_' . $booking->id
+                )); ?>" 
+                   class="button button-primary button-large" 
+                   style="background: #d63638; border-color: #d63638;"
+                   onclick="return confirm('<?php echo esc_js(__('FINAL CONFIRMATION: Are you absolutely sure you want to delete this paid booking?', 'domilocus')); ?>');">
+                    <?php esc_html_e('⚠️ I CONFIRM: Delete Paid Booking', 'domilocus'); ?>
+                </a>
+                
+                <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings')); ?>" 
+                   class="button button-large" 
+                   style="margin-left: 10px;">
+                    <?php esc_html_e('← Cancel and Return to Bookings', 'domilocus'); ?>
+                </a>
+            </p>
+        </div>
+        <?php
+    }
+    
+    /**
      * Calendar page
      */
     public static function calendar_page() {
@@ -1078,24 +764,49 @@ class Domilocus_Admin_Menus {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $selected_apartment = isset($_GET['apartment_id']) ? intval($_GET['apartment_id']) : ($apartments ? $apartments[0]->ID : 0);
         
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $calendar_view = isset($_GET['calendar_view']) ? sanitize_text_field($_GET['calendar_view']) : 'month';
+        
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Booking Calendar', 'domilocus'); ?></h1>
             
             <?php if ($apartments): ?>
-                <form method="get" style="margin-bottom: 20px;">
+                <form method="get" id="calendar-filters-form" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <input type="hidden" name="page" value="domilocus-calendar">
-                    <label for="apartment_id"><?php esc_html_e('Select Apartment:', 'domilocus'); ?></label>
-                    <select name="apartment_id" id="apartment_id" onchange="this.form.submit();">
-                        <?php foreach ($apartments as $apartment): ?>
-                            <option value="<?php echo esc_attr($apartment->ID); ?>" <?php selected($selected_apartment, $apartment->ID); ?>>
-                                <?php echo esc_html($apartment->post_title); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                    
+                    <div>
+                        <label for="apartment_id"><?php esc_html_e('Select Apartment:', 'domilocus'); ?></label>
+                        <select name="apartment_id" id="apartment_id">
+                            <?php foreach ($apartments as $apartment): ?>
+                                <option value="<?php echo esc_attr($apartment->ID); ?>" <?php selected($selected_apartment, $apartment->ID); ?>>
+                                    <?php echo esc_html($apartment->post_title); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="calendar_view"><?php esc_html_e('View:', 'domilocus'); ?></label>
+                        <select name="calendar_view" id="calendar_view">
+                            <option value="month" <?php selected($calendar_view, 'month'); ?>><?php esc_html_e('Month', 'domilocus'); ?></option>
+                            <option value="week" <?php selected($calendar_view, 'week'); ?>><?php esc_html_e('Week', 'domilocus'); ?></option>
+                            <option value="day" <?php selected($calendar_view, 'day'); ?>><?php esc_html_e('Day', 'domilocus'); ?></option>
+                        </select>
+                    </div>
                 </form>
                 
-                <div id="domilocus-calendar-container" data-apartment-id="<?php echo esc_attr($selected_apartment); ?>">
+                <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('#apartment_id, #calendar_view').on('change', function() {
+                        $('#calendar-filters-form').submit();
+                    });
+                });
+                </script>
+                
+                <div id="domilocus-calendar-container" 
+                     data-apartment-id="<?php echo esc_attr($selected_apartment); ?>"
+                     data-view="<?php echo esc_attr($calendar_view); ?>">
                     <div class="calendar-loading">
                         <?php esc_html_e('Loading calendar...', 'domilocus'); ?>
                     </div>
@@ -1131,39 +842,26 @@ class Domilocus_Admin_Menus {
 
         return $labels[$key] ?? ucfirst($status);
     }
-    
+
     /**
-     * Shortcodes Reference page
+     * Render a fallback page when a premium add-on is missing.
      */
-    public static function shortcodes_reference_page() {
-        // Placeholder or simple list
+    public static function addon_missing_page() {
         ?>
         <div class="wrap">
-            <h1><?php esc_html_e('Shortcodes Reference', 'domilocus'); ?></h1>
-            <div class="card">
-                <h2><?php esc_html_e('Available Shortcodes', 'domilocus'); ?></h2>
-                <p><code>[domilocus_apartments]</code> - <?php esc_html_e('Display all apartments', 'domilocus'); ?></p>
-                <p><code>[domilocus_apartment id="123"]</code> - <?php esc_html_e('Display a specific apartment', 'domilocus'); ?></p>
-                <p><code>[domilocus_calendar]</code> - <?php esc_html_e('Display availability calendar', 'domilocus'); ?></p>
+            <h1><?php esc_html_e('Funzionalità non disponibile', 'domilocus'); ?></h1>
+            <div class="notice notice-warning" style="padding: 15px;">
+                <p><?php esc_html_e('Questa pagina richiede un add-on Domilocus attivo. Installa e attiva l’add-on corrispondente oppure contatta il supporto.', 'domilocus'); ?></p>
             </div>
+            <p>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings')); ?>" class="button">
+                    <?php esc_html_e('Vai alle Impostazioni', 'domilocus'); ?>
+                </a>
+            </p>
         </div>
         <?php
     }
-
-    /**
-     * Dynamic Pricing Help page
-     */
-    public static function dynamic_pricing_help_page() {
-        self::premium_placeholder_page();
-    }
-
-    /**
-     * Events Management page
-     */
-    public static function events_management_page() {
-        self::premium_placeholder_page();
-    }
-
+    
     /**
      * Settings page
      */
@@ -1173,46 +871,43 @@ class Domilocus_Admin_Menus {
     }
     
     /**
-     * Tools page
-     */
-    public static function tools_page() {
-        ?>
-        <div class="wrap">
-            <h1><?php esc_html_e('Tools', 'domilocus'); ?></h1>
-            
-            <div class="postbox">
-                <div class="postbox-header">
-                    <h2><?php esc_html_e('Data Management', 'domilocus'); ?></h2>
-                </div>
-                <div class="inside">
-                    <p><?php esc_html_e('Export and import functionality will be available in future versions.', 'domilocus'); ?></p>
-                    
-                    <h4><?php esc_html_e('Database Status', 'domilocus'); ?></h4>
-                    <?php
-                    global $wpdb;
-                    $tables = array(
-                        'domilocus_bookings',
-                        'domilocus_availability', 
-                        'domilocus_pricing'
-                    );
-                    
-                    foreach ($tables as $table) {
-                        $table_name = $wpdb->prefix . $table;
-                        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
-                        $count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
-                        echo '<p><strong>' . esc_html($table) . ':</strong> ' . number_format($count) . ' records</p>';
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-    
-    /**
      * Handle admin actions
      */
     public static function handle_admin_actions() {
+        // Handle booking deletion
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['booking_id'])) {
+            if (!current_user_can('manage_options')) {
+                wp_die(esc_html__('You do not have permission to delete bookings.', 'domilocus'));
+            }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $booking_id = intval($_GET['booking_id']);
+            if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'delete_booking_' . $booking_id)) {
+                // Check if this is a paid booking confirmation
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $confirm_paid = isset($_GET['confirm_paid']) && $_GET['confirm_paid'] === '1';
+                
+                // If it's a paid booking and not confirmed, show warning page (handled in bookings_page)
+                global $wpdb;
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $booking = $wpdb->get_row($wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                ));
+                
+                if ($booking && $booking->payment_status === 'paid' && !$confirm_paid) {
+                    // Don't delete yet - let bookings_page() show confirmation screen
+                    return;
+                }
+                
+                // Proceed with deletion
+                self::delete_booking($booking_id);
+                // delete_booking() handles the redirect and exit
+                return;
+            }
+        }
+
         // Handle various admin actions here
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['domilocus_action'])) {
@@ -1235,45 +930,4 @@ class Domilocus_Admin_Menus {
         }
     }
     
-    /**
-     * Pricing Management page
-     */
-    public static function pricing_management_page() {
-        // Placeholder for premium feature
-        self::premium_placeholder_page();
-    }
-    
-    /**
-     * Tariffs Management page
-     */
-    public static function tariffs_management_page() {
-        // Placeholder for premium feature
-        self::premium_placeholder_page();
-    }
-    
-    /**
-     * Automatic Dynamic Pricing page
-     */
-    public static function automatic_pricing_page() {
-        // Placeholder for premium feature
-        self::premium_placeholder_page();
-    }
-    
-    /**
-     * Statistics & Reports page
-     */
-    public static function statistics_reports_page() {
-        // Placeholder for premium feature
-        self::premium_placeholder_page();
-    }
-    
-    /**
-     * iCal Synchronization page
-     */
-    public static function ical_synchronization_page() {
-        // Placeholder for premium feature
-        self::premium_placeholder_page();
-    }
-    
 }
-

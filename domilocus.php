@@ -3,14 +3,14 @@
  * Plugin Name: Domilocus
  * Plugin URI: https://www.consulinfo.it/domilocus
  * Description: Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration.
- * Version: 1.0.4
+ * Version: 1.0.8
  * Author: ConsulInfo
  * Author URI: https://www.consulinfo.it
  * Support: dev@consulinfo.it
  * Text Domain: domilocus
  * Domain Path: /languages
  * Requires at least: 6.0
- * Tested up to: 6.8
+ * Tested up to: 6.9
  * Requires PHP: 8.0
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('DOMILOCUS_VERSION', '1.0.4');
+define('DOMILOCUS_VERSION', '1.0.8');
 define('DOMILOCUS_PLUGIN_FILE', __FILE__);
 define('DOMILOCUS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DOMILOCUS_PLUGIN_URL', plugin_dir_url(__FILE__));
