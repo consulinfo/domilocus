@@ -5,6 +5,11 @@
  * @package Domilocus
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Domilocus_Shortcodes {
     
     /**

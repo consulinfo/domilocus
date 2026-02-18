@@ -6,6 +6,11 @@
  * @package Domilocus
  */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 class Domilocus_Dashboard_Widget {
     
     /**
