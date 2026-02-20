@@ -152,6 +152,12 @@ class Domilocus_Admin_Settings {
             'emails'   => __('Emails', 'domilocus'),
             'advanced' => __('Advanced', 'domilocus'),
         );
+
+        $tabs = apply_filters('domilocus_settings_tabs', $tabs);
+
+        if (!isset($tabs[$current_tab])) {
+            $current_tab = 'general';
+        }
         ?>
         <div class="wrap domilocus-settings">
             <h1><?php esc_html_e('Domilocus Settings', 'domilocus'); ?></h1>
@@ -167,30 +173,37 @@ class Domilocus_Admin_Settings {
                 <?php endforeach; ?>
             </h2>
 
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                <input type="hidden" name="action" value="domilocus_save_settings" />
-                <input type="hidden" name="tab" value="<?php echo esc_attr($current_tab); ?>" />
-                <?php wp_nonce_field('domilocus_settings_' . $current_tab); ?>
+            <?php
+            $core_tabs = array('general', 'payments', 'emails', 'advanced');
+            if (in_array($current_tab, $core_tabs, true)) :
+            ?>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <input type="hidden" name="action" value="domilocus_save_settings" />
+                    <input type="hidden" name="tab" value="<?php echo esc_attr($current_tab); ?>" />
+                    <?php wp_nonce_field('domilocus_settings_' . $current_tab); ?>
 
-                <?php
-                switch ($current_tab) {
-                    case 'general':
-                        self::render_general_settings();
-                        break;
-                    case 'payments':
-                        self::render_payment_settings();
-                        break;
-                    case 'emails':
-                        self::render_email_settings();
-                        break;
-                    case 'advanced':
-                        self::render_advanced_settings();
-                        break;
-                }
-                ?>
+                    <?php
+                    switch ($current_tab) {
+                        case 'general':
+                            self::render_general_settings();
+                            break;
+                        case 'payments':
+                            self::render_payment_settings();
+                            break;
+                        case 'emails':
+                            self::render_email_settings();
+                            break;
+                        case 'advanced':
+                            self::render_advanced_settings();
+                            break;
+                    }
+                    ?>
 
-                <?php submit_button(__('Save Settings', 'domilocus')); ?>
-            </form>
+                    <?php submit_button(__('Save Settings', 'domilocus')); ?>
+                </form>
+            <?php else : ?>
+                <?php do_action('domilocus_render_settings_tab_' . $current_tab); ?>
+            <?php endif; ?>
 
             <?php
             if ($current_tab === 'emails') {
