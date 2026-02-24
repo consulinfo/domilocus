@@ -99,6 +99,7 @@ class Domilocus_Calendar {
         $base_price = floatval($base_price);
         
         $dynamic_pricing_enabled = class_exists('Domilocus_Pricing_Manager')
+            && method_exists('Domilocus_Pricing_Manager', 'is_dynamic_pricing_enabled')
             && Domilocus_Pricing_Manager::is_dynamic_pricing_enabled($apartment_id);
 
         // Get pricing data for the month only when dynamic pricing is active
@@ -127,7 +128,7 @@ class Domilocus_Calendar {
             $price_for_day = $base_price;
             
             // Always try to get dynamic price (includes events even without dynamic pricing enabled)
-            if (class_exists('Domilocus_Pricing_Manager')) {
+            if (class_exists('Domilocus_Pricing_Manager') && method_exists('Domilocus_Pricing_Manager', 'get_dynamic_price')) {
                 $price_for_day = Domilocus_Pricing_Manager::get_dynamic_price($apartment_id, $date_string, $base_price);
             }
             

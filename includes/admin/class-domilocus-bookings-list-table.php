@@ -122,6 +122,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $colors = array(
             'pending' => '#f0ad4e',
             'confirmed' => '#5cb85c',
+            'pending-payment' => '#ff9800',
             'cancelled' => '#d9534f',
             'completed' => '#5bc0de'
         );
@@ -129,6 +130,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $labels = array(
             'pending' => __('Pending', 'domilocus'),
             'confirmed' => __('Confirmed', 'domilocus'),
+            'pending-payment' => __('In attesa integrazione', 'domilocus'),
             'cancelled' => __('Cancelled', 'domilocus'),
             'completed' => __('Completed', 'domilocus')
         );
@@ -147,6 +149,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $colors = array(
             'pending' => '#f0ad4e',
             'paid' => '#5cb85c',
+            'partial' => '#ff9800',
             'failed' => '#d9534f',
             'refunded' => '#5bc0de'
         );
@@ -154,6 +157,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $labels = array(
             'pending' => __('Pending', 'domilocus'),
             'paid' => __('Pagato', 'domilocus'),
+            'partial' => __('Parziale', 'domilocus'),
             'failed' => __('Fallito', 'domilocus'),
             'refunded' => __('Rimborsato', 'domilocus')
         );
@@ -161,11 +165,28 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $color = $colors[$item->payment_status] ?? '#999';
         $label = $labels[$item->payment_status] ?? ucfirst($item->payment_status);
         
+        $difference_due = 0.0;
+        if (function_exists('domilocus_get_booking_meta')) {
+            $difference_due = (float) domilocus_get_booking_meta((int) $item->id, '_domilocus_additional_payment_due', true);
+            if ($difference_due <= 0) {
+                $difference_due = (float) domilocus_get_booking_meta((int) $item->id, '_domilocus_last_modification_difference_due', true);
+            }
+        }
+
+        $difference_html = '';
+        if ($difference_due > 0) {
+            $difference_html = '<br><small style="color:#b45309;font-weight:600;">' . sprintf(
+                esc_html__('Integrazione: %s', 'domilocus'),
+                wp_strip_all_tags(Domilocus_Settings::format_price($difference_due))
+            ) . '</small>';
+        }
+
         return sprintf(
-            '<span style="color: %s; font-weight: bold;">%s</span><br><small>%s</small>',
+            '<span style="color: %s; font-weight: bold;">%s</span><br><small>%s</small>%s',
             $color,
             $label,
-            $item->payment_method ? esc_html(ucfirst($item->payment_method)) : ''
+            $item->payment_method ? esc_html(ucfirst($item->payment_method)) : '',
+            $difference_html
         );
     }
     

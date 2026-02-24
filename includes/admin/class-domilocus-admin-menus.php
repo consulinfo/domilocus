@@ -134,7 +134,7 @@ class Domilocus_Admin_Menus {
 
         // Hidden fallback pages for add-ons (avoid 404 if add-on is missing).
         add_submenu_page(
-            null,
+            'domilocus',
             __('Funzionalità non disponibile', 'domilocus'),
             '',
             'manage_options',
@@ -142,7 +142,7 @@ class Domilocus_Admin_Menus {
             array(__CLASS__, 'addon_missing_page')
         );
         add_submenu_page(
-            null,
+            'domilocus',
             __('Funzionalità non disponibile', 'domilocus'),
             '',
             'manage_options',
@@ -150,13 +150,17 @@ class Domilocus_Admin_Menus {
             array(__CLASS__, 'addon_missing_page')
         );
         add_submenu_page(
-            null,
+            'domilocus',
             __('Funzionalità non disponibile', 'domilocus'),
             '',
             'manage_options',
             'domilocus-license',
             array(__CLASS__, 'addon_missing_page')
         );
+
+        remove_submenu_page('domilocus', 'domilocus-statistics');
+        remove_submenu_page('domilocus', 'domilocus-frontend-license');
+        remove_submenu_page('domilocus', 'domilocus-license');
         
         // Settings
         add_submenu_page(

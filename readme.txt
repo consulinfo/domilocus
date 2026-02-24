@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.10 =
+* Added: admin visibility for booking date-change payment integrations in Bookings list.
+* Added: improved status labels for pending payment integrations after booking modifications.
+* Improved: compatibility with Starter add-on date modification flow while keeping core free release stable.
 
 = 1.0.8 =
 * Added: `domilocus_calculated_price` filter hook to allow pricing addons (Professional) to modify the final calculation.
