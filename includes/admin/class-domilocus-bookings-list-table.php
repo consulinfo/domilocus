@@ -176,6 +176,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $difference_html = '';
         if ($difference_due > 0) {
             $difference_html = '<br><small style="color:#b45309;font-weight:600;">' . sprintf(
+                /* translators: %s: formatted price amount for the additional payment due after a booking modification */
                 esc_html__('Integrazione: %s', 'domilocus'),
                 wp_strip_all_tags(Domilocus_Settings::format_price($difference_due))
             ) . '</small>';
