@@ -1,0 +1,13 @@
+.required {
+    color: #d63638;
+}
+#post-body-content .postbox {
+    margin-bottom: 20px;
+}
+.misc-pub-section {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+.misc-pub-section:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,2691 @@
+#: includes/admin/class-domilocus-admin-settings.php:282
+msgid "Email Delivery"
+msgstr "Consegna email"
+#: includes/admin/class-domilocus-admin-settings.php:286
+msgid "Use default WordPress mail()"
+msgstr "Usa mail() predefinita di WordPress"
+#: includes/admin/class-domilocus-admin-settings.php:289
+msgid "Use custom SMTP server"
+msgstr "Usa server SMTP personalizzato"
+#: includes/admin/class-domilocus-admin-settings.php:292
+msgid "These settings let you send emails through your own SMTP server without needing additional plugins."
+msgstr "Queste impostazioni consentono di inviare email tramite il tuo server SMTP senza utilizzare plugin aggiuntivi."
+#: includes/admin/class-domilocus-admin-settings.php:298
+msgid "SMTP Host"
+msgstr "Host SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:306
+msgid "SMTP Port"
+msgstr "Porta SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:314
+msgid "SMTP Encryption"
+msgstr "Crittografia SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:324
+msgid "Authentication required"
+msgstr "Autenticazione richiesta"
+#: includes/admin/class-domilocus-admin-settings.php:327
+msgid "Enable SMTP authentication"
+msgstr "Abilita autenticazione SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:334
+msgid "SMTP Username"
+msgstr "Nome utente SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:342
+msgid "SMTP Password"
+msgstr "Password SMTP"
+#: includes/admin/class-domilocus-admin-settings.php:345
+msgid "Password is stored in plain text. Use an app-specific password when available."
+msgstr "La password viene salvata in chiaro. Usa una password specifica per l'app quando disponibile."
+#: includes/admin/class-domilocus-admin-settings.php:351
+msgid "Connection Timeout (seconds)"
+msgstr "Timeout di connessione (secondi)"
+#: includes/admin/class-domilocus-admin-settings.php:355
+msgid "Number of seconds before the SMTP connection times out."
+msgstr "Numero di secondi prima che la connessione SMTP vada in timeout."
+
+#: includes/admin/class-domilocus-admin-settings.php:366
+msgid "Test Email"
+msgstr "Email di prova"
+
+#: includes/admin/class-domilocus-admin-settings.php:367
+msgid "Send a test message using the current email settings."
+msgstr "Invia un messaggio di prova utilizzando le impostazioni email correnti."
+
+#: includes/admin/class-domilocus-admin-settings.php:372
+msgid "Test email address"
+msgstr "Indirizzo email di prova"
+
+#: includes/admin/class-domilocus-admin-settings.php:377
+msgid "We will send a simple test message to this address."
+msgstr "Invieremo un semplice messaggio di prova a questo indirizzo."
+
+#: includes/admin/class-domilocus-admin-settings.php:380
+msgid "Send test email"
+msgstr "Invia email di prova"
+
+#: includes/admin/class-domilocus-admin-settings.php:91
+msgid "Test email sent successfully!"
+msgstr "Email di prova inviata con successo!"
+
+#: includes/admin/class-domilocus-admin-settings.php:97
+msgid "Failed to send the test email. Please check your SMTP settings."
+msgstr "Invio dell'email di prova non riuscito. Controlla le impostazioni SMTP."
+
+#: includes/class-domilocus-emails.php:121
+msgid "Test email from %s"
+msgstr "Email di prova da %s"
+
+#: includes/class-domilocus-emails.php:253
+msgid "If you are reading this message, your Domilocus email settings are working correctly."
+msgstr "Se stai leggendo questo messaggio, le impostazioni email di Domilocus funzionano correttamente."
+
+#: includes/class-domilocus-emails.php:255
+msgid "Site:"
+msgstr "Sito:"
+
+#: includes/class-domilocus-emails.php:256
+msgid "Admin email:"
+msgstr "Email amministratore:"
+
+#: includes/class-domilocus-emails.php:257
+msgid "Sent at:"
+msgstr "Inviata il:"
+
+#: includes/class-domilocus-emails.php:259
+msgid "You can now rely on these settings for booking notifications and confirmations."
+msgstr "Ora puoi fare affidamento su queste impostazioni per notifiche e conferme di prenotazione."
+
+#: includes/class-domilocus-emails.php:138
+msgid "This is a test message to confirm your Domilocus email configuration is working."
+msgstr "Questo è un messaggio di prova per confermare che la configurazione email di Domilocus funziona."
+
+#: includes/class-domilocus-emails.php:139
+msgid "Sent at: %s"
+msgstr "Inviata il: %s"
+
+msgid "Total Amount (incl. tourist tax):"
+msgstr "Importo totale (incl. tassa di soggiorno):"
+
+msgid "Booking Status Update"
+msgstr "Aggiornamento stato prenotazione"
+
+msgid "Your booking has been confirmed!"
+msgstr "La tua prenotazione è stata confermata!"
+
+msgid "Your booking has been cancelled."
+msgstr "La tua prenotazione è stata annullata."
+
+msgid "Thank you for your stay!"
+msgstr "Grazie per il tuo soggiorno!"
+
+msgid "Your booking is pending confirmation."
+msgstr "La tua prenotazione è in attesa di conferma."
+
+msgid "Your booking status has been updated to: %s"
+msgstr "Lo stato della tua prenotazione è stato aggiornato a: %s"
+
+msgid "View Booking in Admin"
+msgstr "Visualizza prenotazione in amministrazione"
+msgid "Tourist Tax"
+msgstr "Tassa di soggiorno"
+
+msgid "Rate plan"
+msgstr "Piano tariffario"
+
+msgid "+%s%% over base price"
+msgstr "+%s%% rispetto al prezzo base"
+
+msgid "Price per night"
+msgstr "Prezzo per notte"
+
+msgid "Price per stay"
+msgstr "Prezzo per soggiorno"
+
+msgid "Per guest per night"
+msgstr "Per ospite per notte"
+
+msgid "Per guest per stay"
+msgstr "Per ospite per soggiorno"
+
+msgid "Progressive rate"
+msgstr "Tariffa progressiva"
+
+msgid "Free cancellation up to %s days before check-in"
+msgstr "Cancellazione gratuita fino a %s giorni prima del check-in"
+
+msgid "Flexible cancellation"
+msgstr "Cancellazione flessibile"
+
+msgid "Moderate cancellation"
+msgstr "Cancellazione moderata"
+
+msgid "Strict cancellation"
+msgstr "Cancellazione rigida"
+
+msgid "Super strict cancellation"
+msgstr "Cancellazione super rigida"
+
+msgid "Custom cancellation policy"
+msgstr "Politica di cancellazione personalizzata"
+
+msgid "Payment due up to %s days before check-in"
+msgstr "Pagamento entro %s giorni prima del check-in"
+
+msgid "At least one adult is required"
+msgstr "È richiesto almeno un adulto"
+
+msgid "Maximum %d guests allowed"
+msgstr "Massimo %d ospiti consentiti"
+
+msgid "At least one adult is required for the booking"
+msgstr "È richiesto almeno un adulto per completare la prenotazione"
+
+msgid "Guest Breakdown"
+msgstr "Dettaglio ospiti"
+
+msgid "Tourist Tax:"
+msgstr "Tassa di soggiorno:"
+
+msgid "Total Amount (incl. tourist tax):"
+msgstr "Importo totale (incl. tassa di soggiorno):"
+# Traduzione Italiana per Domilocus
+# Copyright (C) 2024 Domilocus
+msgid ""
+msgstr ""
+"Project-Id-Version: Domilocus 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/domilocus\n"
+"POT-Creation-Date: 2024-10-01 12:00+0000\n"
+"PO-Revision-Date: 2024-10-01 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Italiano\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: includes/admin/class-domilocus-admin.php:15
+msgid "Domilocus"
+msgstr "Domilocus"
+
+#: includes/admin/class-domilocus-admin-menus.php:20
+msgid "Apartments"
+msgstr "Appartamenti"
+
+#: includes/admin/class-domilocus-admin-menus.php:21
+msgid "All Apartments"
+msgstr "Tutti gli Appartamenti"
+
+#: includes/admin/class-domilocus-admin-menus.php:22
+msgid "Add New"
+msgstr "Aggiungi Nuovo"
+
+#: includes/admin/class-domilocus-admin-menus.php:30
+msgid "Bookings"
+msgstr "Prenotazioni"
+
+#: includes/admin/class-domilocus-admin-menus.php:38
+msgid "Calendar"
+msgstr "Calendario"
+
+#: includes/admin/class-domilocus-admin-menus.php:46
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: includes/admin/class-domilocus-admin.php:169
+msgid "Welcome to Domilocus!"
+msgstr "Benvenuto in Domilocus!"
+
+#: includes/admin/class-domilocus-admin.php:170
+msgid "To get started, please configure your plugin settings."
+msgstr "Per iniziare, apri le impostazioni del plugin."
+
+#: includes/admin/class-domilocus-admin.php:172
+msgid "Configure Settings"
+msgstr "Apri impostazioni"
+
+#: includes/admin/class-domilocus-admin.php:175
+msgid "Dismiss"
+msgstr "Ignora"
+
+#: includes/class-domilocus-metaboxes.php:25
+msgid "Apartment Details"
+msgstr "Dettagli Appartamento"
+
+#: includes/class-domilocus-metaboxes.php:35
+msgid "Pricing"
+msgstr "Prezzi"
+
+#: includes/class-domilocus-metaboxes.php:45
+msgid "Location"
+msgstr "Ubicazione"
+
+#: includes/class-domilocus-metaboxes.php:55
+msgid "House Rules"
+msgstr "Regole della Casa"
+
+#: includes/class-domilocus-metaboxes.php:78
+msgid "Maximum Guests"
+msgstr "Ospiti Massimi"
+
+#: includes/class-domilocus-metaboxes.php:86
+msgid "Bedrooms"
+msgstr "Camere da Letto"
+
+#: includes/class-domilocus-metaboxes.php:94
+msgid "Bathrooms"
+msgstr "Bagni"
+
+#: includes/class-domilocus-metaboxes.php:118
+msgid "Number of beds"
+msgstr "Numero di letti"
+
+#: includes/class-domilocus-metaboxes.php:119
+msgid "Total beds prepared for guests (exclude sofa bed on request)."
+msgstr "Totale letti preparati per gli ospiti (escludi divano letto su richiesta)."
+
+#: includes/class-domilocus-metaboxes.php:120
+msgid "Bed type"
+msgstr "Tipologia letto"
+
+#: includes/class-domilocus-metaboxes.php:121
+msgid "Select the primary bed setup available in the apartment."
+msgstr "Seleziona la principale configurazione del letto disponibile nell'appartamento."
+
+#: includes/class-domilocus-metaboxes.php:130
+msgid "Standard double bed"
+msgstr "Letto matrimoniale standard"
+
+#: includes/class-domilocus-metaboxes.php:131
+msgid "French double bed"
+msgstr "Letto alla francese"
+
+#: includes/class-domilocus-metaboxes.php:132
+msgid "King size bed"
+msgstr "Letto king size"
+
+#: includes/class-domilocus-metaboxes.php:133
+msgid "Queen size bed"
+msgstr "Letto queen size"
+
+#: includes/class-domilocus-metaboxes.php:134
+msgid "Sofa bed"
+msgstr "Divano letto"
+
+#: includes/class-domilocus-metaboxes.php:135
+msgid "Single bed"
+msgstr "Letto singolo"
+
+#: includes/frontend/class-domilocus-frontend.php:744
+msgid "Beds"
+msgstr "Letti"
+
+#: includes/class-domilocus-metaboxes.php:102
+msgid "Square Meters"
+msgstr "Metri Quadri"
+
+#: includes/class-domilocus-metaboxes.php:118
+msgid "Base Price (per night)"
+msgstr "Prezzo Base (per notte)"
+
+#: includes/class-domilocus-metaboxes.php:126
+msgid "Cleaning Fee"
+msgstr "Costo Pulizie"
+
+#: includes/class-domilocus-metaboxes.php:134
+msgid "Extra Guest Fee (per person/night)"
+msgstr "Costo Ospite Extra (per persona/notte)"
+
+#: includes/class-domilocus-metaboxes.php:142
+msgid "Weekend Supplement (%)"
+msgstr "Supplemento Weekend (%)"
+
+#: includes/class-domilocus-metaboxes.php:158
+msgid "Address"
+msgstr "Indirizzo"
+
+#: includes/class-domilocus-metaboxes.php:166
+msgid "Latitude"
+msgstr "Latitudine"
+
+#: includes/class-domilocus-metaboxes.php:174
+msgid "Longitude"
+msgstr "Longitudine"
+
+#: includes/class-domilocus-metaboxes.php:190
+msgid "Check-in Time"
+msgstr "Orario Check-in"
+
+#: includes/class-domilocus-metaboxes.php:198
+msgid "Check-out Time"
+msgstr "Orario Check-out"
+
+#: includes/class-domilocus-metaboxes.php:206
+msgid "Minimum Stay (nights)"
+msgstr "Soggiorno Minimo (notti)"
+
+#: includes/class-domilocus-metaboxes.php:214
+msgid "Maximum Stay (nights)"
+msgstr "Soggiorno Massimo (notti)"
+
+#: includes/class-domilocus-metaboxes.php:222
+msgid "House Rules"
+msgstr "Regole della Casa"
+
+#: includes/class-domilocus-post-types.php:25
+msgid "Apartments"
+msgstr "Appartamenti"
+
+#: includes/class-domilocus-post-types.php:26
+msgid "Apartment"
+msgstr "Appartamento"
+
+#: includes/class-domilocus-post-types.php:27
+msgid "Add New Apartment"
+msgstr "Aggiungi Nuovo Appartamento"
+
+#: includes/class-domilocus-post-types.php:28
+msgid "Edit Apartment"
+msgstr "Modifica Appartamento"
+
+#: includes/class-domilocus-post-types.php:29
+msgid "New Apartment"
+msgstr "Nuovo Appartamento"
+
+#: includes/class-domilocus-post-types.php:30
+msgid "View Apartment"
+msgstr "Visualizza Appartamento"
+
+#: includes/class-domilocus-post-types.php:31
+msgid "Search Apartments"
+msgstr "Cerca Appartamenti"
+
+#: includes/class-domilocus-post-types.php:32
+msgid "No apartments found"
+msgstr "Nessun appartamento trovato"
+
+#: includes/class-domilocus-post-types.php:33
+msgid "No apartments found in trash"
+msgstr "Nessun appartamento trovato nel cestino"
+
+#: includes/class-domilocus-post-types.php:55
+msgid "Categories"
+msgstr "Categorie"
+
+#: includes/class-domilocus-post-types.php:56
+msgid "Category"
+msgstr "Categoria"
+
+#: includes/class-domilocus-post-types.php:72
+msgid "Amenities"
+msgstr "Servizi"
+
+#: includes/class-domilocus-post-types.php:73
+msgid "Amenity"
+msgstr "Servizio"
+
+#: includes/frontend/class-domilocus-shortcodes.php:37
+#: includes/frontend/class-domilocus-shortcodes.php:133
+#: includes/frontend/class-domilocus-shortcodes.php:245
+#: includes/frontend/class-domilocus-shortcodes.php:269
+msgid "Please specify an apartment ID."
+msgstr "Si prega di specificare un ID appartamento."
+
+#: includes/frontend/class-domilocus-shortcodes.php:43
+#: includes/frontend/class-domilocus-shortcodes.php:139
+#: includes/frontend/class-domilocus-shortcodes.php:251
+#: includes/frontend/class-domilocus-shortcodes.php:275
+msgid "Apartment not found."
+msgstr "Appartamento non trovato."
+
+#: includes/frontend/class-domilocus-shortcodes.php:66
+msgid "Amenities"
+msgstr "Servizi"
+
+#: includes/frontend/class-domilocus-shortcodes.php:126
+msgid "No apartments found."
+msgstr "Nessun appartamento trovato."
+
+#: includes/frontend/class-domilocus-shortcodes.php:169
+msgid "/night"
+msgstr "/notte"
+
+#: includes/frontend/class-domilocus-shortcodes.php:194
+msgid "View Details"
+msgstr "Vedi Dettagli"
+
+#: includes/frontend/class-domilocus-shortcodes.php:199
+msgid "Book Now"
+msgstr "Prenota Ora"
+
+#: includes/frontend/class-domilocus-frontend.php:536
+msgid "Book This Apartment"
+msgstr "Prenota questo appartamento"
+
+#: includes/frontend/class-domilocus-shortcodes.php:284
+msgid "Loading calendar..."
+msgstr "Caricamento calendario..."
+
+msgid "Booking Calendar"
+msgstr "Calendario prenotazioni"
+
+msgid "Select Apartment:"
+msgstr "Seleziona appartamento:"
+
+msgid "No apartments found. Please create an apartment first."
+msgstr "Nessun appartamento trovato. Crea prima un appartamento."
+
+#: includes/frontend/class-domilocus-frontend.php:549
+msgid "Booking Summary"
+msgstr "Riepilogo prenotazione"
+
+#: includes/frontend/class-domilocus-frontend.php:551
+msgid "Select dates to see pricing"
+msgstr "Seleziona le date per vedere i prezzi"
+
+#: includes/frontend/class-domilocus-frontend.php:559
+msgid "Full Name"
+msgstr "Nome completo"
+
+#: includes/frontend/class-domilocus-frontend.php:564
+msgid "Email Address"
+msgstr "Indirizzo email"
+
+#: includes/frontend/class-domilocus-frontend.php:569
+msgid "Phone Number"
+msgstr "Numero di telefono"
+
+#: includes/frontend/class-domilocus-frontend.php:574
+msgid "Special Requests"
+msgstr "Richieste speciali"
+
+#: includes/frontend/class-domilocus-frontend.php:576
+msgid "Any special requests or comments..."
+msgstr "Eventuali richieste o commenti..."
+
+#: includes/frontend/class-domilocus-shortcodes.php:296
+msgid "Invalid booking confirmation link."
+msgstr "Link di conferma prenotazione non valido."
+
+#: includes/frontend/class-domilocus-shortcodes.php:302
+#: includes/frontend/class-domilocus-shortcodes.php:313
+msgid "Booking not found."
+msgstr "Prenotazione non trovata."
+
+#: includes/frontend/class-domilocus-shortcodes.php:318
+msgid "Invalid booking confirmation link."
+msgstr "Link di conferma prenotazione non valido."
+
+#: includes/frontend/class-domilocus-shortcodes.php:325
+msgid "Booking Confirmation"
+msgstr "Conferma Prenotazione"
+
+#: includes/frontend/class-domilocus-shortcodes.php:332
+msgid "Booking Information"
+msgstr "Informazioni Prenotazione"
+
+#: includes/frontend/class-domilocus-shortcodes.php:335
+msgid "Booking ID:"
+msgstr "ID Prenotazione:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:339
+msgid "Apartment:"
+msgstr "Appartamento:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:342
+msgid "Check-in:"
+msgstr "Check-in:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:346
+msgid "Check-out:"
+msgstr "Check-out:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:350
+msgid "Guests:"
+msgstr "Ospiti:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:354
+msgid "Total Amount:"
+msgstr "Totale:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:360
+msgid "Customer Information"
+msgstr "Informazioni Cliente"
+
+#: includes/frontend/class-domilocus-shortcodes.php:363
+msgid "Name:"
+msgstr "Nome:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:367
+msgid "Email:"
+msgstr "Email:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:371
+msgid "Phone:"
+msgstr "Telefono:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:379
+msgid "Payment Information"
+msgstr "Informazioni Pagamento"
+
+#: includes/frontend/class-domilocus-shortcodes.php:382
+msgid "Payment Status:"
+msgstr "Stato Pagamento:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:383
+msgid "Paid"
+msgstr "Pagato"
+
+#: includes/frontend/class-domilocus-shortcodes.php:386
+msgid "Payment Method:"
+msgstr "Metodo di Pagamento:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:391
+msgid "Transaction ID:"
+msgstr "ID Transazione:"
+
+#: includes/frontend/class-domilocus-shortcodes.php:399
+msgid "Special Requests"
+msgstr "Richieste Speciali"
+
+#: includes/frontend/class-domilocus-shortcodes.php:407
+msgid "View Apartment"
+msgstr "Vedi Appartamento"
+
+#: includes/frontend/class-domilocus-shortcodes.php:412
+msgid "Print Confirmation"
+msgstr "Stampa Conferma"
+
+#: includes/frontend/class-domilocus-shortcodes.php:432
+msgid "Check-in"
+msgstr "Check-in"
+
+#: includes/frontend/class-domilocus-shortcodes.php:439
+msgid "Check-out"
+msgstr "Check-out"
+
+#: includes/frontend/class-domilocus-shortcodes.php:447
+msgid "Guests"
+msgstr "Ospiti"
+
+#: includes/frontend/class-domilocus-shortcodes.php:450
+msgid "Any"
+msgstr "Qualsiasi"
+
+#: includes/frontend/class-domilocus-shortcodes.php:460
+msgid "Search"
+msgstr "Cerca"
+
+#: includes/frontend/class-domilocus-shortcodes.php:479
+msgid "Price Range (per night)"
+msgstr "Range di Prezzo (per notte)"
+
+#: includes/frontend/class-domilocus-shortcodes.php:482
+msgid "Min"
+msgstr "Min"
+
+#: includes/frontend/class-domilocus-shortcodes.php:485
+msgid "Max"
+msgstr "Max"
+
+#: includes/frontend/class-domilocus-shortcodes.php:547
+msgid "No apartments available for the selected dates."
+msgstr "Nessun appartamento disponibile per le date selezionate."
+
+#: includes/frontend/class-domilocus-shortcodes.php:557
+msgid "Search Results (%d apartments found)"
+msgstr "Risultati Ricerca (%d appartamenti trovati)"
+
+#: includes/frontend/class-domilocus-shortcodes.php:612
+msgid "View & Book"
+msgstr "Vedi e Prenota"
+
+#: includes/frontend/class-domilocus-shortcodes.php:620
+msgid "No apartments found matching your criteria."
+msgstr "Nessun appartamento trovato che corrisponde ai tuoi criteri."
+
+#: includes/class-domilocus-booking.php:150
+msgid "Your booking has been confirmed!"
+msgstr "La tua prenotazione è stata confermata!"
+
+#: includes/class-domilocus-booking.php:151
+msgid "Thank you for your booking. We will contact you soon with further details."
+msgstr "Grazie per la tua prenotazione. Ti contatteremo presto con ulteriori dettagli."
+
+#: includes/class-domilocus-emails.php:45
+msgid "New Booking Received"
+msgstr "Nuova Prenotazione Ricevuta"
+
+#: includes/class-domilocus-emails.php:65
+msgid "Booking Confirmation"
+msgstr "Conferma Prenotazione"
+
+#: includes/class-domilocus-settings.php:25
+msgid "General"
+msgstr "Generale"
+
+#: includes/class-domilocus-settings.php:26
+msgid "Payments"
+msgstr "Pagamenti"
+
+#: includes/class-domilocus-settings.php:27
+msgid "Emails"
+msgstr "Email"
+
+# Traduzioni aggiuntive per frontend
+msgid "Available"
+msgstr "Disponibile"
+
+msgid "Booked"
+msgstr "Prenotato"
+
+msgid "Unavailable"
+msgstr "Non Disponibile"
+
+msgid "Select dates"
+msgstr "Seleziona date"
+
+msgid "Number of guests"
+msgstr "Numero di ospiti"
+
+msgid "Your name"
+msgstr "Il tuo nome"
+
+msgid "Your email"
+msgstr "La tua email"
+
+msgid "Your phone"
+msgstr "Il tuo telefono"
+
+msgid "Special requests"
+msgstr "Richieste speciali"
+
+msgid "Book Now"
+msgstr "Prenota Ora"
+
+msgid "Total Price"
+msgstr "Prezzo Totale"
+
+msgid "Pay with Credit Card"
+msgstr "Paga con Carta di Credito"
+
+msgid "Pay with PayPal"
+msgstr "Paga con PayPal"
+
+msgid "Bank Transfer"
+msgstr "Bonifico Bancario"
+
+msgid "Processing..."
+msgstr "Elaborazione..."
+
+msgid "Payment successful!"
+msgstr "Pagamento riuscito!"
+
+msgid "Payment failed. Please try again."
+msgstr "Pagamento fallito. Riprova."
+
+msgid "Please fill all required fields."
+msgstr "Si prega di compilare tutti i campi obbligatori."
+
+msgid "Please select valid dates."
+msgstr "Si prega di selezionare date valide."
+
+msgid "Selected dates are not available."
+msgstr "Le date selezionate non sono disponibili."
+
+msgid "Apartment Features"
+msgstr "Caratteristiche Appartamento"
+
+msgid "Location & Map"
+msgstr "Posizione e Mappa"
+
+msgid "House Rules & Policies"
+msgstr "Regole e Politiche"
+
+msgid "Reviews"
+msgstr "Recensioni"
+
+msgid "Gallery"
+msgstr "Galleria"
+
+msgid "Previous"
+msgstr "Precedente"
+
+msgid "Next"
+msgstr "Successivo"
+
+msgid "Close"
+msgstr "Chiudi"
+
+msgid "Show on map"
+msgstr "Mostra sulla mappa"
+
+msgid "per person"
+msgstr "per persona"
+
+msgid "Cleaning fee"
+msgstr "Costo pulizie"
+
+msgid "Service fee"
+msgstr "Costo servizio"
+
+msgid "Taxes"
+msgstr "Tasse"
+
+msgid "Subtotal"
+msgstr "Subtotale"
+
+msgid "Total"
+msgstr "Totale"
+
+msgid "Dates & Guests"
+msgstr "Date e ospiti"
+
+msgid "Contact Details"
+msgstr "Dati di contatto"
+
+msgid "Extras & Notes"
+msgstr "Extra e note"
+
+msgid "%s m²"
+msgstr "%s m²"
+
+msgid "Previous image"
+msgstr "Immagine precedente"
+
+msgid "Next image"
+msgstr "Immagine successiva"
+
+msgid "Scroll thumbnails back"
+msgstr "Scorri le miniature indietro"
+
+msgid "Scroll thumbnails forward"
+msgstr "Scorri le miniature avanti"
+
+#: includes/frontend/class-domilocus-frontend.php:149
+msgid "We will email you the bank details to complete the payment."
+msgstr "Ti invieremo via email i dettagli bancari per completare il pagamento."
+
+#: includes/frontend/class-domilocus-frontend.php:234
+msgid "Complete your payment"
+msgstr "Completa il pagamento"
+
+#: includes/frontend/class-domilocus-frontend.php:236
+msgid "Pay Now"
+msgstr "Paga ora"
+
+#: includes/frontend/class-domilocus-frontend.php:245
+msgid "Payment method"
+msgstr "Metodo di pagamento"
+
+#: includes/frontend/class-domilocus-frontend.php:247
+msgid "Pay securely with your credit card"
+msgstr "Paga in modo sicuro con la tua carta di credito"
+
+#: includes/frontend/class-domilocus-frontend.php:248
+msgid "Pay with your PayPal account"
+msgstr "Paga con il tuo account PayPal"
+
+#: includes/frontend/class-domilocus-frontend.php:250
+msgid "Pay by bank transfer"
+msgstr "Paga con bonifico bancario"
+
+#: includes/frontend/class-domilocus-frontend.php:252
+msgid "Your booking has been created!"
+msgstr "La tua prenotazione è stata creata!"
+
+#: includes/frontend/class-domilocus-frontend.php:253
+msgid "View booking details"
+msgstr "Visualizza i dettagli della prenotazione"
+
+#: includes/frontend/class-domilocus-frontend.php:254
+msgid "You will be redirected to PayPal to complete the payment."
+msgstr "Verrai reindirizzato a PayPal per completare il pagamento."
+
+#: includes/frontend/class-domilocus-frontend.php:255
+msgid "Card details"
+msgstr "Dati della carta"
+
+#: includes/frontend/class-domilocus-frontend.php:256
+msgid "Please select a payment method to continue."
+msgstr "Seleziona un metodo di pagamento per continuare."
+
+#: includes/frontend/class-domilocus-frontend.php:257
+msgid "Stripe could not be initialized. Please refresh the page and try again."
+msgstr "Impossibile inizializzare Stripe. Aggiorna la pagina e riprova."
+
+#: includes/frontend/class-domilocus-frontend.php:258
+msgid "Payment successful"
+msgstr "Pagamento riuscito"
+
+#: includes/frontend/class-domilocus-frontend.php:259
+msgid "Your booking is now confirmed. A confirmation email has been sent."
+msgstr "La tua prenotazione è stata confermata. È stata inviata un'email di conferma."
+
+#: includes/frontend/class-domilocus-frontend.php:260
+msgid "View confirmation"
+msgstr "Visualizza la conferma"
+
+#: includes/admin/class-domilocus-admin-settings.php:369
+msgid "Bank Transfer Settings"
+msgstr "Impostazioni bonifico bancario"
+
+#: includes/admin/class-domilocus-admin-settings.php:373
+msgid "Account holder name"
+msgstr "Intestatario del conto"
+
+#: includes/admin/class-domilocus-admin-settings.php:384
+msgid "Bank name"
+msgstr "Nome della banca"
+
+#: includes/admin/class-domilocus-admin-settings.php:395
+#: includes/class-domilocus-payment.php:394
+msgid "Account number"
+msgstr "Numero di conto"
+
+#: includes/admin/class-domilocus-admin-settings.php:398
+msgid "Optional. Leave blank to hide this field."
+msgstr "Facoltativo. Lascia vuoto per nascondere questo campo."
+
+#: includes/admin/class-domilocus-admin-settings.php:405
+#: includes/class-domilocus-payment.php:402
+msgid "IBAN"
+msgstr "IBAN"
+
+#: includes/admin/class-domilocus-admin-settings.php:414
+#: includes/class-domilocus-payment.php:410
+msgid "BIC/SWIFT"
+msgstr "BIC/SWIFT"
+
+#: includes/admin/class-domilocus-admin-settings.php:421
+#: includes/class-domilocus-payment.php:418
+msgid "Payment reference"
+msgstr "Causale del pagamento"
+
+#: includes/admin/class-domilocus-admin-settings.php:424
+msgid "Suggest a reference for guests to include with their transfer (e.g. booking ID)."
+msgstr "Suggerisci una causale che gli ospiti devono indicare nel bonifico (es. ID prenotazione)."
+
+#: includes/admin/class-domilocus-admin-settings.php:431
+msgid "Bank transfer instructions"
+msgstr "Istruzioni per il bonifico"
+
+#: includes/admin/class-domilocus-admin-settings.php:435
+msgid "Displayed to guests after they choose bank transfer. Supports basic HTML."
+msgstr "Mostrato agli ospiti dopo aver scelto il bonifico. Supporta HTML di base."
+
+#: includes/class-domilocus-payment.php:382
+msgid "Account holder"
+msgstr "Intestatario"
+
+#: includes/class-domilocus-payment.php:390
+msgid "Bank"
+msgstr "Banca"
+
+#: includes/class-domilocus-payment.php:430
+msgid "Please complete your bank transfer using the bank details below."
+msgstr "Completa il bonifico utilizzando i dati bancari indicati di seguito."
+
+#: templates/emails/customer_booking_confirmation.php:37
+#: includes/class-domilocus-emails.php:298
+msgid "Bank Transfer Instructions"
+msgstr "Istruzioni per il bonifico"
+
+msgid "Nights"
+msgstr "Notti"
+
+msgid "Night"
+msgstr "Notte"
+
+msgid "Guest"
+msgstr "Ospite"
+
+msgid "Adults"
+msgstr "Adulti"
+
+msgid "Children"
+msgstr "Bambini"
+
+msgid "Infants"
+msgstr "Neonati"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "Air Conditioning"
+msgstr "Aria Condizionata"
+
+msgid "Heating"
+msgstr "Riscaldamento"
+
+msgid "Kitchen"
+msgstr "Cucina"
+
+msgid "Parking"
+msgstr "Parcheggio"
+
+msgid "Pool"
+msgstr "Piscina"
+
+msgid "Gym"
+msgstr "Palestra"
+
+msgid "Pet Friendly"
+msgstr "Ammessi Animali"
+
+msgid "Smoking Allowed"
+msgstr "Permesso Fumare"
+
+msgid "No Smoking"
+msgstr "Vietato Fumare"
+
+msgid "Check availability"
+msgstr "Verifica disponibilità"
+
+msgid "Instant Book"
+msgstr "Prenotazione Immediata"
+
+msgid "Contact Host"
+msgstr "Contatta Host"
+
+msgid "Share"
+msgstr "Condividi"
+
+msgid "Save to Wishlist"
+msgstr "Salva nei Preferiti"
+
+msgid "Report this listing"
+msgstr "Segnala questo annuncio"
+
+msgid "Cancellation Policy"
+msgstr "Politica di Cancellazione"
+
+msgid "Free cancellation"
+msgstr "Cancellazione gratuita"
+
+msgid "Moderate cancellation"
+msgstr "Cancellazione moderata"
+
+msgid "Strict cancellation"
+msgstr "Cancellazione severa"
+
+msgid "days before check-in"
+msgstr "giorni prima del check-in"
+
+msgid "Refund"
+msgstr "Rimborso"
+
+msgid "No refund"
+msgstr "Nessun rimborso"
+
+msgid "Show more"
+msgstr "Mostra di più"
+
+msgid "Show less"
+msgstr "Mostra di meno"
+
+msgid "Read more"
+msgstr "Leggi di più"
+
+msgid "Read less"
+msgstr "Leggi di meno"
+
+# Frontend strings
+msgid "Loading..."
+msgstr "Caricamento..."
+
+msgid "An error occurred"
+msgstr "Si è verificato un errore"
+
+msgid "Success!"
+msgstr "Successo!"
+
+msgid "Loading calendar..."
+msgstr "Caricamento calendario..."
+
+msgid "Available"
+msgstr "Disponibile"
+
+msgid "Booked"
+msgstr "Prenotato"
+
+msgid "Unavailable"
+msgstr "Non disponibile"
+
+msgid "Select dates"
+msgstr "Seleziona date"
+
+msgid "Check-in"
+msgstr "Check-in"
+
+msgid "Check-out"
+msgstr "Check-out"
+
+msgid "Nights"
+msgstr "Notti"
+
+msgid "Night"
+msgstr "Notte"
+
+msgid "Previous"
+msgstr "Precedente"
+
+msgid "Next"
+msgstr "Successivo"
+
+msgid "Guests"
+msgstr "Ospiti"
+
+msgid "Adults"
+msgstr "Adulti"
+
+msgid "Children"
+msgstr "Bambini"
+
+msgid "Infants"
+msgstr "Neonati"
+
+msgid "Your name"
+msgstr "Il tuo nome"
+
+msgid "Your email"
+msgstr "La tua email"
+
+msgid "Your phone"
+msgstr "Il tuo telefono"
+
+msgid "Special requests"
+msgstr "Richieste speciali"
+
+msgid "Book Now"
+msgstr "Prenota Ora"
+
+msgid "Processing..."
+msgstr "Elaborazione..."
+
+msgid "Please fill all required fields."
+msgstr "Compila tutti i campi obbligatori."
+
+msgid "Please select valid dates."
+msgstr "Seleziona date valide."
+
+msgid "Selected dates are not available."
+msgstr "Le date selezionate non sono disponibili."
+
+msgid "Total Price"
+msgstr "Prezzo Totale"
+
+msgid "Pay with Credit Card"
+msgstr "Paga con Carta di Credito"
+
+msgid "Pay with PayPal"
+msgstr "Paga con PayPal"
+
+msgid "Bank Transfer"
+msgstr "Bonifico Bancario"
+
+msgid "Payment successful!"
+msgstr "Pagamento riuscito!"
+
+msgid "Payment failed. Please try again."
+msgstr "Pagamento fallito. Riprova."
+
+msgid "Subtotal"
+msgstr "Subtotale"
+
+msgid "Cleaning fee"
+msgstr "Spese di pulizia"
+
+msgid "Service fee"
+msgstr "Commissioni di servizio"
+
+msgid "Taxes"
+msgstr "Tasse"
+
+msgid "Total"
+msgstr "Totale"
+
+msgid "per person"
+msgstr "per persona"
+
+msgid "Search"
+msgstr "Cerca"
+
+msgid "Any"
+msgstr "Qualsiasi"
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Max"
+msgstr "Max"
+
+msgid "From"
+msgstr "Da"
+
+msgid "per night"
+msgstr "per notte"
+
+msgid "Amenities"
+msgstr "Servizi"
+
+msgid "Size"
+msgstr "Dimensione"
+
+msgid "Bedrooms"
+msgstr "Camere da letto"
+
+msgid "Bathrooms"
+msgstr "Bagni"
+
+msgid "Book This Apartment"
+msgstr "Prenota Questo Appartamento"
+
+msgid "Decrease guests"
+msgstr "Diminuisci ospiti"
+
+msgid "Increase guests"
+msgstr "Aumenta ospiti"
+
+msgid "Adults (10+)"
+msgstr "Adulti (10+ anni)"
+msgid "Tourist tax (€6 per person/night, max 10 nights) applies to guests aged 10 and above."
+msgstr "La tassa di soggiorno (6 € a persona/notte, max 10 notti) si applica agli ospiti dai 10 anni in su."
+
+msgid "Decrease adults"
+msgstr "Diminuisci adulti"
+
+msgid "Increase adults"
+msgstr "Aumenta adulti"
+
+msgid "Children (0-9)"
+msgstr "Bambini (0-9 anni)"
+
+msgid "Decrease children"
+msgstr "Diminuisci bambini"
+
+msgid "Increase children"
+msgstr "Aumenta bambini"
+
+msgid "Tourist tax (€6 per person/night, max 10 nights) applies to guests aged 10 and above."
+msgstr "La tassa di soggiorno (6 € a persona/notte, max 10 notti) si applica agli ospiti dai 10 anni in su."
+
+msgid "Special Requests"
+msgstr "Richieste Speciali"
+
+msgid "Any special requests or comments..."
+msgstr "Eventuali richieste speciali o commenti..."
+
+msgid "Adult"
+msgstr "Adulto"
+
+msgid "Adults"
+msgstr "Adulti"
+
+msgid "Child"
+msgstr "Bambino"
+
+msgid "Children"
+msgstr "Bambini"
+
+msgid "Tourist Tax"
+msgstr "Tassa di soggiorno"
+
+msgid "At least one adult is required"
+msgstr "È richiesto almeno un adulto"
+
+msgid "Maximum %d guests allowed"
+msgstr "Massimo %d ospiti consentiti"
+
+msgid "At least one adult is required for the booking"
+msgstr "È richiesto almeno un adulto per completare la prenotazione"
+
+msgid "Check Availability"
+msgstr "Verifica Disponibilità"
+
+msgid "Complete Your Booking"
+msgstr "Completa la Prenotazione"
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "Please specify an apartment ID."
+msgstr "Specifica un ID appartamento."
+
+msgid "Apartment not found."
+msgstr "Appartamento non trovato."
+
+msgid "No apartments found."
+msgstr "Nessun appartamento trovato."
+
+msgid "Invalid booking confirmation link."
+msgstr "Link di conferma prenotazione non valido."
+
+msgid "Booking not found."
+msgstr "Prenotazione non trovata."
+
+msgid "N/A"
+msgstr "N/D"
+
+msgid "No apartments available for the selected dates."
+msgstr "Nessun appartamento disponibile per le date selezionate."
+
+msgid "Search Results (%d apartments found)"
+msgstr "Risultati di ricerca (%d appartamenti trovati)"
+
+msgid "/night"
+msgstr "/notte"
+
+msgid "View Details"
+msgstr "Visualizza Dettagli"
+
+msgid "Booking Confirmation"
+msgstr "Conferma Prenotazione"
+
+msgid "Booking Information"
+msgstr "Informazioni Prenotazione"
+
+msgid "Booking ID:"
+msgstr "ID Prenotazione:"
+
+msgid "Apartment:"
+msgstr "Appartamento:"
+
+msgid "Guests:"
+msgstr "Ospiti:"
+
+msgid "Total Amount:"
+msgstr "Importo Totale:"
+
+msgid "Customer Information"
+msgstr "Informazioni Cliente"
+
+msgid "Name:"
+msgstr "Nome:"
+
+msgid "Email:"
+msgstr "Email:"
+
+msgid "Phone:"
+msgstr "Telefono:"
+
+msgid "Payment Information"
+msgstr "Informazioni Pagamento"
+
+msgid "Payment Status:"
+msgstr "Stato Pagamento:"
+
+msgid "Paid"
+msgstr "Pagato"
+
+msgid "Payment Method:"
+msgstr "Metodo di Pagamento:"
+
+msgid "Transaction ID:"
+msgstr "ID Transazione:"
+
+msgid "View Apartment"
+msgstr "Visualizza Appartamento"
+
+msgid "Print Confirmation"
+msgstr "Stampa Conferma"
+
+msgid "Price Range (per night)"
+msgstr "Fascia di Prezzo (per notte)"
+
+# Admin Dashboard strings
+msgid "Are you sure you want to delete this item?"
+msgstr "Sei sicuro di voler eliminare questo elemento?"
+
+msgid "Select Image"
+msgstr "Seleziona Immagine"
+
+msgid "Use Image"
+msgstr "Usa Immagine"
+
+msgid "Success"
+msgstr "Successo"
+
+msgid "This plugin requires PHP version %s or higher. You are running version %s."
+msgstr "Questo plugin richiede PHP versione %s o superiore. Stai usando la versione %s."
+
+msgid "Thank you for using %s Domilocus %s."
+msgstr "Grazie per aver usato %s Domilocus %s."
+
+msgid "Domilocus requires PHP version %s or higher. You are running version %s."
+msgstr "Domilocus richiede PHP versione %s o superiore. Stai usando la versione %s."
+
+msgid "Plugin Deactivated"
+msgstr "Plugin Disattivato"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Image"
+msgstr "Immagine"
+
+msgid "Details"
+msgstr "Dettagli"
+
+msgid "Base Price"
+msgstr "Prezzo Base"
+
+msgid "Availability"
+msgstr "Disponibilità"
+
+msgid "Bookings"
+msgstr "Prenotazioni"
+
+msgid "%d guests • %d bed • %s bath"
+msgstr "%d ospiti • %d letto • %s bagno"
+
+msgid "Not set"
+msgstr "Non impostato"
+
+msgid "No bookings"
+msgstr "Nessuna prenotazione"
+
+msgid "Apartment"
+msgstr "Appartamento"
+
+msgid "Customer"
+msgstr "Cliente"
+
+msgid "Dates"
+msgstr "Date"
+
+msgid "Amount"
+msgstr "Importo"
+
+msgid "Status"
+msgstr "Stato"
+
+msgid "Payment"
+msgstr "Pagamento"
+
+msgid "Data not found"
+msgstr "Dati non trovati"
+
+msgid "Apartment not found"
+msgstr "Appartamento non trovato"
+
+msgid "Security check failed"
+msgstr "Controllo di sicurezza fallito"
+
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Non hai permessi sufficienti per accedere a questa pagina."
+
+msgid "Domilocus"
+msgstr "Domilocus"
+
+msgid "Domilocus"
+msgstr "Domilocus"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Apartments"
+msgstr "Appartamenti"
+
+msgid "Add Apartment"
+msgstr "Aggiungi Appartamento"
+
+msgid "Categories"
+msgstr "Categorie"
+
+msgid "Amenities"
+msgstr "Servizi"
+
+msgid "Bookings"
+msgstr "Prenotazioni"
+
+msgid "Calendar"
+msgstr "Calendario"
+
+msgid "Pricing Management"
+msgstr "Gestione Prezzi"
+
+msgid "Tariff Management"
+msgstr "Gestione Tariffe"
+
+msgid "Automatic Pricing"
+msgstr "Prezzi Automatici"
+
+msgid "Statistics & Reports"
+msgstr "Statistiche e Report"
+
+msgid "Platform Integration"
+msgstr "Integrazione Piattaforme"
+
+msgid "Shortcodes Reference"
+msgstr "Guida Shortcodes"
+
+msgid "Dynamic Pricing Help"
+msgstr "Guida Prezzi Dinamici"
+
+msgid "Events Management"
+msgstr "Gestione Eventi"
+
+msgid "Reports"
+msgstr "Report"
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Tools"
+msgstr "Strumenti"
+
+# Metaboxes strings
+msgid "Apartment Details"
+msgstr "Dettagli Appartamento"
+
+msgid "Image Gallery"
+msgstr "Galleria Immagini"
+
+msgid "Pricing & Availability"
+msgstr "Prezzi e Disponibilità"
+
+msgid "Location"
+msgstr "Posizione"
+
+msgid "House Rules"
+msgstr "Regole della Casa"
+
+msgid "Booking Details"
+msgstr "Dettagli Prenotazione"
+
+msgid "Customer Information"
+msgstr "Informazioni Cliente"
+
+msgid "Payment Information"
+msgstr "Informazioni Pagamento"
+
+msgid "Maximum Guests"
+msgstr "Ospiti Massimi"
+
+msgid "Maximum number of guests allowed"
+msgstr "Numero massimo di ospiti consentiti"
+
+msgid "Size (m²)"
+msgstr "Dimensioni (m²)"
+
+msgid "Check-in Time"
+msgstr "Orario Check-in"
+
+msgid "Check-out Time"
+msgstr "Orario Check-out"
+
+msgid "Add Images"
+msgstr "Aggiungi Immagini"
+
+msgid "Select Images"
+msgstr "Seleziona Immagini"
+
+msgid "Base Price per Night"
+msgstr "Prezzo Base per Notte"
+
+msgid "Default price per night (can be overridden by seasonal pricing)"
+msgstr "Prezzo predefinito per notte (può essere sovrascritto da prezzi stagionali)"
+
+msgid "Minimum Stay"
+msgstr "Soggiorno Minimo"
+
+msgid "nights"
+msgstr "notti"
+
+msgid "Maximum Stay"
+msgstr "Soggiorno Massimo"
+
+msgid "Instant Booking"
+msgstr "Prenotazione Istantanea"
+
+msgid "Allow instant booking without admin approval"
+msgstr "Consenti prenotazione istantanea senza approvazione admin"
+
+msgid "Address"
+msgstr "Indirizzo"
+
+msgid "City"
+msgstr "Città"
+
+msgid "Country"
+msgstr "Paese"
+
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgid "You can find coordinates on Google Maps"
+msgstr "Puoi trovare le coordinate su Google Maps"
+
+msgid "Rules that guests must follow during their stay"
+msgstr "Regole che gli ospiti devono seguire durante il soggiorno"
+
+msgid "Cancellation Policy"
+msgstr "Politica di Cancellazione"
+
+msgid "Flexible"
+msgstr "Flessibile"
+
+msgid "Moderate"
+msgstr "Moderata"
+
+msgid "Strict"
+msgstr "Rigida"
+
+msgid "Super Strict"
+msgstr "Super Rigida"
+
+msgid "Select Apartment"
+msgstr "Seleziona Appartamento"
+
+msgid "Check-in Date"
+msgstr "Data Check-in"
+
+msgid "Check-out Date"
+msgstr "Data Check-out"
+
+msgid "Number of Guests"
+msgstr "Numero di Ospiti"
+
+msgid "Booking Status"
+msgstr "Stato Prenotazione"
+
+msgid "Pending"
+msgstr "In Attesa"
+
+msgid "Confirmed"
+msgstr "Confermata"
+
+msgid "Cancelled"
+msgstr "Cancellata"
+
+msgid "Completed"
+msgstr "Completata"
+
+msgid "Closed"
+msgstr "Chiuso"
+
+msgid "Booking Notes"
+msgstr "Note Prenotazione"
+
+msgid "Payment Status"
+msgstr "Stato Pagamento"
+
+msgid "Failed"
+msgstr "Fallito"
+
+msgid "Refunded"
+msgstr "Rimborsato"
+
+# Settings page strings
+msgid "Domilocus Settings"
+msgstr "Impostazioni Domilocus"
+
+msgid "Settings saved successfully!"
+msgstr "Impostazioni salvate con successo!"
+
+msgid "General"
+msgstr "Generale"
+
+msgid "Payments"
+msgstr "Pagamenti"
+
+msgid "Emails"
+msgstr "Email"
+
+msgid "Advanced"
+msgstr "Avanzate"
+
+msgid "Currency"
+msgstr "Valuta"
+
+msgid "The currency for your prices"
+msgstr "La valuta per i tuoi prezzi"
+
+msgid "Currency Position"
+msgstr "Posizione Valuta"
+
+msgid "Before amount (€ 100.00)"
+msgstr "Prima dell'importo (€ 100.00)"
+
+msgid "After amount (100.00 €)"
+msgstr "Dopo l'importo (100.00 €)"
+
+msgid "Default Check-in Time"
+msgstr "Orario Check-in Predefinito"
+
+msgid "Default Check-out Time"
+msgstr "Orario Check-out Predefinito"
+
+msgid "Minimum Stay (nights)"
+msgstr "Soggiorno Minimo (notti)"
+
+msgid "Maximum Stay (nights)"
+msgstr "Soggiorno Massimo (notti)"
+
+msgid "Advance Booking (days)"
+msgstr "Prenotazione Anticipata (giorni)"
+
+msgid "How far in advance customers can book"
+msgstr "Quanto in anticipo i clienti possono prenotare"
+
+msgid "Booking Confirmation"
+msgstr "Conferma Prenotazione"
+
+msgid "Manual confirmation required"
+msgstr "Conferma manuale richiesta"
+
+msgid "Automatic confirmation"
+msgstr "Conferma automatica"
+
+msgid "Payment Methods"
+msgstr "Metodi di Pagamento"
+
+msgid "Enabled Methods"
+msgstr "Metodi Abilitati"
+
+msgid "Stripe (Credit Cards)"
+msgstr "Stripe (Carte di Credito)"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "Bank Transfer"
+msgstr "Bonifico Bancario"
+
+msgid "Stripe Settings"
+msgstr "Impostazioni Stripe"
+
+msgid "Test Mode"
+msgstr "Modalità Test"
+
+msgid "Enable test mode"
+msgstr "Abilita modalità test"
+
+msgid "Use test API keys for testing"
+msgstr "Usa chiavi API di test per i test"
+
+msgid "Test Publishable Key"
+msgstr "Chiave Pubblicabile di Test"
+
+msgid "Test Secret Key"
+msgstr "Chiave Segreta di Test"
+
+msgid "Live Publishable Key"
+msgstr "Chiave Pubblicabile Live"
+
+msgid "Live Secret Key"
+msgstr "Chiave Segreta Live"
+
+msgid "PayPal Settings"
+msgstr "Impostazioni PayPal"
+
+msgid "PayPal Mode"
+msgstr "Modalità PayPal"
+
+msgid "Sandbox (Test)"
+msgstr "Sandbox (Test)"
+
+msgid "Live"
+msgstr "Live"
+
+msgid "Client ID"
+msgstr "ID Cliente"
+
+msgid "Client Secret"
+msgstr "Segreto Cliente"
+
+msgid "From Name"
+msgstr "Nome Mittente"
+
+msgid "The name that appears in the \"From\" field of emails"
+msgstr "Il nome che appare nel campo \"Da\" delle email"
+
+msgid "From Email"
+msgstr "Email Mittente"
+
+msgid "The email address that appears in the \"From\" field"
+msgstr "L'indirizzo email che appare nel campo \"Da\""
+
+msgid "Admin Email"
+msgstr "Email Admin"
+
+msgid "Email address to receive booking notifications"
+msgstr "Indirizzo email per ricevere notifiche di prenotazione"
+
+msgid "Email Notifications"
+msgstr "Notifiche Email"
+
+msgid "Send booking notifications to admin"
+msgstr "Invia notifiche di prenotazione all'admin"
+
+msgid "Send booking confirmations to customers"
+msgstr "Invia conferme di prenotazione ai clienti"
+
+msgid "Google Maps API Key"
+msgstr "Chiave API Google Maps"
+
+msgid "Required for displaying maps on apartment pages"
+msgstr "Richiesta per visualizzare mappe nelle pagine degli appartamenti"
+
+msgid "Features"
+msgstr "Funzionalità"
+
+# Email strings
+msgid "Booking Confirmation - %s"
+msgstr "Conferma Prenotazione - %s"
+
+msgid "New Booking Received - %s"
+msgstr "Nuova Prenotazione Ricevuta - %s"
+
+msgid "Booking Status Update - %s"
+msgstr "Aggiornamento Stato Prenotazione - %s"
+
+msgid "Your booking has been confirmed!"
+msgstr "La tua prenotazione è stata confermata!"
+
+msgid "Your booking has been cancelled."
+msgstr "La tua prenotazione è stata cancellata."
+
+msgid "Thank you for your stay!"
+msgstr "Grazie per il tuo soggiorno!"
+
+msgid "Your booking is pending confirmation."
+msgstr "La tua prenotazione è in attesa di conferma."
+
+msgid "Your booking status has been updated to: %s"
+msgstr "Lo stato della tua prenotazione è stato aggiornato a: %s"
+
+msgid "Payment Confirmation - %s"
+msgstr "Conferma Pagamento - %s"
+
+msgid "Credit Card"
+msgstr "Carta di Credito"
+
+msgid "Dear %s,"
+msgstr "Caro %s,"
+
+msgid "Thank you for your booking! Here are the details:"
+msgstr "Grazie per la tua prenotazione! Ecco i dettagli:"
+
+# Post types and taxonomy strings
+msgid "All Apartments"
+msgstr "Tutti gli Appartamenti"
+
+msgid "Add New"
+msgstr "Aggiungi Nuovo"
+
+msgid "Add New Apartment"
+msgstr "Aggiungi Nuovo Appartamento"
+
+msgid "Edit Apartment"
+msgstr "Modifica Appartamento"
+
+msgid "New Apartment"
+msgstr "Nuovo Appartamento"
+
+msgid "View Apartment"
+msgstr "Visualizza Appartamento"
+
+msgid "Search Apartments"
+msgstr "Cerca Appartamenti"
+
+msgid "No apartments found."
+msgstr "Nessun appartamento trovato."
+
+msgid "No apartments found in Trash."
+msgstr "Nessun appartamento trovato nel cestino."
+
+msgid "Parent Apartment:"
+msgstr "Appartamento Padre:"
+
+msgid "Apartment updated."
+msgstr "Appartamento aggiornato."
+
+msgid "Custom field updated."
+msgstr "Campo personalizzato aggiornato."
+
+msgid "Custom field deleted."
+msgstr "Campo personalizzato eliminato."
+
+msgid "Apartment restored to revision from %s"
+msgstr "Appartamento ripristinato alla revisione del %s"
+
+msgid "Apartment published."
+msgstr "Appartamento pubblicato."
+
+msgid "Apartment saved."
+msgstr "Appartamento salvato."
+
+msgid "Apartment submitted."
+msgstr "Appartamento inviato."
+
+msgid "Apartment scheduled for: %1$s."
+msgstr "Appartamento programmato per: %1$s."
+
+msgid "M j, Y @ G:i"
+msgstr "j M Y @ G:i"
+
+msgid "Apartment draft updated."
+msgstr "Bozza appartamento aggiornata."
+
+msgid "Add or remove categories"
+msgstr "Aggiungi o rimuovi categorie"
+
+msgid "Choose from the most used"
+msgstr "Scegli tra i più usati"
+
+msgid "Popular Categories"
+msgstr "Categorie Popolari"
+
+msgid "Add or remove amenities"
+msgstr "Aggiungi o rimuovi servizi"
+
+msgid "All Bookings"
+msgstr "Tutte le Prenotazioni"
+
+msgid "Edit Booking"
+msgstr "Modifica Prenotazione"
+
+msgid "New Booking"
+msgstr "Nuova Prenotazione"
+
+msgid "View Booking"
+msgstr "Visualizza Prenotazione"
+
+msgid "Search Bookings"
+msgstr "Cerca Prenotazioni"
+
+msgid "No bookings found."
+msgstr "Nessuna prenotazione trovata."
+
+msgid "No bookings found in Trash."
+msgstr "Nessuna prenotazione trovata nel cestino."
+
+msgid "Parent Booking:"
+msgstr "Prenotazione Padre:"
+
+msgid "Booking updated."
+msgstr "Prenotazione aggiornata."
+
+msgid "Booking restored to revision from %s"
+msgstr "Prenotazione ripristinata alla revisione del %s"
+
+msgid "Booking published."
+msgstr "Prenotazione pubblicata."
+
+msgid "Booking saved."
+msgstr "Prenotazione salvata."
+
+msgid "Booking submitted."
+msgstr "Prenotazione inviata."
+
+msgid "Booking scheduled for: %1$s."
+msgstr "Prenotazione programmata per: %1$s."
+
+msgid "Booking draft updated."
+msgstr "Bozza prenotazione aggiornata."
+
+# Dashboard strings
+msgid "Domilocus Dashboard"
+msgstr "Dashboard Domilocus"
+
+msgid "Total Apartments"
+msgstr "Appartamenti Totali"
+
+msgid "Total Bookings"
+msgstr "Prenotazioni Totali"
+
+msgid "Pending Bookings"
+msgstr "Prenotazioni in Attesa"
+
+msgid "Total Revenue"
+msgstr "Ricavi Totali"
+
+msgid "Recent Bookings"
+msgstr "Prenotazioni Recenti"
+
+msgid "Quick Actions"
+msgstr "Azioni rapide"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "View All Bookings"
+msgstr "Visualizza Tutte le Prenotazioni"
+
+msgid "No bookings yet."
+msgstr "Nessuna prenotazione ancora."
+
+msgid "Upcoming Check-ins"
+msgstr "Check-in Imminenti"
+
+msgid "No upcoming check-ins."
+msgstr "Nessun check-in imminente."
+
+msgid "Today!"
+msgstr "Oggi!"
+
+msgid "View Calendar"
+msgstr "Visualizza calendario"
+
+msgid "View Statistics & Reports"
+msgstr "Visualizza statistiche e report"
+
+msgid "Save Settings"
+msgstr "Salva Impostazioni"
+
+msgid "bed"
+msgstr "letto"
+
+msgid "beds"
+msgstr "letti"
+
+msgid "bath"
+msgstr "bagno"
+
+msgid "baths"
+msgstr "bagni"
+
+# Calendar month names
+msgid "January"
+msgstr "Gennaio"
+
+msgid "February"
+msgstr "Febbraio"
+
+msgid "March"
+msgstr "Marzo"
+
+msgid "April"
+msgstr "Aprile"
+
+msgid "May"
+msgstr "Maggio"
+
+msgid "June"
+msgstr "Giugno"
+
+msgid "July"
+msgstr "Luglio"
+
+msgid "August"
+msgstr "Agosto"
+
+msgid "September"
+msgstr "Settembre"
+
+msgid "October"
+msgstr "Ottobre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Dicembre"
+
+# Calendar day names
+msgid "Sun"
+msgstr "Dom"
+
+msgid "Mon"
+msgstr "Lun"
+
+msgid "Tue"
+msgstr "Mar"
+
+msgid "Wed"
+msgstr "Mer"
+
+msgid "Thu"
+msgstr "Gio"
+
+msgid "Fri"
+msgstr "Ven"
+
+msgid "Sat"
+msgstr "Sab"
+
+# Calendar status
+msgid "Blocked"
+msgstr "Bloccato"
+
+msgid "Maintenance"
+msgstr "Manutenzione"
+
+msgid "Apartment ID is required"
+msgstr "ID appartamento richiesto"
+
+msgid "Insufficient permissions"
+msgstr "Permessi insufficienti"
+
+msgid "Missing required parameters"
+msgstr "Parametri richiesti mancanti"
+
+msgid "Invalid status"
+msgstr "Stato non valido"
+
+# Frontend form strings
+msgid "Processing..."
+msgstr "Elaborazione..."
+
+msgid "Book Now"
+msgstr "Prenota Ora"
+
+msgid "This field is required"
+msgstr "Questo campo è obbligatorio"
+
+msgid "Please enter a valid email address"
+msgstr "Inserisci un indirizzo email valido"
+
+msgid "Please select a valid check-in date"
+msgstr "Seleziona una data di arrivo valida"
+
+msgid "Please select a valid check-out date"
+msgstr "Seleziona una data di partenza valida"
+
+msgid "Please accept the terms and conditions"
+msgstr "Accetta i termini e le condizioni"
+
+msgid "Booking Summary"
+msgstr "Riepilogo Prenotazione"
+
+msgid "Nights"
+msgstr "Notti"
+
+msgid "Cleaning Fee"
+msgstr "Costo Pulizie"
+
+msgid "Taxes"
+msgstr "Tasse"
+
+msgid "Total"
+msgstr "Totale"
+
+msgid "Guida Prezzi Dinamici"
+msgstr "Guida Prezzi Dinamici"
+
+msgid "Settings saved successfully"
+msgstr "Impostazioni salvate con successo"
+
+msgid "What is Dynamic Pricing?"
+msgstr "Cos'è il Pricing Dinamico?"
+
+msgid "Occupancy Analysis"
+msgstr "Analisi Occupazione"
+
+msgid "Events Analysis"
+msgstr "Analisi Eventi"
+
+msgid "Competition Analysis"
+msgstr "Analisi Concorrenza"
+
+msgid "Demand Analysis"
+msgstr "Analisi Domanda"
+
+msgid "Seasonal Adjustment"
+msgstr "Aggiustamento Stagionale"
+
+msgid "Price Limits"
+msgstr "Limiti di Prezzo"
+
+msgid "Best Practices"
+msgstr "Best Practices"
+
+msgid "Frequently Asked Questions"
+msgstr "Domande Frequenti"
+
+#: admin/events-management.php:1
+msgid "Events Management requires an active Domilocus Professional license or higher."
+msgstr "La Gestione Eventi richiede una licenza Domilocus Professional attiva o superiore."
+
+#: includes/admin/class-domilocus-admin-menus.php:927
+msgid "Attenzione: Cancellazione Prenotazione Pagata"
+msgstr "Attenzione: Cancellazione Prenotazione Pagata"
+
+#: includes/admin/class-domilocus-admin-menus.php:930
+msgid "⚠️ AVVISO IMPORTANTE"
+msgstr "⚠️ AVVISO IMPORTANTE"
+
+#: includes/admin/class-domilocus-admin-menus.php:932
+msgid "Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>."
+msgstr "Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>."
+
+#: includes/admin/class-domilocus-admin-menus.php:935
+msgid "Questa azione è irreversibile e comporta:"
+msgstr "Questa azione è irreversibile e comporta:"
+
+#: includes/admin/class-domilocus-admin-menus.php:938
+msgid "Cancellazione permanente della prenotazione dal database"
+msgstr "Cancellazione permanente della prenotazione dal database"
+
+#: includes/admin/class-domilocus-admin-menus.php:939
+msgid "Liberazione delle date nel calendario"
+msgstr "Liberazione delle date nel calendario"
+
+#: includes/admin/class-domilocus-admin-menus.php:940
+msgid "Perdita dello storico del pagamento ricevuto"
+msgstr "Perdita dello storico del pagamento ricevuto"
+
+#: includes/admin/class-domilocus-admin-menus.php:941
+msgid "Necessità di gestire manualmente il rimborso al cliente"
+msgstr "Necessità di gestire manualmente il rimborso al cliente"
+
+#: includes/admin/class-domilocus-admin-menus.php:946
+msgid "Dettagli Prenotazione"
+msgstr "Dettagli Prenotazione"
+
+#: includes/admin/class-domilocus-admin-menus.php:949
+msgid "ID Prenotazione:"
+msgstr "ID Prenotazione:"
+
+#: includes/admin/class-domilocus-admin-menus.php:953
+msgid "Cliente:"
+msgstr "Cliente:"
+
+#: includes/admin/class-domilocus-admin-menus.php:957
+msgid "Date:"
+msgstr "Date:"
+
+#: includes/admin/class-domilocus-admin-menus.php:961
+msgid "Importo:"
+msgstr "Importo:"
+
+#: includes/admin/class-domilocus-admin-menus.php:965
+msgid "Stato:"
+msgstr "Stato:"
+
+#: includes/admin/class-domilocus-admin-menus.php:966
+msgid "PAGATA"
+msgstr "PAGATA"
+
+#: includes/admin/class-domilocus-admin-menus.php:972
+msgid "Procedura Consigliata"
+msgstr "Procedura Consigliata"
+
+#: includes/admin/class-domilocus-admin-menus.php:974
+msgid "Contattare il cliente per confermare la cancellazione"
+msgstr "Contattare il cliente per confermare la cancellazione"
+
+#: includes/admin/class-domilocus-admin-menus.php:975
+msgid "Gestire il rimborso tramite il metodo di pagamento utilizzato"
+msgstr "Gestire il rimborso tramite il metodo di pagamento utilizzato"
+
+#: includes/admin/class-domilocus-admin-menus.php:976
+msgid "Documentare la cancellazione e il rimborso esternamente"
+msgstr "Documentare la cancellazione e il rimborso esternamente"
+
+#: includes/admin/class-domilocus-admin-menus.php:977
+msgid "Solo dopo: confermare la cancellazione qui sotto"
+msgstr "Solo dopo: confermare la cancellazione qui sotto"
+
+#: includes/admin/class-domilocus-admin-menus.php:987
+msgid "ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?"
+msgstr "ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?"
+
+#: includes/admin/class-domilocus-admin-menus.php:989
+msgid "⚠️ CONFERMO: Cancella Prenotazione Pagata"
+msgstr "⚠️ CONFERMO: Cancella Prenotazione Pagata"
+
+#: includes/admin/class-domilocus-admin-menus.php:995
+msgid "← Annulla e Torna alle Prenotazioni"
+msgstr "← Annulla e Torna alle Prenotazioni"
+
+
+msgid "The selected dates are available"
+msgstr "Le date selezionate sono disponibili"
+
+msgid "The selected dates are not available. Please choose other dates."
+msgstr "Le date selezionate non sono disponibili. Si prega di scegliere altre date."
+
+msgid "Some of the requested dates are no longer available."
+msgstr "Alcune delle date richieste non sono più disponibili."
+
+msgid "Other dates are temporarily reserved by another user."
+msgstr "Altre date sono temporaneamente riservate da un altro utente."
+
+msgid "Statistics and Reports"
+msgstr "Statistiche e Report"
+
+msgid "Settings saved."
+msgstr "Impostazioni salvate."
+
+msgid "Seasonal Rates"
+msgstr "Tariffe stagionali"
+
+msgid "Room Type Rates"
+msgstr "Tariffe per tipo camera"
+
+msgid "Event Calendar Integration"
+msgstr "Integrazione calendario eventi"
+
+msgid "Booking Data Export"
+msgstr "Esportazione dati prenotazioni"
+
+msgid "Dynamic pricing rules"
+msgstr "Regole di pricing dinamico"
+
+msgid "Custom payment methods"
+msgstr "Metodi di pagamento personalizzati"
+
+msgid "Advanced reporting dashboards"
+msgstr "Dashboard di reporting avanzate"
+
+msgid "Multi-property management"
+msgstr "Gestione multi-proprietà"
+
+msgid "API access for integrations"
+msgstr "Accesso API per integrazioni"
+
+msgid "Conflicting bookings"
+msgstr "Prenotazioni in conflitto"
+
+msgid "Please select a property to view the calendar."
+msgstr "Seleziona una proprietà per visualizzare il calendario."
+
+
+msgid "Some of the requested dates are already confirmed by other guests."
+msgstr "Alcune delle date richieste sono già confermate da altri ospiti."
+
+msgid "Other dates are temporarily reserved pending confirmation."
+msgstr "Altre date sono temporaneamente riservate in attesa di conferma."
+
+msgid "This booking is no longer available. For any questions please contact us directly."
+msgstr "Questa prenotazione non è più disponibile. Per qualsiasi dubbio contattaci direttamente."
+
+msgid "Payment to be completed as soon as possible."
+msgstr "Pagamento da completare il prima possibile."
+
+msgid "Use PHP time format (e.g. H:i)."
+msgstr "Utilizza il formato PHP per l'ora (es. H:i)."
+
+msgid "PayPal button will only be shown after manual operator confirmation."
+msgstr "Il pulsante PayPal verrà mostrato soltanto dopo la conferma manuale dell'operatore."
+
+msgid "Select the currency used for bookings."
+msgstr "Seleziona la valuta utilizzata per le prenotazioni."
+
+
+msgid "Currency Symbol Position"
+msgstr "Posizione simbolo valuta"
+
+
+msgid "Before amount (e.g. € 100)"
+msgstr "Prima importo (es. € 100)"
+
+
+msgid "After amount (e.g. 100 €)"
+msgstr "Dopo importo (es. 100 €)"
+
+
+msgid "Date Format"
+msgstr "Formato data"
+
+
+msgid "Use PHP format (e.g. d/m/Y)."
+msgstr "Utilizza il formato PHP (es. d/m/Y)."
+
+
+msgid "Time Format"
+msgstr "Formato ora"
+
+
+msgid "Use PHP time format (e.g. H:i)."
+msgstr "Utilizza il formato PHP per l'ora (es. H:i)."
+
+
+msgid "Maximum Booking Advance (days)"
+msgstr "Anticipo massimo prenotazione (giorni)"
+
+
+msgid "Manual"
+msgstr "Manuale"
+
+
+msgid "Automatic"
+msgstr "Automatica"
+
+
+msgid "Sofa Bed Supplement"
+msgstr "Supplemento divano letto"
+
+
+msgid "Amount for preparing the sofa bed when two guests travel."
+msgstr "Importo per la preparazione del divano letto quando viaggiano due ospiti."
+
+
+msgid "Active Payment Methods"
+msgstr "Metodi di pagamento attivi"
+
+
+msgid "Credit Card (Stripe)"
+msgstr "Carta di credito (Stripe)"
+
+
+msgid "Stripe"
+msgstr "Stripe"
+
+
+msgid "Use test keys (sandbox)"
+msgstr "Utilizza le chiavi di test (sandbox)"
+
+
+msgid "Publishable Key"
+msgstr "Chiave pubblica"
+
+
+msgid "Secret Key"
+msgstr "Chiave segreta"
+
+
+msgid "Publishable Key (test)"
+msgstr "Chiave pubblica (test)"
+
+
+msgid "Secret Key (test)"
+msgstr "Chiave segreta (test)"
+
+
+msgid "Webhook Secret"
+msgstr "Secret webhook"
+
+
+msgid "Mode"
+msgstr "Modalità"
+
+
+msgid "Sandbox (test)"
+msgstr "Sandbox (test)"
+
+
+msgid "Live (production)"
+msgstr "Live (produzione)"
+
+
+msgid "Last-Minute Bookings"
+msgstr "Prenotazioni last-minute"
+
+
+msgid "Automatically show PayPal button for stays starting within this number of days. Set to 0 to disable last-minute logic."
+msgstr "Mostra automaticamente il pulsante PayPal per i soggiorni che iniziano entro questo numero di giorni. Imposta 0 per disattivare la logica last-minute."
+
+
+msgid "Availability on Request"
+msgstr "Disponibilità su richiesta"
+
+
+msgid "Allow PayPal payment when customer requests it (outside last-minute period)."
+msgstr "Consenti pagamento PayPal quando il cliente lo richiede (fuori dal periodo last-minute)."
+
+
+msgid "PayPal button will only be shown after manual operator confirmation."
+msgstr "Il pulsante PayPal verrà mostrato soltanto dopo la conferma manuale dell'operatore."
+
+
+msgid "PayPal Percentage Fee"
+msgstr "Commissione percentuale PayPal"
+
+
+msgid "Percentage applied to PayPal payments (e.g. 3.4)."
+msgstr "Percentuale applicata ai pagamenti PayPal (es. 3.4)."
+
+
+msgid "PayPal Fixed Fee"
+msgstr "Commissione fissa PayPal"
+
+
+msgid "Fixed amount added to PayPal payments (in set currency)."
+msgstr "Importo fisso aggiunto ai pagamenti PayPal (nella valuta impostata)."
+
+
+msgid "Account Holder"
+msgstr "Intestatario conto"
+
+
+msgid "Bank Name"
+msgstr "Nome banca"
+
+
+msgid "Account Number"
+msgstr "Numero conto"
+
+
+msgid "Transfer Reference"
+msgstr "Riferimento bonifico"
+
+
+msgid "Text shown to customer after booking."
+msgstr "Testo mostrato al cliente dopo la prenotazione."
+
+
+msgid "Sender Name"
+msgstr "Nome mittente"
+
+
+msgid "Name displayed in \"From\" field."
+msgstr "Nome visualizzato nel campo \"Da\"."
+
+
+msgid "Sender Email"
+msgstr "Email mittente"
+
+
+msgid "Address used to send messages."
+msgstr "Indirizzo utilizzato per inviare i messaggi."
+
+
+msgid "Administrator Email"
+msgstr "Email amministratore"
+
+
+msgid "Address that receives new booking notifications."
+msgstr "Indirizzo che riceve le notifiche di nuova prenotazione."
+
+
+msgid "Send Confirmation to Customer"
+msgstr "Invia conferma al cliente"
+
+
+msgid "Sending Method"
+msgstr "Metodo di invio"
+
+
+msgid "Default WordPress (wp_mail)"
+msgstr "Default WordPress (wp_mail)"
+
+
+msgid "Custom SMTP"
+msgstr "SMTP personalizzato"
+
+
+msgid "Configure your SMTP server without additional plugins."
+msgstr "Configura il tuo server SMTP senza plug-in aggiuntivi."
+
+
+msgid "Encryption"
+msgstr "Crittografia"
+
+
+msgid "Auto (auto-detect)"
+msgstr "Auto (rileva automaticamente)"
+
+
+msgid "None"
+msgstr "Nessuna"
+
+
+msgid "SSL/TLS (port 465)"
+msgstr "SSL/TLS (porta 465)"
+
+
+msgid "STARTTLS (port 587)"
+msgstr "STARTTLS (porta 587)"
+
+
+msgid "Leave on Auto to try the best connection. Alternatively select STARTTLS (port 587) or SSL/TLS (port 465)."
+msgstr "Lascia su Auto per tentare la connessione migliore. In alternativa seleziona STARTTLS (porta 587) o SSL/TLS (porta 465)."
+
+
+msgid "Authentication"
+msgstr "Autenticazione"
+
+
+msgid "Require SMTP Login"
+msgstr "Richiedi login SMTP"
+
+
+msgid "Password is stored in plain text. Use dedicated passwords."
+msgstr "La password è salvata in chiaro. Usa password dedicate."
+
+
+msgid "Send Test Email"
+msgstr "Invia email di prova"
+
+
+msgid "Send a test message to verify current settings."
+msgstr "Invia un messaggio di test per verificare le impostazioni correnti."
+
+
+msgid "Test Email Address"
+msgstr "Indirizzo email di prova"
+
+
+msgid "You will receive a simple verification message."
+msgstr "Riceverai un semplice messaggio di verifica."
+
+
+msgid "Test email sent successfully."
+msgstr "Email di prova inviata con successo."
+
+
+msgid "Required to show maps on apartment pages."
+msgstr "Necessario per mostrare le mappe nelle pagine appartamento."
+
+
+msgid "Enable Customer Reviews"
+msgstr "Abilita recensioni clienti"
+
+
+msgid "Enable Wishlist"
+msgstr "Abilita lista dei desideri"
+
+
+msgid "iCal Synchronization"
+msgstr "Sincronizzazione iCal"
+
+
+msgid "Remove Data on Uninstall"
+msgstr "Rimuovi dati alla disinstallazione"
+
+
+msgid "Permanently delete plugin data on uninstall"
+msgstr "Elimina definitivamente i dati del plugin alla disinstallazione"
+
+
+msgid "Warning: apartments, bookings and settings will be deleted."
+msgstr "Attenzione: verranno cancellati appartamenti, prenotazioni e impostazioni."
+
+
+msgid "Invalid tab."
+msgstr "Scheda non valida."
+
+
+msgid "Security check failed."
+msgstr "Verifica di sicurezza fallita."
+
+
+msgid "Edit"
+msgstr "Modifica"
+
+
+msgid "Delete"
+msgstr "Elimina"
+
+
+
+msgid "Manage Day"
+msgstr "Gestisci Giorno"
+
+msgid "Manage"
+msgstr "Gestisci"
+
+msgid "Status:"
+msgstr "Stato:"
+
+msgid "Price per night (€):"
+msgstr "Prezzo per notte (€):"
+
+msgid "Minimum stay (nights):"
+msgstr "Soggiorno minimo (notti):"
+
+msgid "Notes:"
+msgstr "Note:"
+
+msgid "Private notes for this day..."
+msgstr "Note private per questo giorno..."
+
+msgid "Save"
+msgstr "Salva"
+
+msgid "Saving..."
+msgstr "Salvataggio..."
+
+msgid "Error loading calendar:"
+msgstr "Errore nel caricamento del calendario:"
+
+msgid "Connection error while loading calendar"
+msgstr "Errore di connessione durante il caricamento del calendario"
+
+msgid "Data saved successfully"
+msgstr "Dati salvati con successo"
+
+msgid "Error saving:"
+msgstr "Errore nel salvataggio:"
+
+msgid "Connection error while saving"
+msgstr "Errore di connessione durante il salvataggio"
+
+msgid "Unknown error"
+msgstr "Errore sconosciuto"
+
+msgid "Set prices for period:"
+msgstr "Imposta prezzi per periodo:"
+
+msgid "Start date"
+msgstr "Data inizio"
+
+msgid "End date"
+msgstr "Data fine"
+
+msgid "Price €"
+msgstr "Prezzo €"
+
+msgid "Apply Prices"
+msgstr "Applica Prezzi"
+
+msgid "Block/Unblock period:"
+msgstr "Blocca/Sblocca periodo:"
+
+msgid "Apply Status"
+msgstr "Applica Stato"
+
+msgid "Fill in all fields to set prices"
+msgstr "Compila tutti i campi per impostare i prezzi"
+
+msgid "Fill in the dates to set status"
+msgstr "Compila le date per impostare lo stato"
+
+msgid "Action completed successfully"
+msgstr "Azione completata con successo"
+
+msgid "Error:"
+msgstr "Errore:"
+
+msgid "Connection error"
+msgstr "Errore di connessione"
+msgid "Your PayPal payment request has been registered. We will notify you as soon as online payment is available."
+msgstr "La tua richiesta di pagamento con PayPal è stata registrata. Ti avviseremo non appena il pagamento online sarà disponibile."
+
+msgid "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."
+msgstr "Soluzione completa per la gestione di prenotazioni e proprietà per case vacanze, appartamenti e alloggi con amministrazione backend."

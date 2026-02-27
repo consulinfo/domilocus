@@ -1,0 +1,498 @@
+# British English Translation for Domilocus
+# Copyright (C) 2024 Domilocus
+msgid ""
+msgstr ""
+"Project-Id-Version: Domilocus 1.0.0\n"
+"Language-Team: English (UK)\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Domilocus"
+msgstr "Domilocus"
+
+# Menu items
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Apartments"
+msgstr "Flats"
+
+msgid "Add Apartment"
+msgstr "Add Flat"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Amenities"
+msgstr "Amenities"
+
+msgid "Bookings"
+msgstr "Bookings"
+
+msgid "Calendar"
+msgstr "Calendar"
+
+msgid "Pricing Management"
+msgstr "Pricing Management"
+
+msgid "Tariff Management"
+msgstr "Tariff Management"
+
+msgid "Automatic Pricing"
+msgstr "Automatic Pricing"
+
+msgid "Statistics & Reports"
+msgstr "Statistics & Reports"
+
+msgid "Platform Integration"
+msgstr "Platform Integration"
+
+msgid "Shortcodes Reference"
+msgstr "Shortcodes Reference"
+
+msgid "Dynamic Pricing Help"
+msgstr "Dynamic Pricing Help"
+
+msgid "Events Management"
+msgstr "Events Management"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Tools"
+msgstr "Tools"
+
+# Legacy translations
+msgid "Apartments"
+msgstr "Flats"
+
+msgid "All Apartments"
+msgstr "All Flats"
+
+msgid "Add New"
+msgstr "Add New"
+
+msgid "Bookings"
+msgstr "Bookings"
+
+msgid "Calendar"
+msgstr "Calendar"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Apartment Details"
+msgstr "Flat Details"
+
+msgid "Pricing"
+msgstr "Pricing"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "House Rules"
+msgstr "House Rules"
+
+msgid "Maximum Guests"
+msgstr "Maximum Guests"
+
+msgid "Bedrooms"
+msgstr "Bedrooms"
+
+msgid "Bathrooms"
+msgstr "Bathrooms"
+
+msgid "Number of beds"
+msgstr "Number of beds"
+
+msgid "Total beds prepared for guests (exclude sofa bed on request)."
+msgstr "Total beds prepared for guests (exclude sofa bed on request)."
+
+msgid "Bed type"
+msgstr "Bed type"
+
+msgid "Select the primary bed setup available in the apartment."
+msgstr "Select the primary bed setup available in the apartment."
+
+msgid "Standard double bed"
+msgstr "Standard double bed"
+
+msgid "French double bed"
+msgstr "French double bed"
+
+msgid "King size bed"
+msgstr "King size bed"
+
+msgid "Queen size bed"
+msgstr "Queen size bed"
+
+msgid "Sofa bed"
+msgstr "Sofa bed"
+
+msgid "Single bed"
+msgstr "Single bed"
+
+msgid "Beds"
+msgstr "Beds"
+
+msgid "Square Meters"
+msgstr "Square Metres"
+
+msgid "Base Price (per night)"
+msgstr "Base Price (per night)"
+
+msgid "Cleaning Fee"
+msgstr "Cleaning Fee"
+
+msgid "Extra Guest Fee (per person/night)"
+msgstr "Extra Guest Fee (per person/night)"
+
+msgid "Weekend Supplement (%)"
+msgstr "Weekend Supplement (%)"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "Check-in Time"
+msgstr "Check-in Time"
+
+msgid "Check-out Time"
+msgstr "Check-out Time"
+
+msgid "Minimum Stay (nights)"
+msgstr "Minimum Stay (nights)"
+
+msgid "Maximum Stay (nights)"
+msgstr "Maximum Stay (nights)"
+
+msgid "Please specify an apartment ID."
+msgstr "Please specify a flat ID."
+
+msgid "Apartment not found."
+msgstr "Flat not found."
+
+msgid "Amenities"
+msgstr "Amenities"
+
+msgid "No apartments found."
+msgstr "No flats found."
+
+msgid "/night"
+msgstr "/night"
+
+msgid "View Details"
+msgstr "View Details"
+
+msgid "Book Now"
+msgstr "Book Now"
+
+msgid "Loading calendar..."
+msgstr "Loading calendar..."
+
+msgid "Booking Confirmation"
+msgstr "Booking Confirmation"
+
+msgid "Booking Information"
+msgstr "Booking Information"
+
+msgid "Check-in"
+msgstr "Check-in"
+
+msgid "Check-out"
+msgstr "Check-out"
+
+msgid "Guests"
+msgstr "Guests"
+
+msgid "Any"
+msgstr "Any"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Available"
+msgstr "Available"
+
+msgid "Booked"
+msgstr "Booked"
+
+msgid "Pay with Credit Card"
+msgstr "Pay with Credit/Debit Card"
+
+msgid "Pay with PayPal"
+msgstr "Pay with PayPal"
+
+msgid "Bank Transfer"
+msgstr "Bank Transfer"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "Air Conditioning"
+msgstr "Air Conditioning"
+
+msgid "Kitchen"
+msgstr "Kitchen"
+
+msgid "Parking"
+msgstr "Car Park"
+
+#: includes/frontend/class-domilocus-frontend.php:149
+msgid "We will email you the bank details to complete the payment."
+msgstr "We will email you the bank details to complete the payment."
+
+#: includes/frontend/class-domilocus-frontend.php:234
+msgid "Complete your payment"
+msgstr "Complete your payment"
+
+#: includes/frontend/class-domilocus-frontend.php:236
+msgid "Pay Now"
+msgstr "Pay Now"
+
+#: includes/frontend/class-domilocus-frontend.php:245
+msgid "Payment method"
+msgstr "Payment method"
+
+#: includes/frontend/class-domilocus-frontend.php:247
+msgid "Pay securely with your credit card"
+msgstr "Pay securely with your credit card"
+
+#: includes/frontend/class-domilocus-frontend.php:248
+msgid "Pay with your PayPal account"
+msgstr "Pay with your PayPal account"
+
+#: includes/frontend/class-domilocus-frontend.php:250
+msgid "Pay by bank transfer"
+msgstr "Pay by bank transfer"
+
+#: includes/frontend/class-domilocus-frontend.php:252
+msgid "Your booking has been created!"
+msgstr "Your booking has been created!"
+
+#: includes/frontend/class-domilocus-frontend.php:253
+msgid "View booking details"
+msgstr "View booking details"
+
+#: includes/frontend/class-domilocus-frontend.php:254
+msgid "You will be redirected to PayPal to complete the payment."
+msgstr "You will be redirected to PayPal to complete the payment."
+
+#: includes/frontend/class-domilocus-frontend.php:255
+msgid "Card details"
+msgstr "Card details"
+
+#: includes/frontend/class-domilocus-frontend.php:256
+msgid "Please select a payment method to continue."
+msgstr "Please select a payment method to continue."
+
+#: includes/frontend/class-domilocus-frontend.php:257
+msgid "Stripe could not be initialized. Please refresh the page and try again."
+msgstr "Stripe could not be initialized. Please refresh the page and try again."
+
+#: includes/frontend/class-domilocus-frontend.php:258
+msgid "Payment successful"
+msgstr "Payment successful"
+
+#: includes/frontend/class-domilocus-frontend.php:259
+msgid "Your booking is now confirmed. A confirmation email has been sent."
+msgstr "Your booking is now confirmed. A confirmation email has been sent."
+
+#: includes/frontend/class-domilocus-frontend.php:260
+msgid "View confirmation"
+msgstr "View confirmation"
+
+#: admin/events-management.php:1
+msgid "Events Management requires an active Domilocus Professional license or higher."
+msgstr "Events Management requires an active Domilocus Professional license or higher."
+
+#: includes/admin/class-domilocus-admin-menus.php:927
+msgid "Attenzione: Cancellazione Prenotazione Pagata"
+msgstr "Warning: Deleting Paid Booking"
+
+#: includes/admin/class-domilocus-admin-menus.php:930
+msgid "⚠️ AVVISO IMPORTANTE"
+msgstr "⚠️ IMPORTANT WARNING"
+
+#: includes/admin/class-domilocus-admin-menus.php:932
+msgid "Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>."
+msgstr "You are about to delete a <strong>CONFIRMED and PAID</strong> booking."
+
+#: includes/admin/class-domilocus-admin-menus.php:935
+msgid "Questa azione è irreversibile e comporta:"
+msgstr "This action is irreversible and involves:"
+
+#: includes/admin/class-domilocus-admin-menus.php:938
+msgid "Cancellazione permanente della prenotazione dal database"
+msgstr "Permanent deletion of the booking from the database"
+
+#: includes/admin/class-domilocus-admin-menus.php:939
+msgid "Liberazione delle date nel calendario"
+msgstr "Release of dates in the calendar"
+
+#: includes/admin/class-domilocus-admin-menus.php:940
+msgid "Perdita dello storico del pagamento ricevuto"
+msgstr "Loss of payment history"
+
+#: includes/admin/class-domilocus-admin-menus.php:941
+msgid "Necessità di gestire manualmente il rimborso al cliente"
+msgstr "Need to manually handle customer refund"
+
+#: includes/admin/class-domilocus-admin-menus.php:946
+msgid "Dettagli Prenotazione"
+msgstr "Booking Details"
+
+#: includes/admin/class-domilocus-admin-menus.php:949
+msgid "ID Prenotazione:"
+msgstr "Booking ID:"
+
+#: includes/admin/class-domilocus-admin-menus.php:953
+msgid "Cliente:"
+msgstr "Customer:"
+
+#: includes/admin/class-domilocus-admin-menus.php:957
+msgid "Date:"
+msgstr "Dates:"
+
+#: includes/admin/class-domilocus-admin-menus.php:961
+msgid "Importo:"
+msgstr "Amount:"
+
+#: includes/admin/class-domilocus-admin-menus.php:965
+msgid "Stato:"
+msgstr "Status:"
+
+#: includes/admin/class-domilocus-admin-menus.php:966
+msgid "PAGATA"
+msgstr "PAID"
+
+#: includes/admin/class-domilocus-admin-menus.php:972
+msgid "Procedura Consigliata"
+msgstr "Recommended Procedure"
+
+#: includes/admin/class-domilocus-admin-menus.php:974
+msgid "Contattare il cliente per confermare la cancellazione"
+msgstr "Contact the customer to confirm cancellation"
+
+#: includes/admin/class-domilocus-admin-menus.php:975
+msgid "Gestire il rimborso tramite il metodo di pagamento utilizzato"
+msgstr "Process refund through the payment method used"
+
+#: includes/admin/class-domilocus-admin-menus.php:976
+msgid "Documentare la cancellazione e il rimborso esternamente"
+msgstr "Document cancellation and refund externally"
+
+#: includes/admin/class-domilocus-admin-menus.php:977
+msgid "Solo dopo: confermare la cancellazione qui sotto"
+msgstr "Only then: confirm deletion below"
+
+#: includes/admin/class-domilocus-admin-menus.php:987
+msgid "ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?"
+msgstr "FINAL CONFIRMATION: Are you absolutely sure you want to delete this paid booking?"
+
+#: includes/admin/class-domilocus-admin-menus.php:989
+msgid "⚠️ CONFERMO: Cancella Prenotazione Pagata"
+msgstr "⚠️ I CONFIRM: Delete Paid Booking"
+
+#: includes/admin/class-domilocus-admin-menus.php:995
+msgid "← Annulla e Torna alle Prenotazioni"
+msgstr "← Cancel and Return to Bookings"
+
+msgid "Manage Day"
+msgstr "Manage Day"
+
+msgid "Manage"
+msgstr "Manage"
+
+msgid "Status:"
+msgstr "Status:"
+
+msgid "Blocked"
+msgstr "Blocked"
+
+msgid "Maintenance"
+msgstr "Maintenance"
+
+msgid "Price per night (€):"
+msgstr "Price per night (€):"
+
+msgid "Minimum stay (nights):"
+msgstr "Minimum stay (nights):"
+
+msgid "Notes:"
+msgstr "Notes:"
+
+msgid "Private notes for this day..."
+msgstr "Private notes for this day..."
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Saving..."
+msgstr "Saving..."
+
+msgid "Error loading calendar:"
+msgstr "Error loading calendar:"
+
+msgid "Connection error while loading calendar"
+msgstr "Connection error while loading calendar"
+
+msgid "Data saved successfully"
+msgstr "Data saved successfully"
+
+msgid "Error saving:"
+msgstr "Error saving:"
+
+msgid "Connection error while saving"
+msgstr "Connection error while saving"
+
+msgid "Unknown error"
+msgstr "Unknown error"
+
+msgid "Quick Actions"
+msgstr "Quick Actions"
+
+msgid "Set prices for period:"
+msgstr "Set prices for period:"
+
+msgid "Start date"
+msgstr "Start date"
+
+msgid "End date"
+msgstr "End date"
+
+msgid "Price €"
+msgstr "Price €"
+
+msgid "Apply Prices"
+msgstr "Apply Prices"
+
+msgid "Block/Unblock period:"
+msgstr "Block/Unblock period:"
+
+msgid "Apply Status"
+msgstr "Apply Status"
+
+msgid "Fill in all fields to set prices"
+msgstr "Fill in all fields to set prices"
+
+msgid "Fill in the dates to set status"
+msgstr "Fill in the dates to set status"
+
+msgid "Action completed successfully"
+msgstr "Action completed successfully"
+
+msgid "Error:"
+msgstr "Error:"
+
+msgid "Connection error"
+msgstr "Connection error"
+
+
+msgid "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."
+msgstr "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."

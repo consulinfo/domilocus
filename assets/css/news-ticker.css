@@ -1,0 +1,111 @@
+/**
+ * News Ticker Styles
+ */
+.domilocus-news-ticker-wrapper {
+    background: linear-gradient(135deg, #0073aa 0%, #005177 100%);
+    color: white;
+    padding: 12px 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.domilocus-news-ticker-icon {
+    flex-shrink: 0;
+    margin-right: 15px;
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.domilocus-news-ticker-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 24px;
+}
+
+.domilocus-news-ticker-items {
+    display: flex;
+    animation: domilocus-ticker-scroll 30s linear infinite;
+    white-space: nowrap;
+}
+
+.domilocus-news-ticker-items:hover {
+    animation-play-state: paused;
+}
+
+.domilocus-ticker-item {
+    padding-right: 60px;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.domilocus-ticker-item a {
+    color: white;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+.domilocus-ticker-item a:hover {
+    text-decoration-style: solid;
+}
+
+.domilocus-ticker-item strong {
+    opacity: 0.8;
+    font-weight: 600;
+}
+
+.domilocus-ticker-refresh {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+    line-height: 1;
+}
+
+.domilocus-ticker-refresh:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.domilocus-ticker-refresh .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.domilocus-news-ticker-dismiss {
+    flex-shrink: 0;
+    margin-left: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.7;
+    padding: 0;
+    line-height: 1;
+}
+
+.domilocus-news-ticker-dismiss:hover {
+    opacity: 1;
+}
+
+@keyframes domilocus-ticker-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

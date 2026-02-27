@@ -1,0 +1,340 @@
+{
+  "amenities": {
+    "wifi": {
+      "en": "Wi-Fi",
+      "it": "Wi-Fi",
+      "fr": "Wi-Fi",
+      "es": "Wi-Fi",
+      "de": "WLAN",
+      "icon": "📶"
+    },
+    "air_conditioning": {
+      "en": "Air Conditioning",
+      "it": "Aria Condizionata",
+      "fr": "Climatisation",
+      "es": "Aire Acondicionado",
+      "de": "Klimaanlage",
+      "icon": "❄️"
+    },
+    "heating": {
+      "en": "Heating",
+      "it": "Riscaldamento",
+      "fr": "Chauffage",
+      "es": "Calefacción",
+      "de": "Heizung",
+      "icon": "🔥"
+    },
+    "kitchen": {
+      "en": "Kitchen",
+      "it": "Cucina",
+      "fr": "Cuisine",
+      "es": "Cocina",
+      "de": "Küche",
+      "icon": "🍳"
+    },
+    "parking": {
+      "en": "Parking",
+      "it": "Parcheggio",
+      "fr": "Parking",
+      "es": "Aparcamiento",
+      "de": "Parkplatz",
+      "icon": "🚗"
+    },
+    "pool": {
+      "en": "Swimming Pool",
+      "it": "Piscina",
+      "fr": "Piscine",
+      "es": "Piscina",
+      "de": "Schwimmbad",
+      "icon": "🏊"
+    },
+    "gym": {
+      "en": "Gym",
+      "it": "Palestra",
+      "fr": "Salle de Sport",
+      "es": "Gimnasio",
+      "de": "Fitnessstudio",
+      "icon": "🏋️"
+    },
+    "pet_friendly": {
+      "en": "Pet Friendly",
+      "it": "Ammessi Animali",
+      "fr": "Animaux Acceptés",
+      "es": "Se Admiten Mascotas",
+      "de": "Haustiere Erlaubt",
+      "icon": "🐕"
+    },
+    "smoking_allowed": {
+      "en": "Smoking Allowed",
+      "it": "Permesso Fumare",
+      "fr": "Fumeur Autorisé",
+      "es": "Se Permite Fumar",
+      "de": "Rauchen Erlaubt",
+      "icon": "🚬"
+    },
+    "no_smoking": {
+      "en": "No Smoking",
+      "it": "Vietato Fumare",
+      "fr": "Non Fumeur",
+      "es": "No Fumar",
+      "de": "Nichtraucher",
+      "icon": "🚭"
+    },
+    "washer": {
+      "en": "Washing Machine",
+      "it": "Lavatrice",
+      "fr": "Lave-linge",
+      "es": "Lavadora",
+      "de": "Waschmaschine",
+      "icon": "🧺"
+    },
+    "dryer": {
+      "en": "Dryer",
+      "it": "Asciugatrice",
+      "fr": "Sèche-linge",
+      "es": "Secadora",
+      "de": "Wäschetrockner",
+      "icon": "🌪️"
+    },
+    "dishwasher": {
+      "en": "Dishwasher",
+      "it": "Lavastoviglie",
+      "fr": "Lave-vaisselle",
+      "es": "Lavavajillas",
+      "de": "Geschirrspüler",
+      "icon": "🍽️"
+    },
+    "tv": {
+      "en": "TV",
+      "it": "TV",
+      "fr": "Télévision",
+      "es": "Televisión",
+      "de": "Fernseher",
+      "icon": "📺"
+    },
+    "balcony": {
+      "en": "Balcony",
+      "it": "Balcone",
+      "fr": "Balcon",
+      "es": "Balcón",
+      "de": "Balkon",
+      "icon": "🏞️"
+    },
+    "terrace": {
+      "en": "Terrace",
+      "it": "Terrazza",
+      "fr": "Terrasse",
+      "es": "Terraza",
+      "de": "Terrasse",
+      "icon": "🌅"
+    },
+    "garden": {
+      "en": "Garden",
+      "it": "Giardino",
+      "fr": "Jardin",
+      "es": "Jardín",
+      "de": "Garten",
+      "icon": "🌳"
+    },
+    "elevator": {
+      "en": "Elevator",
+      "it": "Ascensore",
+      "fr": "Ascenseur",
+      "es": "Ascensor",
+      "de": "Aufzug",
+      "icon": "🛗"
+    },
+    "wheelchair_accessible": {
+      "en": "Wheelchair Accessible",
+      "it": "Accessibile in Sedia a Rotelle",
+      "fr": "Accessible aux Fauteuils Roulants",
+      "es": "Accesible en Silla de Ruedas",
+      "de": "Rollstuhlgerecht",
+      "icon": "♿"
+    },
+    "iron": {
+      "en": "Iron",
+      "it": "Ferro da Stiro",
+      "fr": "Fer à Repasser",
+      "es": "Plancha",
+      "de": "Bügeleisen",
+      "icon": "🪶"
+    },
+    "hair_dryer": {
+      "en": "Hair Dryer",
+      "it": "Asciugacapelli",
+      "fr": "Sèche-cheveux",
+      "es": "Secador de Pelo",
+      "de": "Haartrockner",
+      "icon": "💨"
+    },
+    "coffee_machine": {
+      "en": "Coffee Machine",
+      "it": "Macchina del Caffè",
+      "fr": "Machine à Café",
+      "es": "Cafetera",
+      "de": "Kaffeemaschine",
+      "icon": "☕"
+    },
+    "microwave": {
+      "en": "Microwave",
+      "it": "Microonde",
+      "fr": "Micro-ondes",
+      "es": "Microondas",
+      "de": "Mikrowelle",
+      "icon": "🔥"
+    },
+    "refrigerator": {
+      "en": "Refrigerator",
+      "it": "Frigorifero",
+      "fr": "Réfrigérateur",
+      "es": "Refrigerador",
+      "de": "Kühlschrank",
+      "icon": "🧊"
+    },
+    "safe": {
+      "en": "Safe",
+      "it": "Cassaforte",
+      "fr": "Coffre-fort",
+      "es": "Caja Fuerte",
+      "de": "Safe",
+      "icon": "🔒"
+    },
+    "beach_access": {
+      "en": "Beach Access",
+      "it": "Accesso alla Spiaggia",
+      "fr": "Accès à la Plage",
+      "es": "Acceso a la Playa",
+      "de": "Strandzugang",
+      "icon": "🏖️"
+    },
+    "ski_access": {
+      "en": "Ski Access",
+      "it": "Accesso alle Piste da Sci",
+      "fr": "Accès aux Pistes de Ski",
+      "es": "Acceso a Pistas de Esquí",
+      "de": "Skizugang",
+      "icon": "⛷️"
+    },
+    "concierge": {
+      "en": "Concierge Service",
+      "it": "Servizio Concierge",
+      "fr": "Service de Conciergerie",
+      "es": "Servicio de Conserjería",
+      "de": "Concierge-Service",
+      "icon": "🎩"
+    },
+    "housekeeping": {
+      "en": "Housekeeping",
+      "it": "Servizio Pulizie",
+      "fr": "Service de Ménage",
+      "es": "Servicio de Limpieza",
+      "de": "Reinigungsservice",
+      "icon": "🧽"
+    }
+  },
+  "room_types": {
+    "studio": {
+      "en": "Studio",
+      "it": "Monolocale",
+      "fr": "Studio",
+      "es": "Estudio",
+      "de": "Studio"
+    },
+    "apartment": {
+      "en": "Apartment",
+      "it": "Appartamento",
+      "fr": "Appartement",
+      "es": "Apartamento",
+      "de": "Wohnung"
+    },
+    "villa": {
+      "en": "Villa",
+      "it": "Villa",
+      "fr": "Villa",
+      "es": "Villa",
+      "de": "Villa"
+    },
+    "penthouse": {
+      "en": "Penthouse",
+      "it": "Attico",
+      "fr": "Penthouse",
+      "es": "Ático",
+      "de": "Penthouse"
+    },
+    "loft": {
+      "en": "Loft",
+      "it": "Loft",
+      "fr": "Loft",
+      "es": "Loft",
+      "de": "Loft"
+    }
+  },
+  "payment_methods": {
+    "credit_card": {
+      "en": "Credit Card",
+      "it": "Carta di Credito",
+      "fr": "Carte de Crédit",
+      "es": "Tarjeta de Crédito",
+      "de": "Kreditkarte"
+    },
+    "paypal": {
+      "en": "PayPal",
+      "it": "PayPal",
+      "fr": "PayPal",
+      "es": "PayPal",
+      "de": "PayPal"
+    },
+    "bank_transfer": {
+      "en": "Bank Transfer",
+      "it": "Bonifico Bancario",
+      "fr": "Virement Bancaire",
+      "es": "Transferencia Bancaria",
+      "de": "Banküberweisung"
+    },
+    "cash": {
+      "en": "Cash",
+      "it": "Contanti",
+      "fr": "Espèces",
+      "es": "Efectivo",
+      "de": "Bar"
+    }
+  },
+  "booking_status": {
+    "pending": {
+      "en": "Pending",
+      "it": "In Attesa",
+      "fr": "En Attente",
+      "es": "Pendiente",
+      "de": "Ausstehend"
+    },
+    "confirmed": {
+      "en": "Confirmed",
+      "it": "Confermata",
+      "fr": "Confirmée",
+      "es": "Confirmada",
+      "de": "Bestätigt"
+    },
+    "paid": {
+      "en": "Paid",
+      "it": "Pagata",
+      "fr": "Payée",
+      "es": "Pagada",
+      "de": "Bezahlt"
+    },
+    "cancelled": {
+      "en": "Cancelled",
+      "it": "Cancellata",
+      "fr": "Annulée",
+      "es": "Cancelada",
+      "de": "Storniert"
+    },
+    "completed": {
+      "en": "Completed",
+      "it": "Completata",
+      "fr": "Terminée",
+      "es": "Completada",
+      "de": "Abgeschlossen"
+    }
+  }
+}
