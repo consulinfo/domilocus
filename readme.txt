@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.15
+Stable tag: 1.0.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.16 =
+* Fixed: iCal import now stores the event UID and uses upsert deduplication — editing a booking from admin no longer causes a duplicate on the next sync.
+* Added: `ical_uid` column to the bookings table (DB migration runs automatically on upgrade).
+* Fixed: saving a booking from admin preserves the original `source` and `ical_uid` so iCal sync can still match the record.
 
 = 1.0.15 =
 * Fixed: Stable Tag mismatch between readme.txt and plugin header.

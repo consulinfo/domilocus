@@ -140,6 +140,56 @@ class Domilocus_Install {
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN external_platform varchar(50) DEFAULT NULL AFTER access_code");
             }
+
+            if (!in_array('ical_uid', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN ical_uid varchar(255) DEFAULT NULL AFTER external_platform");
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD INDEX ical_uid (ical_uid)");
+            }
+
+            // Data-repair: bookings edited from admin that were originally iCal-imported
+            // lost their source='ical_import' → they ended up in the export .ics and caused
+            // duplicate imports on the external channel.  Restore source for those records.
+            // Fingerprint: booking_notes = 'Imported via iCal' (fixed string written only by
+            // the iCal importer). We intentionally do NOT filter on customer_email because the
+            // admin may have added an email address to the booking after import.
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $wpdb->query(
+                "UPDATE {$bookings_table}
+                 SET source = 'ical_import'
+                 WHERE source = 'admin'
+                   AND (booking_notes = 'Imported via iCal' OR booking_notes LIKE 'Imported via iCal%')"
+            );
+
+            // Data-repair: set external_platform for iCal-imported bookings that have none,
+            // by inferring the platform from the apartment's configured import URL.
+            // Runs for each platform slug we recognise.
+            $platform_map = array(
+                'vrbo'        => '%vrbo%',
+                'airbnb'      => '%airbnb%',
+                'booking.com' => '%booking.com%',
+                'expedia'     => '%expedia%',
+            );
+            foreach ($platform_map as $slug => $url_like) {
+                // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query(
+                    $wpdb->prepare(
+                        "UPDATE {$bookings_table} b
+                         INNER JOIN {$wpdb->postmeta} pm
+                                 ON pm.post_id = b.apartment_id
+                                AND pm.meta_key = '_domilocus_ical_feeds'
+                                AND pm.meta_value LIKE %s
+                         SET b.external_platform = %s
+                         WHERE (b.external_platform IS NULL OR b.external_platform = '')
+                           AND (b.booking_notes = 'Imported via iCal' OR b.booking_notes LIKE 'Imported via iCal%%')
+                           AND (b.source = 'ical_import' OR b.source = 'admin')",
+                        $url_like,
+                        $slug
+                    )
+                );
+                // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            }
         }
 
         $availability_table = $wpdb->prefix . 'domilocus_availability';
@@ -212,6 +262,7 @@ class Domilocus_Install {
             notes text,
             access_code varchar(20) DEFAULT NULL,
             external_platform varchar(50) DEFAULT NULL,
+            ical_uid varchar(255) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -222,6 +273,7 @@ class Domilocus_Install {
             KEY check_out (check_out),
             KEY source (source),
             KEY ical_feed_id (ical_feed_id),
+            KEY ical_uid (ical_uid),
             UNIQUE KEY access_code (access_code)
         ) $charset_collate;";
         

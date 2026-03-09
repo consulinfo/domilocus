@@ -476,6 +476,16 @@ class Domilocus_Booking_Form {
                             </div>
                             <?php endif; ?>
 
+                            <?php
+                            /**
+                             * Fires in the booking edit sidebar, after the built-in boxes.
+                             * Used by premium add-ons (e.g. domilocus-starter) to inject additional boxes.
+                             *
+                             * @param int $booking_id Current booking ID (only on edit, 0 on add-new).
+                             */
+                            do_action( 'domilocus_booking_sidebar_boxes', $booking_id );
+                            ?>
+
                             <!-- Publish -->
                             <div class="postbox">
                                 <div class="postbox-header">
@@ -575,8 +585,36 @@ class Domilocus_Booking_Form {
             'booking_notes' => isset($_POST['booking_notes']) ? sanitize_textarea_field(wp_unslash($_POST['booking_notes'])) : '',
             'notes' => isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '',
             'external_platform' => isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '',
-            'source' => 'admin'
+            'source' => 'admin',
         );
+
+        // When editing an existing booking, preserve source and ical_uid so that
+        // iCal sync can still match the record by UID on the next run and does not
+        // create a duplicate.
+        if ($is_edit) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $orig = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT source, ical_uid FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                )
+            );
+            if ($orig) {
+                // Keep the original source only if it was set by an automated system.
+                if (!empty($orig->source) && 'admin' !== $orig->source) {
+                    $booking_data['source'] = $orig->source;
+                }
+                // Always preserve ical_uid if it exists.
+                if (!empty($orig->ical_uid)) {
+                    $booking_data['ical_uid'] = $orig->ical_uid;
+                }
+                // Preserve external_platform if admin submitted empty but original had a value.
+                // This prevents losing the platform identity when admin only edits email/access code.
+                if (empty($booking_data['external_platform']) && !empty($orig->external_platform)) {
+                    $booking_data['external_platform'] = $orig->external_platform;
+                }
+            }
+        }
         
         if ($is_edit) {
             // Update existing booking
