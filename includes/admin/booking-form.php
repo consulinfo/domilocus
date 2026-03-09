@@ -379,6 +379,103 @@ class Domilocus_Booking_Form {
                                 </div>
                             </div>
                             
+                            <!-- Codice Accesso APP -->
+                            <?php if ($is_edit): ?>
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2>📱 <?php esc_html_e('Codice Accesso APP', 'domilocus'); ?></h2>
+                                </div>
+                                <div class="inside">
+                                    <p class="description" style="margin-bottom:10px">
+                                        <?php esc_html_e('Genera un codice da inviare all\'ospite (es. Booking.com, Airbnb) per accedere all\'app.', 'domilocus'); ?>
+                                    </p>
+                                    <?php
+                                    $current_code = $booking->access_code ?? '';
+                                    $ext_platform  = $booking->external_platform ?? '';
+                                    ?>
+                                    <div class="misc-pub-section">
+                                        <label for="external_platform"><?php esc_html_e('Piattaforma', 'domilocus'); ?></label>
+                                        <select id="external_platform" name="external_platform" class="widefat" style="margin-top:5px">
+                                            <option value="" <?php selected($ext_platform, ''); ?>><?php esc_html_e('-- Seleziona --', 'domilocus'); ?></option>
+                                            <option value="booking.com" <?php selected($ext_platform, 'booking.com'); ?>>Booking.com</option>
+                                            <option value="airbnb" <?php selected($ext_platform, 'airbnb'); ?>>Airbnb</option>
+                                            <option value="vrbo" <?php selected($ext_platform, 'vrbo'); ?>>VRBO</option>
+                                            <option value="other" <?php selected($ext_platform, 'other'); ?>><?php esc_html_e('Altro', 'domilocus'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="misc-pub-section" style="margin-top:12px">
+                                        <label><?php esc_html_e('Codice generato', 'domilocus'); ?></label>
+                                        <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
+                                            <input type="text" id="access_code_display" readonly
+                                                   value="<?php echo esc_attr($current_code); ?>"
+                                                   class="widefat"
+                                                   style="font-family:monospace;font-weight:700;font-size:16px;background:#f0f4ff;letter-spacing:2px" />
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                                        <button type="button" id="btn_generate_code"
+                                                class="button button-secondary"
+                                                data-booking-id="<?php echo absint($booking_id); ?>"
+                                                data-nonce="<?php echo esc_attr(wp_create_nonce('domilocus_access_code_' . $booking_id)); ?>">
+                                            🔄 <?php esc_html_e('Genera nuovo codice', 'domilocus'); ?>
+                                        </button>
+                                        <button type="button" id="btn_send_code"
+                                                class="button button-primary"
+                                                data-booking-id="<?php echo absint($booking_id); ?>"
+                                                data-nonce="<?php echo esc_attr(wp_create_nonce('domilocus_access_code_' . $booking_id)); ?>"
+                                                <?php echo empty($current_code) ? 'disabled' : ''; ?>>
+                                            ✉️ <?php esc_html_e('Invia codice per email', 'domilocus'); ?>
+                                        </button>
+                                    </div>
+                                    <div id="access_code_msg" style="margin-top:8px;font-size:13px"></div>
+                                    <script>
+                                    (function(){
+                                        var ajaxurl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+                                        document.getElementById('btn_generate_code').addEventListener('click', function(){
+                                            var btn = this;
+                                            btn.disabled = true;
+                                            var fd = new FormData();
+                                            fd.append('action', 'domilocus_generate_access_code');
+                                            fd.append('booking_id', btn.dataset.bookingId);
+                                            fd.append('nonce', btn.dataset.nonce);
+                                            fd.append('external_platform', document.getElementById('external_platform').value);
+                                            fetch(ajaxurl, {method:'POST', body:fd})
+                                                .then(function(r){ return r.json(); })
+                                                .then(function(d){
+                                                    if(d.success){
+                                                        document.getElementById('access_code_display').value = d.data.code;
+                                                        document.getElementById('btn_send_code').disabled = false;
+                                                        document.getElementById('access_code_msg').innerHTML = '<span style="color:green">✓ Codice generato: <strong>' + d.data.code + '</strong></span>';
+                                                    } else {
+                                                        document.getElementById('access_code_msg').innerHTML = '<span style="color:red">Errore: ' + (d.data||'') + '</span>';
+                                                    }
+                                                    btn.disabled = false;
+                                                });
+                                        });
+                                        document.getElementById('btn_send_code').addEventListener('click', function(){
+                                            var btn = this;
+                                            btn.disabled = true;
+                                            var fd = new FormData();
+                                            fd.append('action', 'domilocus_send_access_code');
+                                            fd.append('booking_id', btn.dataset.bookingId);
+                                            fd.append('nonce', btn.dataset.nonce);
+                                            fetch(ajaxurl, {method:'POST', body:fd})
+                                                .then(function(r){ return r.json(); })
+                                                .then(function(d){
+                                                    if(d.success){
+                                                        document.getElementById('access_code_msg').innerHTML = '<span style="color:green">✓ Email inviata a <strong>' + d.data.email + '</strong></span>';
+                                                    } else {
+                                                        document.getElementById('access_code_msg').innerHTML = '<span style="color:red">Errore: ' + (d.data||'') + '</span>';
+                                                    }
+                                                    btn.disabled = false;
+                                                });
+                                        });
+                                    })();
+                                    </script>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+
                             <!-- Publish -->
                             <div class="postbox">
                                 <div class="postbox-header">
@@ -477,6 +574,7 @@ class Domilocus_Booking_Form {
             'payment_id' => isset($_POST['payment_id']) ? sanitize_text_field(wp_unslash($_POST['payment_id'])) : '',
             'booking_notes' => isset($_POST['booking_notes']) ? sanitize_textarea_field(wp_unslash($_POST['booking_notes'])) : '',
             'notes' => isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '',
+            'external_platform' => isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '',
             'source' => 'admin'
         );
         
@@ -531,9 +629,98 @@ class Domilocus_Booking_Form {
         
         exit;
     }
+
+    /**
+     * AJAX: genera un codice univoco per la prenotazione.
+     */
+    public static function ajax_generate_access_code() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Permission denied' );
+        }
+        $booking_id = isset( $_POST['booking_id'] ) ? intval( $_POST['booking_id'] ) : 0;
+        if ( ! $booking_id || ! isset( $_POST['nonce'] ) ||
+             ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'domilocus_access_code_' . $booking_id ) ) {
+            wp_send_json_error( 'Invalid request' );
+        }
+        global $wpdb;
+        // Genera codice univoco DML-XXXXXX
+        do {
+            $code = 'DML-' . strtoupper( substr( bin2hex( random_bytes( 4 ) ), 0, 6 ) );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uniqueness check inside loop; caching would cause false positives.
+            $exists = $wpdb->get_var( $wpdb->prepare(
+                "SELECT id FROM {$wpdb->prefix}domilocus_bookings WHERE access_code = %s",
+                $code
+            ) );
+        } while ( $exists );
+
+        $platform = isset( $_POST['external_platform'] ) ? sanitize_text_field( wp_unslash( $_POST['external_platform'] ) ) : '';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->update(
+            $wpdb->prefix . 'domilocus_bookings',
+            array( 'access_code' => $code, 'external_platform' => $platform ),
+            array( 'id' => $booking_id ),
+            array( '%s', '%s' ),
+            array( '%d' )
+        );
+        wp_cache_delete( 'domilocus_booking_' . $booking_id, 'domilocus' );
+        wp_send_json_success( array( 'code' => $code ) );
+    }
+
+    /**
+     * AJAX: invia email con il codice accesso all'ospite.
+     */
+    public static function ajax_send_access_code() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( 'Permission denied' );
+        }
+        $booking_id = isset( $_POST['booking_id'] ) ? intval( $_POST['booking_id'] ) : 0;
+        if ( ! $booking_id || ! isset( $_POST['nonce'] ) ||
+             ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'domilocus_access_code_' . $booking_id ) ) {
+            wp_send_json_error( 'Invalid request' );
+        }
+        global $wpdb;
+        $cache_key = 'domilocus_booking_' . $booking_id;
+        $booking   = wp_cache_get( $cache_key, 'domilocus' );
+        if ( false === $booking ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+            $booking = $wpdb->get_row( $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                $booking_id
+            ) );
+            wp_cache_set( $cache_key, $booking, 'domilocus' );
+        }
+        if ( ! $booking || empty( $booking->access_code ) || empty( $booking->customer_email ) ) {
+            wp_send_json_error( 'Dati mancanti: genera prima il codice e assicurati che l\'email sia compilata.' );
+        }
+        $apt_name = get_the_title( (int) $booking->apartment_id ) ?: 'Appartamento';
+        $checkin  = date_i18n( 'd/m/Y', strtotime( $booking->check_in ) );
+        $checkout = date_i18n( 'd/m/Y', strtotime( $booking->check_out ) );
+        $platform = $booking->external_platform ?? '';
+        $subject  = '📱 Il tuo codice di accesso all\'app — ' . $apt_name;
+        $body  = "Gentile {$booking->customer_name},\n\n";
+        $body .= "Per gestire la tua prenotazione comodamente, scarica l'app Domilocus e accedi con:\n\n";
+        $body .= "  Email:  {$booking->customer_email}\n";
+        $body .= "  Codice: {$booking->access_code}\n\n";
+        $body .= "--- Riepilogo prenotazione ---\n";
+        $body .= "Struttura:   {$apt_name}\n";
+        $body .= "Check-in:    {$checkin}\n";
+        $body .= "Check-out:   {$checkout}\n";
+        if ( $platform ) {
+            $body .= "Piattaforma: {$platform}\n";
+        }
+        $body .= "\nIl codice non scade e può essere rigenerato dall'host in caso di necessità.\n\nBuon soggiorno!";
+        $sent = wp_mail( $booking->customer_email, $subject, $body );
+        if ( $sent ) {
+            wp_send_json_success( array( 'email' => $booking->customer_email ) );
+        } else {
+            wp_send_json_error( 'Impossibile inviare l\'email. Controlla la configurazione SMTP.' );
+        }
+    }
 }
 
 // Initialize
 Domilocus_Booking_Form::init();
+add_action( 'wp_ajax_domilocus_generate_access_code', array( 'Domilocus_Booking_Form', 'ajax_generate_access_code' ) );
+add_action( 'wp_ajax_domilocus_send_access_code',    array( 'Domilocus_Booking_Form', 'ajax_send_access_code' ) );
 
 

@@ -128,6 +128,18 @@ class Domilocus_Install {
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN notes text AFTER ical_feed_id");
             }
+
+            if (!in_array('access_code', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN access_code varchar(20) DEFAULT NULL AFTER notes");
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD UNIQUE INDEX access_code (access_code)");
+            }
+
+            if (!in_array('external_platform', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN external_platform varchar(50) DEFAULT NULL AFTER access_code");
+            }
         }
 
         $availability_table = $wpdb->prefix . 'domilocus_availability';
@@ -198,6 +210,8 @@ class Domilocus_Install {
             source varchar(50) DEFAULT 'manual',
             ical_feed_id bigint(20) DEFAULT NULL,
             notes text,
+            access_code varchar(20) DEFAULT NULL,
+            external_platform varchar(50) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -207,7 +221,8 @@ class Domilocus_Install {
             KEY check_in (check_in),
             KEY check_out (check_out),
             KEY source (source),
-            KEY ical_feed_id (ical_feed_id)
+            KEY ical_feed_id (ical_feed_id),
+            UNIQUE KEY access_code (access_code)
         ) $charset_collate;";
         
         // Availability table
