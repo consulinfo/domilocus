@@ -224,7 +224,16 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         
         // Filtri
         $where = array('1=1');
-        
+
+        // Vista: attive (default) = check_out >= oggi | archivio = check_out < oggi | tutte
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $view = !empty($_GET['view']) ? sanitize_text_field(wp_unslash($_GET['view'])) : 'active';
+        if ( 'archive' === $view ) {
+            $where[] = 'check_out < CURDATE()';
+        } elseif ( 'all' !== $view ) { // default: active
+            $where[] = 'check_out >= CURDATE()';
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!empty($_GET['s'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -279,51 +288,45 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
     
     protected function get_views() {
         global $wpdb;
-        
-        $status_links = array();
+
+        $links = array();
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $current_status = !empty($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : '';
-        
-        // All
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
-        $total = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings");
-        $class = empty($current_status) ? 'current' : '';
-        $status_links['all'] = sprintf(
+        $current_view = !empty($_GET['view']) ? sanitize_text_field(wp_unslash($_GET['view'])) : 'active';
+
+        // Attive (check_out >= oggi)
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $count_active = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE check_out >= CURDATE()");
+        $links['active'] = sprintf(
             '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-            admin_url('admin.php?page=domilocus-bookings'),
-            $class,
+            admin_url('admin.php?page=domilocus-bookings&view=active'),
+            'active' === $current_view ? 'current' : '',
+            __('Attive', 'domilocus'),
+            $count_active
+        );
+
+        // Archivio (check_out < oggi)
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $count_archive = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE check_out < CURDATE()");
+        $links['archive'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            admin_url('admin.php?page=domilocus-bookings&view=archive'),
+            'archive' === $current_view ? 'current' : '',
+            __('Archivio', 'domilocus'),
+            $count_archive
+        );
+
+        // Tutte
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $count_all = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings");
+        $links['all'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            admin_url('admin.php?page=domilocus-bookings&view=all'),
+            'all' === $current_view ? 'current' : '',
             __('Tutte', 'domilocus'),
-            $total
+            $count_all
         );
-        
-        // Stati
-        $statuses = array(
-            'pending' => __('Pending', 'domilocus'),
-            'confirmed' => __('Confermate', 'domilocus'),
-            'cancelled' => __('Cancellate', 'domilocus'),
-            'completed' => __('Completate', 'domilocus')
-        );
-        
-        foreach ($statuses as $status => $label) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            $count = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE status = %s",
-                $status
-            ));
-            
-            if ($count > 0) {
-                $class = $current_status === $status ? 'current' : '';
-                $status_links[$status] = sprintf(
-                    '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-                    admin_url('admin.php?page=domilocus-bookings&status=' . $status),
-                    $class,
-                    $label,
-                    $count
-                );
-            }
-        }
-        
-        return $status_links;
+
+        return $links;
     }
 }
 
