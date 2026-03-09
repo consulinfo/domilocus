@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,15 +179,6 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
-
-= 1.0.14 =
-* Improved: bookings list now defaults to "Attive" tab (check-out >= today), keeping the main view clean. Added "Archivio" tab for past bookings and "Tutte" for unfiltered view.
-
-= 1.0.13 =
-* Added: access code system for external-platform guests (Booking.com, Airbnb, VRBO) — admin can generate a DML-XXXXXX code and email it; guests use email + code to log in via the app.
-* Added: `access_code` and `external_platform` columns with automatic DB migration.
-* Fixed: PHP syntax error caused by AJAX methods placed outside class scope.
-* Fixed: direct DB query caching warnings (PHPCS compliance).
 
 = 1.0.12 =
 * Fixed: admin calendar availability data now consistently uses `status` instead of a legacy `available` flag across month/week/day views.

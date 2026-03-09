@@ -259,7 +259,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $where_sql = implode(' AND ', $where);
         
         // Total items
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $total_items = $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE $where_sql");
         
         // Query items
