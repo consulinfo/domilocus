@@ -180,6 +180,21 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 
 == Changelog ==
 
+= 1.0.15 =
+* Fixed: Stable Tag mismatch between readme.txt and plugin header.
+* Fixed: PHPCS PluginCheck.Security.DirectDB.UnescapedDBParameter warning on bookings count query.
+
+= 1.0.14 =
+* Improved: bookings list now defaults to "Attive" tab (check-out >= today), keeping the main view clean.
+* Added: "Archivio" tab for past bookings (check-out < today).
+* Added: "Tutte" tab to see all bookings without date filter.
+
+= 1.0.13 =
+* Added: access code system for external-platform guests (Booking.com, Airbnb, VRBO) — admin generates a DML-XXXXXX code and emails it; guests use email + code to log in via the app.
+* Added: `access_code` and `external_platform` columns with automatic DB migration.
+* Fixed: PHP syntax error caused by AJAX methods placed outside class scope.
+* Fixed: direct DB query caching warnings (PHPCS compliance).
+
 = 1.0.12 =
 * Fixed: admin calendar availability data now consistently uses `status` instead of a legacy `available` flag across month/week/day views.
 * Fixed: admin day/week views now correctly reflect booked/blocked/maintenance states and no longer mislabel pending bookings.
