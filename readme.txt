@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.16
+Stable tag: 1.0.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,14 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.0.17 =
+* Fixed: iCal sync no longer creates duplicate bookings for records imported before v1.0.16 (orphan-adopt: existing records with NULL ical_uid and matching apartment/check-in are updated instead of re-inserted).
+* Added: `platform_booking_code` column to store the OTA reservation code (e.g. VRBO ID-XXXXXXX, Airbnb HMXXXXXXX) parsed from the iCal DESCRIPTION field.
+* Fixed: admin booking form preserves `source`, `ical_uid`, `external_platform`, and `platform_booking_code` on save — iCal-imported bookings remain correctly identified after admin edits.
+* Fixed: dynamic format array in `save_booking()` prevents silent field loss when `ical_uid` or `platform_booking_code` are conditionally included.
+* Fixed: feature gate definitions corrected — `statistics_basic` now requires Starter (not Professional), `dynamic_pricing` requires Professional (not Premium), `white_label` requires Premium (not Enterprise).
+* Added: `domilocus_admin_menu_icon` and `domilocus_admin_menu_title` filter hooks to allow Premium White Label add-on to replace the admin sidebar icon and title.
 
 = 1.0.16 =
 * Fixed: iCal import now stores the event UID and uses upsert deduplication — editing a booking from admin no longer causes a duplicate on the next sync.
