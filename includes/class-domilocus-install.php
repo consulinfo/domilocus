@@ -159,13 +159,14 @@ class Domilocus_Install {
             // Fingerprint: booking_notes = 'Imported via iCal' (fixed string written only by
             // the iCal importer). We intentionally do NOT filter on customer_email because the
             // admin may have added an email address to the booking after import.
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
             $wpdb->query(
                 "UPDATE {$bookings_table}
                  SET source = 'ical_import'
                  WHERE source = 'admin'
                    AND (booking_notes = 'Imported via iCal' OR booking_notes LIKE 'Imported via iCal%')"
             );
+            // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
             // Data-repair: set external_platform for iCal-imported bookings that have none,
             // by inferring the platform from the apartment's configured import URL.
@@ -177,7 +178,7 @@ class Domilocus_Install {
                 'expedia'     => '%expedia%',
             );
             foreach ($platform_map as $slug => $url_like) {
-                // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
                 $wpdb->query(
                     $wpdb->prepare(
                         "UPDATE {$bookings_table} b
@@ -193,7 +194,7 @@ class Domilocus_Install {
                         $slug
                     )
                 );
-                // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery
             }
         }
 

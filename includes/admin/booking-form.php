@@ -405,11 +405,13 @@ class Domilocus_Booking_Form {
                                                 'expedia'     => 'Expedia',
                                             );
                                             $platform_label = isset($platform_labels[$ext_platform]) ? $platform_labels[$ext_platform] : esc_html($ext_platform);
-                                            echo esc_html(
-                                                $platform_label
-                                                    ? sprintf( __('Codice prenotazione %s', 'domilocus'), $platform_label )
-                                                    : __('Codice prenotazione piattaforma', 'domilocus')
-                                            );
+                                            if ( $platform_label ) {
+                                                // translators: %s: platform name (e.g. Airbnb, VRBO)
+                                                $booking_code_label = sprintf( __( 'Codice prenotazione %s', 'domilocus' ), $platform_label );
+                                            } else {
+                                                $booking_code_label = __( 'Codice prenotazione piattaforma', 'domilocus' );
+                                            }
+                                            echo esc_html( $booking_code_label );
                                             ?>
                                         </span>
                                         <strong style="font-family:monospace;font-size:15px;letter-spacing:1px"><?php echo esc_html($platform_code); ?></strong>
