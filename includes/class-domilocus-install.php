@@ -148,6 +148,11 @@ class Domilocus_Install {
                 $wpdb->query("ALTER TABLE $bookings_table ADD INDEX ical_uid (ical_uid)");
             }
 
+            if (!in_array('platform_booking_code', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN platform_booking_code varchar(100) DEFAULT NULL AFTER ical_uid");
+            }
+
             // Data-repair: bookings edited from admin that were originally iCal-imported
             // lost their source='ical_import' → they ended up in the export .ics and caused
             // duplicate imports on the external channel.  Restore source for those records.
@@ -263,6 +268,7 @@ class Domilocus_Install {
             access_code varchar(20) DEFAULT NULL,
             external_platform varchar(50) DEFAULT NULL,
             ical_uid varchar(255) DEFAULT NULL,
+            platform_booking_code varchar(100) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),

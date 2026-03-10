@@ -29,13 +29,18 @@ class Domilocus_Admin_Menus {
         $translations = Domilocus_Translations::get_translations($current_language);
         
         // Main menu
+        // Filters allow premium add-ons (e.g. White Label) to override the icon
+        // and menu title without modifying this file.
+        // When no add-on hooks in, defaults are unchanged.
+        $menu_icon  = apply_filters( 'domilocus_admin_menu_icon',  'dashicons-calendar-alt' );
+        $menu_title = apply_filters( 'domilocus_admin_menu_title', 'Domilocus' );
         add_menu_page(
-            'Domilocus',
-            'Domilocus',
+            $menu_title,
+            $menu_title,
             'manage_options',
             'domilocus',
             array(__CLASS__, 'dashboard_page'),
-            'dashicons-calendar-alt',
+            $menu_icon,
             25
         );
         

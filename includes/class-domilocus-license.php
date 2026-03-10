@@ -124,6 +124,12 @@ class Domilocus_License {
                 'plan_required' => 'starter',
                 'group' => 'payments'
             ),
+            'statistics_basic' => array(
+                'label' => __('Statistiche Base', 'domilocus'),
+                'description' => __('Occupazione, fatturato, report mensili', 'domilocus'),
+                'plan_required' => 'starter',
+                'group' => 'analytics'
+            ),
 
             // PROFESSIONAL FEATURES
             'advanced_tariffs' => array(
@@ -132,9 +138,27 @@ class Domilocus_License {
                 'plan_required' => 'professional',
                 'group' => 'pricing'
             ),
+            'dynamic_pricing' => array(
+                'label' => __('Prezzi Dinamici', 'domilocus'),
+                'description' => __('Prezzi automatici basati su festività, eventi, stagioni', 'domilocus'),
+                'plan_required' => 'professional',
+                'group' => 'pricing'
+            ),
+            'contracts_signatures' => array(
+                'label' => __('Contratti e Firme Digitali', 'domilocus'),
+                'description' => __('Generazione contratti PDF con firma digitale ospite', 'domilocus'),
+                'plan_required' => 'professional',
+                'group' => 'documents'
+            ),
             'statistics_basic' => array(
                 'label' => __('Statistiche Base', 'domilocus'),
                 'description' => __('Occupazione, fatturato, report mensili', 'domilocus'),
+                'plan_required' => 'professional',
+                'group' => 'analytics'
+            ),
+            'statistics_advanced' => array(
+                'label' => __('Statistiche Avanzate', 'domilocus'),
+                'description' => __('KPI avanzati, tasso occupazione, RevPAR', 'domilocus'),
                 'plan_required' => 'professional',
                 'group' => 'analytics'
             ),
@@ -152,12 +176,6 @@ class Domilocus_License {
             ),
 
             // PREMIUM FEATURES (top tier)
-            'dynamic_pricing' => array(
-                'label' => __('Prezzi Dinamici Automatici', 'domilocus'),
-                'description' => __('AI per ottimizzazione prezzi in tempo reale', 'domilocus'),
-                'plan_required' => 'premium',
-                'group' => 'pricing'
-            ),
             'advanced_analytics' => array(
                 'label' => __('Analytics Avanzati', 'domilocus'),
                 'description' => __('Revenue management, forecasting, export dati', 'domilocus'),
@@ -176,11 +194,29 @@ class Domilocus_License {
                 'plan_required' => 'premium',
                 'group' => 'integrations'
             ),
-
-            // ENTERPRISE FEATURES
             'white_label' => array(
                 'label' => __('White Label', 'domilocus'),
-                'description' => __('Rimozione branding Domilocus', 'domilocus'),
+                'description' => __('Rimozione branding Domilocus, logo personalizzato', 'domilocus'),
+                'plan_required' => 'premium',
+                'group' => 'branding'
+            ),
+            'pms_integration' => array(
+                'label' => __('Integrazione PMS', 'domilocus'),
+                'description' => __('Connessione con Property Management System esterni', 'domilocus'),
+                'plan_required' => 'premium',
+                'group' => 'integrations'
+            ),
+
+            // ENTERPRISE FEATURES
+            'channel_manager' => array(
+                'label' => __('Channel Manager', 'domilocus'),
+                'description' => __('Integrazione con channel manager per OTA multipli', 'domilocus'),
+                'plan_required' => 'enterprise',
+                'group' => 'integrations'
+            ),
+            'white_label_enterprise' => array(
+                'label' => __('White Label Enterprise', 'domilocus'),
+                'description' => __('Branding completo incluso dominio dedicato', 'domilocus'),
                 'plan_required' => 'enterprise',
                 'group' => 'branding'
             ),

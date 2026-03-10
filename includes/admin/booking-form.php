@@ -390,9 +390,31 @@ class Domilocus_Booking_Form {
                                         <?php esc_html_e('Genera un codice da inviare all\'ospite (es. Booking.com, Airbnb) per accedere all\'app.', 'domilocus'); ?>
                                     </p>
                                     <?php
-                                    $current_code = $booking->access_code ?? '';
+                                    $current_code  = $booking->access_code ?? '';
                                     $ext_platform  = $booking->external_platform ?? '';
+                                    $platform_code = $booking->platform_booking_code ?? '';
                                     ?>
+                                    <?php if (!empty($platform_code)) : ?>
+                                    <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px">
+                                        <span style="font-size:11px;color:#555;display:block;margin-bottom:4px">
+                                            <?php
+                                            $platform_labels = array(
+                                                'airbnb'      => 'Airbnb',
+                                                'vrbo'        => 'VRBO',
+                                                'booking.com' => 'Booking.com',
+                                                'expedia'     => 'Expedia',
+                                            );
+                                            $platform_label = isset($platform_labels[$ext_platform]) ? $platform_labels[$ext_platform] : esc_html($ext_platform);
+                                            echo esc_html(
+                                                $platform_label
+                                                    ? sprintf( __('Codice prenotazione %s', 'domilocus'), $platform_label )
+                                                    : __('Codice prenotazione piattaforma', 'domilocus')
+                                            );
+                                            ?>
+                                        </span>
+                                        <strong style="font-family:monospace;font-size:15px;letter-spacing:1px"><?php echo esc_html($platform_code); ?></strong>
+                                    </div>
+                                    <?php endif; ?>
                                     <div class="misc-pub-section">
                                         <label for="external_platform"><?php esc_html_e('Piattaforma', 'domilocus'); ?></label>
                                         <select id="external_platform" name="external_platform" class="widefat" style="margin-top:5px">
@@ -595,7 +617,7 @@ class Domilocus_Booking_Form {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $orig = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT source, ical_uid FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    "SELECT source, ical_uid, external_platform, platform_booking_code FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
                     $booking_id
                 )
             );
@@ -613,19 +635,38 @@ class Domilocus_Booking_Form {
                 if (empty($booking_data['external_platform']) && !empty($orig->external_platform)) {
                     $booking_data['external_platform'] = $orig->external_platform;
                 }
+                // Always preserve platform_booking_code — admin cannot change it from the form.
+                if (!empty($orig->platform_booking_code)) {
+                    $booking_data['platform_booking_code'] = $orig->platform_booking_code;
+                }
             }
         }
         
         if ($is_edit) {
             // Update existing booking
             $booking_data['updated_at'] = current_time('mysql');
-            
+
+            // Build format array dynamically so any conditionally-added fields
+            // (ical_uid, platform_booking_code, …) are never silently dropped.
+            $int_fields   = array('apartment_id', 'guests');
+            $float_fields = array('total_amount');
+            $update_formats = array();
+            foreach ($booking_data as $key => $val) {
+                if (in_array($key, $int_fields, true)) {
+                    $update_formats[] = '%d';
+                } elseif (in_array($key, $float_fields, true)) {
+                    $update_formats[] = '%f';
+                } else {
+                    $update_formats[] = '%s';
+                }
+            }
+
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $updated = $wpdb->update(
                 $wpdb->prefix . 'domilocus_bookings',
                 $booking_data,
                 array('id' => $booking_id),
-                array('%d', '%s', '%s', '%s', '%s', '%s', '%d', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'),
+                $update_formats,
                 array('%d')
             );
             
@@ -643,12 +684,26 @@ class Domilocus_Booking_Form {
             // Insert new booking
             $booking_data['created_at'] = current_time('mysql');
             $booking_data['updated_at'] = current_time('mysql');
-            
+
+            // Build format array dynamically (same logic as update above).
+            $int_fields   = array('apartment_id', 'guests');
+            $float_fields = array('total_amount');
+            $insert_formats = array();
+            foreach ($booking_data as $key => $val) {
+                if (in_array($key, $int_fields, true)) {
+                    $insert_formats[] = '%d';
+                } elseif (in_array($key, $float_fields, true)) {
+                    $insert_formats[] = '%f';
+                } else {
+                    $insert_formats[] = '%s';
+                }
+            }
+
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $inserted = $wpdb->insert(
                 $wpdb->prefix . 'domilocus_bookings',
                 $booking_data,
-                array('%d', '%s', '%s', '%s', '%s', '%s', '%d', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
+                $insert_formats
             );
             
             if ($inserted) {
