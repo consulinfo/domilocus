@@ -208,7 +208,9 @@ class Domilocus_Admin_Menus {
             return;
         }
 
-        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        $request_uri = isset($_SERVER['REQUEST_URI'])
+            ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']))
+            : '';
         if ($request_uri === '') {
             return;
         }
@@ -1001,12 +1003,11 @@ class Domilocus_Admin_Menus {
 
         if (!empty($extra_tabs)) {
             $active_extra = isset($extra_tabs[$active]);
-            $details_attr = $active_extra ? ' open' : '';
             $summary_style = $active_extra
                 ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;font-weight:600;cursor:pointer;'
                 : 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#fff;color:#2271b1;font-weight:600;cursor:pointer;';
 
-            echo '<details class="domilocus-extra-tabs"' . $details_attr . ' style="margin:0 0 18px;">';
+            echo '<details class="domilocus-extra-tabs"' . ($active_extra ? ' open="open"' : '') . ' style="margin:0 0 18px;">';
             echo '<summary style="' . esc_attr($summary_style) . '">Altri moduli (' . esc_html((string) count($extra_tabs)) . ')</summary>';
             echo '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;padding-bottom:2px;">';
             foreach ($extra_tabs as $slug => $tab) {

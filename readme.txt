@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.0.19
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,16 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.0 =
+* Added: non-fiscal receipt system with progressive annual numbering (e.g. 01/2026), available from admin and frontend booking confirmation.
+* Added: printable receipt document with improved Italian legal wording and correct payer/receiver logic.
+* Added: dedicated owner name setting for receipts, separated from email sender name.
+* Improved: platform bookings (Airbnb/OTA/iCal) receipt logic now issues amount for tourist tax collection only, with clear explanatory note.
+* Improved: admin navigation redesigned with horizontal tab bar and compact module grouping for better UX on full installations.
+* Improved: top admin bar quick links for common actions (new booking, bookings, calendar, apartments).
+* Fixed: dashboard/top-menu routing and malformed admin URL normalization to prevent "page not found"/permission edge cases.
+* Fixed: security/code-quality hardening for escaping, input sanitization, nonce flow documentation, and PHPCS compatibility.
 
 = 1.0.17 =
 * Fixed: iCal sync no longer creates duplicate bookings for records imported before v1.0.16 (orphan-adopt: existing records with NULL ical_uid and matching apartment/check-in are updated instead of re-inserted).

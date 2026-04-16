@@ -151,6 +151,9 @@ class Domilocus_Receipts {
     // -------------------------------------------------------------------------
 
     public static function handle_download() {
+        // Nonce is verified only for admin users in authorize_download().
+        // Guest downloads use signed booking key instead of nonce.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $booking_id = isset($_GET['booking_id']) ? absint($_GET['booking_id']) : 0;
         if (!$booking_id) {
             wp_die('ID prenotazione non valido.');
@@ -410,6 +413,7 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
             return Domilocus_Booking::get_booking((int) $booking_id);
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d", (int) $booking_id)
         );
