@@ -3,7 +3,7 @@
  * Plugin Name: Domilocus
  * Plugin URI: https://domilocus.consulinfo.it
  * Description: Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration.
- * Version: 1.0.17
+ * Version: 1.0.19
  * Author: ConsulInfo
  * Author URI: https://domilocus.consulinfo.it
  * Support: dev@consulinfo.it
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('DOMILOCUS_VERSION', '1.0.17');
+define('DOMILOCUS_VERSION', '1.0.19');
 define('DOMILOCUS_PLUGIN_FILE', __FILE__);
 define('DOMILOCUS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DOMILOCUS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -91,6 +91,8 @@ final class Domilocus {
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-translations.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-translation-helper.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-pricing-manager.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-booking-meta.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-receipts.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-events-manager.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-eventbrite-api-validator.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-tariffs-manager.php';
@@ -147,6 +149,9 @@ final class Domilocus {
         
         // Initialize pricing manager
         Domilocus_Pricing_Manager::init();
+
+        // Initialize receipts (non-fiscal)
+        Domilocus_Receipts::init();
         
         // Initialize statistics manager
         // Domilocus_Statistics_Manager::init();

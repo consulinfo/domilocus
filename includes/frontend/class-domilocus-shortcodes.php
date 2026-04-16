@@ -1101,6 +1101,14 @@ class Domilocus_Shortcodes {
                         <?php esc_html_e('View Apartment', 'domilocus'); ?>
                     </a>
                 <?php endif; ?>
+                <?php if (class_exists('Domilocus_Receipts')): ?>
+                    <a href="<?php echo esc_url(Domilocus_Receipts::get_guest_download_url((int) $booking->id, (string) $booking_key)); ?>"
+                       class="button secondary"
+                       target="_blank"
+                       rel="noopener">
+                        <?php esc_html_e('Scarica ricevuta (non fiscale)', 'domilocus'); ?>
+                    </a>
+                <?php endif; ?>
                 <button type="button" onclick="window.print()" class="button">
                     <?php esc_html_e('Print Confirmation', 'domilocus'); ?>
                 </button>

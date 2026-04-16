@@ -47,6 +47,7 @@ class Domilocus_Admin_Settings {
      */
     public static function register_settings() {
         // General settings
+        register_setting('domilocus_general', 'domilocus_manager_owner_name', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_currency', array(
             'sanitize_callback' => 'sanitize_text_field'
         ));
@@ -161,6 +162,7 @@ class Domilocus_Admin_Settings {
         ?>
         <div class="wrap domilocus-settings">
             <h1><?php esc_html_e('Domilocus Settings', 'domilocus'); ?></h1>
+            <?php if (class_exists('Domilocus_Admin_Menus')) { Domilocus_Admin_Menus::render_page_nav('domilocus-settings'); } ?>
 
             <?php self::render_feedback_notices(); ?>
 
@@ -255,6 +257,14 @@ class Domilocus_Admin_Settings {
         ?>
         <table class="form-table" role="presentation">
             <tbody>
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_owner_name">Nome titolare / locatore</label></th>
+                    <td>
+                        <input type="text" id="domilocus_manager_owner_name" name="domilocus_manager_owner_name" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_owner_name', '')); ?>" />
+                        <p class="description">Nome e cognome (o ragione sociale) che appare nelle ricevute non fiscali come &ldquo;Io sottoscritto&hellip;&rdquo;.</p>
+                    </td>
+                </tr>
+
                 <tr>
                     <th scope="row"><label for="domilocus_manager_currency"><?php esc_html_e('Currency', 'domilocus'); ?></label></th>
                     <td>
@@ -778,6 +788,7 @@ class Domilocus_Admin_Settings {
      */
     private static function save_general_settings() {
         $fields = array(
+            'domilocus_manager_owner_name' => 'sanitize_text_field',
             'domilocus_manager_currency' => 'sanitize_text_field',
             'domilocus_manager_currency_position' => 'sanitize_text_field',
             'domilocus_manager_date_format' => 'sanitize_text_field',

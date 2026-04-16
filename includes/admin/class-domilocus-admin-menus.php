@@ -14,8 +14,13 @@ class Domilocus_Admin_Menus {
      * Initialize
      */
     public static function init() {
-        add_action('admin_menu', array(__CLASS__, 'add_admin_menu'));
+        // Register parent menu early so add-on submenus always attach correctly.
+        add_action('admin_menu', array(__CLASS__, 'add_admin_menu'), 5);
+        add_action('admin_init', array(__CLASS__, 'normalize_admin_request'), 1);
         add_action('admin_init', array(__CLASS__, 'handle_admin_actions'));
+        add_action('admin_bar_menu', array(__CLASS__, 'add_admin_bar_menu'), 100);
+        add_action('admin_head', array(__CLASS__, 'hide_sidebar_submenu_css'));
+        add_action('admin_head', array(__CLASS__, 'force_top_level_dashboard_link'));
     }
     
     /**
@@ -54,40 +59,13 @@ class Domilocus_Admin_Menus {
             array(__CLASS__, 'dashboard_page')
         );
         
-        // Apartments
+        // Apartments list
         add_submenu_page(
             'domilocus',
             $translations['apartments'] ?? __('Apartments', 'domilocus'),
             $translations['apartments'] ?? __('Apartments', 'domilocus'),
             'manage_options',
             'edit.php?post_type=domilocus_apartment'
-        );
-        
-        // Add New Apartment
-        add_submenu_page(
-            'domilocus',
-            __('Add Apartment', 'domilocus'),
-            __('Add Apartment', 'domilocus'),
-            'manage_options',
-            'post-new.php?post_type=domilocus_apartment'
-        );
-        
-        // Categories
-        add_submenu_page(
-            'domilocus',
-            $translations['categories'] ?? __('Categories', 'domilocus'),
-            $translations['categories'] ?? __('Categories', 'domilocus'),
-            'manage_options',
-            'edit-tags.php?taxonomy=domilocus_apartment_category&post_type=domilocus_apartment'
-        );
-        
-        // Amenities
-        add_submenu_page(
-            'domilocus',
-            $translations['amenities'] ?? __('Amenities', 'domilocus'),
-            $translations['amenities'] ?? __('Amenities', 'domilocus'),
-            'manage_options',
-            'edit-tags.php?taxonomy=domilocus_apartment_amenity&post_type=domilocus_apartment'
         );
         
         // Bookings
@@ -182,6 +160,74 @@ class Domilocus_Admin_Menus {
         // respective add-on plugins using the 'domilocus_admin_menu' action hook.
         // This keeps the base plugin clean and avoids license issues with the
         // public distribution on WordPress.org and GitHub.
+    }
+
+    /**
+     * Hide Domilocus submenu in sidebar without unregistering pages.
+     * This avoids capability/routing issues on direct page URLs.
+     */
+    public static function hide_sidebar_submenu_css() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        ?>
+        <style>
+            #adminmenu #toplevel_page_domilocus .wp-submenu,
+            #adminmenu #toplevel_page_domilocus.wp-has-current-submenu .wp-submenu {
+                display: none !important;
+            }
+        </style>
+        <?php
+    }
+
+    /**
+     * Force top-level Domilocus click to always open dashboard page.
+     */
+    public static function force_top_level_dashboard_link() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        $dashboard_url = admin_url('admin.php?page=domilocus');
+        ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var top = document.querySelector('#toplevel_page_domilocus > a.menu-top');
+            if (top) {
+                top.setAttribute('href', <?php echo wp_json_encode($dashboard_url); ?>);
+            }
+        });
+        </script>
+        <?php
+    }
+
+    /**
+     * Redirect malformed admin paths to their correct admin.php?page=... URLs.
+     */
+    public static function normalize_admin_request() {
+        if (!is_admin()) {
+            return;
+        }
+
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) wp_unslash($_SERVER['REQUEST_URI']) : '';
+        if ($request_uri === '') {
+            return;
+        }
+
+        $path = wp_parse_url($request_uri, PHP_URL_PATH);
+        if (!is_string($path) || $path === '') {
+            return;
+        }
+
+        $basename = basename($path);
+        if ($basename === 'domilocus-app-activity') {
+            wp_safe_redirect(admin_url('admin.php?page=domilocus-app-activity'));
+            exit;
+        }
+
+        if ($basename === 'domilocus') {
+            wp_safe_redirect(admin_url('admin.php?page=domilocus'));
+            exit;
+        }
     }
     
     
@@ -365,7 +411,7 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html($translations['dashboard'] ?? __('Domilocus Dashboard', 'domilocus')); ?></h1>
-            
+            <?php self::render_page_nav('domilocus'); ?>
             <div class="domilocus-dashboard-widgets">
                 <!-- News Ticker -->
                 <?php 
@@ -627,8 +673,8 @@ class Domilocus_Admin_Menus {
                 <?php esc_html_e('Add New', 'domilocus'); ?>
             </a>
             <hr class="wp-header-end">
-            
-            <?php 
+            <?php self::render_page_nav('domilocus-bookings'); ?>
+            <?php
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (isset($_GET['message']) && $_GET['message'] === 'deleted'): ?>
                 <div class="notice notice-success is-dismissible">
@@ -779,7 +825,7 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Booking Calendar', 'domilocus'); ?></h1>
-            
+            <?php self::render_page_nav('domilocus-calendar'); ?>
             <?php if ($apartments): ?>
                 <form method="get" id="calendar-filters-form" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                     <input type="hidden" name="page" value="domilocus-calendar">
@@ -859,6 +905,7 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Funzionalità non disponibile', 'domilocus'); ?></h1>
+            <?php self::render_page_nav(); ?>
             <div class="notice notice-warning" style="padding: 15px;">
                 <p><?php esc_html_e('Questa pagina richiede un add-on Domilocus attivo. Installa e attiva l’add-on corrispondente oppure contatta il supporto.', 'domilocus'); ?></p>
             </div>
@@ -878,7 +925,212 @@ class Domilocus_Admin_Menus {
         // This will be handled by Domilocus_Admin_Settings
         Domilocus_Admin_Settings::render_settings_page();
     }
-    
+    // -------------------------------------------------------------------------
+    // Navigazione orizzontale — barra tab comune a tutte le pagine Domilocus.
+    // -------------------------------------------------------------------------
+
+    /**
+     * Renders the top horizontal navigation tabs shared across all Domilocus pages.
+     * Call this right after the <h1> inside each <div class="wrap">.
+     *
+     * @param string $active Slug of the active tab (domilocus|domilocus-bookings|domilocus-calendar|domilocus-settings).
+     */
+    public static function render_page_nav($active = '') {
+        if ($active === '') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : 'domilocus';
+            $active = $page;
+        }
+
+        $tabs = array(
+            'domilocus'          => array('label' => 'Dashboard',       'url' => admin_url('admin.php?page=domilocus')),
+            'domilocus-bookings' => array('label' => 'Prenotazioni',    'url' => admin_url('admin.php?page=domilocus-bookings')),
+            'domilocus-calendar' => array('label' => 'Calendario',      'url' => admin_url('admin.php?page=domilocus-calendar')),
+            'domilocus-apartments' => array('label' => 'Appartamenti',  'url' => admin_url('edit.php?post_type=domilocus_apartment')),
+            'domilocus-settings' => array('label' => 'Impostazioni',    'url' => admin_url('admin.php?page=domilocus-settings')),
+        );
+
+        // Add-on tabs are discovered dynamically from registered submenus,
+        // so labels/slugs are always consistent with active plugins.
+        $tabs = self::append_dynamic_domilocus_tabs($tabs);
+
+        /**
+         * Allow add-ons to register extra navigation tabs.
+         * Each entry: 'slug' => array('label' => 'Label', 'url' => 'URL')
+         */
+        $tabs = apply_filters('domilocus_page_nav_tabs', $tabs);
+
+        // Apartments is a CPT page so active detection is different.
+        $current_post_type = isset($_GET['post_type']) ? sanitize_key($_GET['post_type']) : ''; // phpcs:ignore
+        if ($current_post_type === 'domilocus_apartment') {
+            $active = 'domilocus-apartments';
+        }
+
+        $primary_slugs = array(
+            'domilocus',
+            'domilocus-bookings',
+            'domilocus-calendar',
+            'domilocus-apartments',
+            'domilocus-settings',
+        );
+
+        $primary_tabs = array();
+        $extra_tabs   = array();
+        foreach ($tabs as $slug => $tab) {
+            if (in_array($slug, $primary_slugs, true)) {
+                $primary_tabs[$slug] = $tab;
+            } else {
+                $extra_tabs[$slug] = $tab;
+            }
+        }
+
+        echo '<nav class="domilocus-page-nav" style="margin:12px 0 10px;border-bottom:1px solid #c3c4c7;display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding-bottom:1px;">';
+        foreach ($primary_tabs as $slug => $tab) {
+            $is_active    = ($slug === $active);
+            $base_style   = 'display:inline-block;padding:8px 16px;font-size:14px;font-weight:500;text-decoration:none;border:1px solid transparent;border-bottom:none;margin-bottom:-1px;flex:0 0 auto;white-space:nowrap;';
+            $active_style = 'background:#f0f0f1;color:#1d2327;border-color:#c3c4c7;border-bottom-color:#f0f0f1;border-radius:4px 4px 0 0;';
+            $idle_style   = 'color:#2271b1;border-radius:4px 4px 0 0;';
+            printf(
+                '<a href="%s" style="%s">%s</a>',
+                esc_url($tab['url']),
+                esc_attr($base_style . ($is_active ? $active_style : $idle_style)),
+                esc_html($tab['label'])
+            );
+        }
+        echo '</nav>';
+
+        if (!empty($extra_tabs)) {
+            $active_extra = isset($extra_tabs[$active]);
+            $details_attr = $active_extra ? ' open' : '';
+            $summary_style = $active_extra
+                ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;font-weight:600;cursor:pointer;'
+                : 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#fff;color:#2271b1;font-weight:600;cursor:pointer;';
+
+            echo '<details class="domilocus-extra-tabs"' . $details_attr . ' style="margin:0 0 18px;">';
+            echo '<summary style="' . esc_attr($summary_style) . '">Altri moduli (' . esc_html((string) count($extra_tabs)) . ')</summary>';
+            echo '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;padding-bottom:2px;">';
+            foreach ($extra_tabs as $slug => $tab) {
+                $is_active = ($slug === $active);
+                $style = $is_active
+                    ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;text-decoration:none;font-size:13px;flex:0 0 auto;'
+                    : 'display:inline-block;padding:6px 10px;border:1px solid #dcdcde;border-radius:4px;background:#fff;color:#2271b1;text-decoration:none;font-size:13px;flex:0 0 auto;';
+                printf(
+                    '<a href="%s" style="%s">%s</a>',
+                    esc_url($tab['url']),
+                    esc_attr($style),
+                    esc_html($tab['label'])
+                );
+            }
+            echo '</div>';
+            echo '</details>';
+        }
+    }
+
+    /**
+     * Appends dynamic tabs from actual Domilocus submenu registrations.
+     * This prevents broken links when add-ons use different page slugs.
+     *
+     * @param array $tabs Existing tab list.
+     * @return array
+     */
+    private static function append_dynamic_domilocus_tabs($tabs) {
+        global $submenu;
+
+        if (empty($submenu['domilocus']) || !is_array($submenu['domilocus'])) {
+            return $tabs;
+        }
+
+        foreach ($submenu['domilocus'] as $item) {
+            $label = isset($item[0]) ? trim(wp_strip_all_tags((string) $item[0])) : '';
+            $slug  = isset($item[2]) ? (string) $item[2] : '';
+
+            if ($slug === '' || $label === '') {
+                continue;
+            }
+
+            // Keep only Domilocus-related pages and skip base pages already present.
+            $is_domilocus_slug = (strpos($slug, 'domilocus-') === 0);
+            if (!$is_domilocus_slug) {
+                continue;
+            }
+
+            if (isset($tabs[$slug]) || in_array($slug, array('domilocus', 'domilocus-bookings', 'domilocus-calendar', 'domilocus-settings'), true)) {
+                continue;
+            }
+
+            $url = admin_url('admin.php?page=' . rawurlencode($slug));
+            $tabs[$slug] = array(
+                'label' => $label,
+                'url'   => $url,
+            );
+        }
+
+        return $tabs;
+    }
+
+    // -------------------------------------------------------------------------
+    // Admin bar — link rapidi nella barra nera in alto.
+    // -------------------------------------------------------------------------
+
+    /**
+     * Add Domilocus quick-links to the WordPress admin bar.
+     */
+    public static function add_admin_bar_menu($wp_admin_bar) {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // Root node (visible in both frontend and backend).
+        $wp_admin_bar->add_node(array(
+            'id'    => 'domilocus',
+            'title' => '<span class="ab-icon dashicons dashicons-calendar-alt" style="font-size:17px;line-height:1.9;margin-right:4px;"></span> Domilocus',
+            'href'  => admin_url('admin.php?page=domilocus'),
+            'meta'  => array('class' => 'domilocus-adminbar'),
+        ));
+
+        // Child links — quick actions.
+        $links = array(
+            array(
+                'id'    => 'domilocus-new-booking',
+                'title' => '<span class="dashicons dashicons-plus-alt2" style="font-size:14px;line-height:2;margin-right:3px;vertical-align:middle;"></span> Nuova prenotazione',
+                'href'  => admin_url('admin.php?page=domilocus-bookings&action=add'),
+            ),
+            array(
+                'id'    => 'domilocus-bookings',
+                'title' => 'Prenotazioni',
+                'href'  => admin_url('admin.php?page=domilocus-bookings'),
+            ),
+            array(
+                'id'    => 'domilocus-calendar',
+                'title' => 'Calendario',
+                'href'  => admin_url('admin.php?page=domilocus-calendar'),
+            ),
+            array(
+                'id'    => 'domilocus-new-apartment',
+                'title' => '<span class="dashicons dashicons-plus-alt2" style="font-size:14px;line-height:2;margin-right:3px;vertical-align:middle;"></span> Nuovo appartamento',
+                'href'  => admin_url('post-new.php?post_type=domilocus_apartment'),
+            ),
+            array(
+                'id'    => 'domilocus-apartments',
+                'title' => 'Appartamenti',
+                'href'  => admin_url('edit.php?post_type=domilocus_apartment'),
+            ),
+        );
+
+        // Allow add-ons to add/remove links.
+        $links = apply_filters('domilocus_admin_bar_links', $links);
+
+        foreach ($links as $link) {
+            $wp_admin_bar->add_node(array(
+                'parent' => 'domilocus',
+                'id'     => $link['id'],
+                'title'  => $link['title'],
+                'href'   => $link['href'],
+                'meta'   => isset($link['meta']) ? $link['meta'] : array(),
+            ));
+        }
+    }
+
     /**
      * Handle admin actions
      */
