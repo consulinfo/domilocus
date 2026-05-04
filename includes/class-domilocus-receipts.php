@@ -881,15 +881,18 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 
         $cin = '';
         $cir = '';
-        if (preg_match('/CIN\s*[:\-]?\s*([^\s\|\/]+)/i', $value, $cin_match)) {
+        if (preg_match('/CIN\s*[:\-]?\s*([^\|\n]+)/i', $value, $cin_match)) {
             $cin = trim((string) $cin_match[1]);
         }
-        if (preg_match('/CIR\s*[:\-]?\s*([^\s\|\/]+)/i', $value, $cir_match)) {
+        if (preg_match('/CIR\s*[:\-]?\s*([^\|\n]+)/i', $value, $cir_match)) {
             $cir = trim((string) $cir_match[1]);
         }
 
         if ($cin === '' || $cir === '') {
-            $parts = preg_split('/\s*[\|\/,-]\s*/', $value);
+            // Fallback: cerca il separatore | o virgola; la / viene usata solo
+            // se non ci sono separatori più forti, per non spezzare codici tipo IT-XX/2024-001
+            $sep = preg_match('/[|,]/', $value) ? '/\s*[|,]\s*/' : '/\s*\/\s*/';
+            $parts = preg_split($sep, $value, 2);
             if (is_array($parts) && count($parts) >= 2) {
                 if ($cin === '') {
                     $cin = trim((string) $parts[0]);
