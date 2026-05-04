@@ -699,7 +699,6 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         <p><?php echo esc_html($payment_declaration); ?></p>
 
         <?php if ($is_no_show): ?>
-        <p class="note"><?php echo esc_html(self::t('noshow_penalty_line')); ?></p>
         <p class="note"><?php echo esc_html(self::t('noshow_iva_line')); ?></p>
         <?php endif; ?>
 
