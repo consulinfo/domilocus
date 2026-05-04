@@ -331,7 +331,7 @@ class Domilocus_Receipts {
         $context       = self::build_receipt_context($booking);
         $number        = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
         $created_at    = (string) domilocus_get_booking_meta($booking_id, self::META_CREATED_AT, true);
-        $created_label = $created_at ? wp_date('d/m/Y H:i', strtotime($created_at)) : '-';
+        $created_label = wp_date('d/m/Y', strtotime((string) $booking->check_out));
         $gross_amount  = (float) $context['gross_total'];
         $tourist_tax   = (float) $context['tourist_tax'];
         $is_platform   = (bool) $context['is_platform'];
@@ -577,7 +577,7 @@ class Domilocus_Receipts {
         $check_out_ts = strtotime((string) $booking->check_out);
         $payment_ts = $check_out_ts ? $check_out_ts : current_time('timestamp');
         $payment_label = wp_date('d/m/Y', $payment_ts);
-        $date_label = $created_at ? wp_date('d/m/Y H:i:s', strtotime($created_at)) : wp_date('d/m/Y H:i:s');
+        $date_label = wp_date('d/m/Y', $payment_ts);
         $period_label = self::format_period((string) $booking->check_in, (string) $booking->check_out);
         $nights = max(1, (int) ((strtotime((string) $booking->check_out) - strtotime((string) $booking->check_in)) / DAY_IN_SECONDS));
         $currency = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));

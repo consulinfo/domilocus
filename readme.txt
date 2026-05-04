@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.5 =
+* Fixed: data di emissione nella ricevuta non fiscale ora mostra sempre la data di check-out.
 
 = 1.1.4 =
 * Added: portale ricevuta ospite integrato nella pagina di conferma prenotazione — visualizzazione, stampa/PDF e aggiornamento dati direttamente dal link di conferma.
