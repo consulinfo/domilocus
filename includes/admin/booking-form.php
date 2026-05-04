@@ -327,6 +327,9 @@ class Domilocus_Booking_Form {
                                             <option value="completed" <?php selected($defaults['status'], 'completed'); ?>>
                                                 <?php esc_html_e('Completed', 'domilocus'); ?>
                                             </option>
+                                            <option value="no_show" <?php selected($defaults['status'], 'no_show'); ?>>
+                                                Non presentato (no-show)
+                                            </option>
                                         </select>
                                     </div>
                                     

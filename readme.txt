@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.3 =
+* Added: stato prenotazione "Non presentato (no-show)" nel form admin — impostare questo stato genera automaticamente la ricevuta come penale per mancato arrivo (art. 15 DPR 633/72).
 
 = 1.1.2 =
 * Added: guest fiscal code / VAT field on booking form (Codice Fiscale / P.IVA ospite), stored in bookings table.
