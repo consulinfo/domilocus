@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: receipt platform detection is now OTA-wide (Booking.com, Airbnb, VRBO, Expedia, generic OTA and iCal imports), not Booking-only.
+* Improved: receipt context now keeps backward compatibility with existing stored platform metadata while correctly classifying legacy bookings.
 
 = 1.1.0 =
 * Added: non-fiscal receipt system with progressive annual numbering (e.g. 01/2026), available from admin and frontend booking confirmation.

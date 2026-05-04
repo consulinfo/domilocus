@@ -61,13 +61,17 @@ class Domilocus_Receipts {
 
         self::ensure_receipt_for_booking($booking);
 
+        $context       = self::build_receipt_context($booking);
         $number        = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
         $created_at    = (string) domilocus_get_booking_meta($booking_id, self::META_CREATED_AT, true);
         $created_label = $created_at ? wp_date('d/m/Y H:i', strtotime($created_at)) : '-';
-        $net_amount    = (float)  domilocus_get_booking_meta($booking_id, self::META_NET_AMOUNT, true);
-        $is_platform   = domilocus_get_booking_meta($booking_id, self::META_IS_PLATFORM, true) === '1';
+        $gross_amount  = (float) $context['gross_total'];
+        $tourist_tax   = (float) $context['tourist_tax'];
+        $is_platform   = (bool) $context['is_platform'];
+        $is_no_show    = (bool) $context['is_no_show'];
         $currency      = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));
-        $amount_label  = number_format($net_amount, 2, ',', '.') . ' ' . $currency;
+        $gross_label   = number_format($gross_amount, 2, ',', '.') . ' ' . $currency;
+        $tax_label     = number_format($tourist_tax, 2, ',', '.') . ' ' . $currency;
         $url           = self::get_admin_download_url($booking_id);
         $modal_id      = 'dml-rcpt-modal-' . $booking_id;
         $btn_id        = 'dml-rcpt-btn-'   . $booking_id;
@@ -80,6 +84,9 @@ class Domilocus_Receipts {
                 <p style="margin:0 0 8px;font-size:13px;">
                     <strong>N.&nbsp;<?php echo esc_html($number ?: '-'); ?></strong>
                     &nbsp;&mdash;&nbsp;<?php echo esc_html($created_label); ?>
+                    <?php if ($is_no_show): ?>
+                        &nbsp;<span style="background:#fff4e5;color:#8a4b00;border-radius:3px;padding:1px 5px;font-size:11px;">no-show</span>
+                    <?php endif; ?>
                     <?php if ($is_platform): ?>
                         &nbsp;<span style="background:#f0f6ff;color:#2271b1;border-radius:3px;padding:1px 5px;font-size:11px;">piattaforma</span>
                     <?php endif; ?>
@@ -99,15 +106,13 @@ class Domilocus_Receipts {
                         <td style="padding:5px 0;"><?php echo esc_html($created_label); ?></td>
                     </tr>
                     <tr>
-                        <td style="padding:5px 0;"><strong>Importo</strong></td>
-                        <td style="padding:5px 0;"><?php echo esc_html($amount_label); ?></td>
+                        <td style="padding:5px 0;"><strong>Totale lordo</strong></td>
+                        <td style="padding:5px 0;"><?php echo esc_html($gross_label); ?></td>
                     </tr>
-                    <?php if ($is_platform): ?>
+                    <?php if (!$is_no_show): ?>
                     <tr>
-                        <td style="padding:5px 0;" valign="top"><strong>Tipo</strong></td>
-                        <td style="padding:5px 0;">Prenotazione da piattaforma<br>
-                            <small style="color:#555;">L&rsquo;importo corrisponde alla tassa di soggiorno incassata direttamente dall&rsquo;ospite.</small>
-                        </td>
+                        <td style="padding:5px 0;"><strong>Tassa soggiorno</strong></td>
+                        <td style="padding:5px 0;"><?php echo esc_html($tax_label); ?><?php if ($tourist_tax > 0): ?> <small style="color:#555;">(incassata direttamente)</small><?php endif; ?></td>
                     </tr>
                     <?php endif; ?>
                 </table>
@@ -210,26 +215,15 @@ class Domilocus_Receipts {
         $created_at  = !empty($booking->created_at) ? (string) $booking->created_at : current_time('mysql');
         $tourist_tax = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
         $total       = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
+        $is_no_show  = self::is_no_show_booking($booking_id, $booking);
 
-        // Detect platform / iCal bookings.
-        $is_platform   = false;
-        $platform_name = '';
-        $source        = isset($booking->source) ? (string) $booking->source : '';
-        if (!empty($booking->external_platform)) {
-            $is_platform   = true;
-            $platform_name = strtoupper((string) $booking->external_platform);
-        } elseif ($source === 'ical_import') {
-            $is_platform   = true;
-            $platform_name = 'iCal / piattaforma esterna';
-        }
+        $platform_data = self::detect_platform_data($booking);
+        $is_platform   = (bool) $platform_data['is_platform'];
+        $platform_name = (string) $platform_data['platform_name'];
 
-        // For platform bookings the host only receipts the tourist tax
-        // (the stay amount is collected by the platform, not paid directly to the host).
-        if ($is_platform) {
-            $net_amount = $tourist_tax;
-        } else {
-            $net_amount = max(0.0, $total - $tourist_tax);
-        }
+        // Store the main receipt amount as gross booking total.
+        // (No-show keeps gross total as penalty basis; tourist tax is excluded at render time.)
+        $net_amount = max(0.0, $total);
 
         domilocus_update_booking_meta($booking_id, self::META_NUMBER,      $number);
         domilocus_update_booking_meta($booking_id, self::META_SEQUENCE,    $seq);
@@ -238,6 +232,7 @@ class Domilocus_Receipts {
         domilocus_update_booking_meta($booking_id, self::META_NET_AMOUNT,  $net_amount);
         domilocus_update_booking_meta($booking_id, self::META_IS_PLATFORM, $is_platform ? '1' : '0');
         domilocus_update_booking_meta($booking_id, self::META_PLATFORM,    $platform_name);
+        domilocus_update_booking_meta($booking_id, '_domilocus_receipt_no_show', $is_no_show ? '1' : '0');
     }
 
     private static function next_sequence($year) {
@@ -256,9 +251,12 @@ class Domilocus_Receipts {
         $booking_id    = (int) $booking->id;
         $number        = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
         $created_at    = (string) domilocus_get_booking_meta($booking_id, self::META_CREATED_AT, true);
-        $net_amount    = (float)  domilocus_get_booking_meta($booking_id, self::META_NET_AMOUNT, true);
-        $is_platform   = domilocus_get_booking_meta($booking_id, self::META_IS_PLATFORM, true) === '1';
-        $platform_name = (string) domilocus_get_booking_meta($booking_id, self::META_PLATFORM, true);
+        $context       = self::build_receipt_context($booking);
+        $gross_total   = (float) $context['gross_total'];
+        $tourist_tax   = (float) $context['tourist_tax'];
+        $is_platform   = (bool) $context['is_platform'];
+        $platform_name = (string) $context['platform_name'];
+        $is_no_show    = (bool) $context['is_no_show'];
 
         // Host name (titolare / gestore dell'immobile).
         // Dedicated option first, then fall back to email sender name.
@@ -284,14 +282,12 @@ class Domilocus_Receipts {
         $period_label = self::format_period((string) $booking->check_in, (string) $booking->check_out);
         $nights       = max(1, (int) ((strtotime((string) $booking->check_out) - strtotime((string) $booking->check_in)) / DAY_IN_SECONDS));
         $currency     = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));
-        $amount_label = number_format($net_amount, 2, ',', '.') . ' ' . $currency;
+        $gross_label  = number_format($gross_total, 2, ',', '.') . ' ' . $currency;
+        $tax_label    = number_format($tourist_tax, 2, ',', '.') . ' ' . $currency;
 
-        // Guest name — may be empty/unknown for iCal imports.
-        $guest_name = trim((string) $booking->customer_name);
-        if ($guest_name === '' || 0 === strcasecmp($guest_name, 'not available') || 0 === strcasecmp($guest_name, 'n/a')
-            || stripos($guest_name, 'not available') !== false) {
-            $guest_name = '';
-        }
+        $people = self::get_receipt_people($booking);
+        $payer_name = $people['payer_name'];
+        $guest_name = $people['guest_name'];
 
         $source_label = self::source_label($booking);
 
@@ -325,30 +321,19 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
 
   <div class="doc">
 
-    <?php if ($is_platform): ?>
-
+    <?php if ($is_no_show): ?>
     <p>Io sottoscritto <strong><?php echo esc_html($host_name); ?></strong>, dichiaro di aver ricevuto in data <strong><?php echo esc_html($date_label); ?></strong>
-    <?php if ($guest_name !== ''): ?>
-        da <strong><?php echo esc_html($guest_name); ?></strong>
-    <?php endif; ?>
-    la somma di <span class="amount"><?php echo esc_html($amount_label); ?></span>,
-    a titolo di <strong>tassa di soggiorno</strong> relativa alla prenotazione pervenuta tramite
-    <strong><?php echo esc_html($platform_name ?: 'piattaforma esterna'); ?></strong>.</p>
-
-    <p class="note">L&rsquo;importo del soggiorno &egrave; stato riscosso direttamente dalla piattaforma di prenotazione e non &egrave; oggetto della presente ricevuta.</p>
-
+    da <strong><?php echo esc_html($payer_name ?: 'cliente'); ?></strong> la somma di <span class="amount"><?php echo esc_html($gross_label); ?></span>
+    a titolo di <strong>Penale per mancato arrivo</strong>.</p>
     <?php else: ?>
-
     <p>Io sottoscritto <strong><?php echo esc_html($host_name); ?></strong>, dichiaro di aver ricevuto in data <strong><?php echo esc_html($date_label); ?></strong>
-    <?php if ($guest_name !== ''): ?>
-        da <strong><?php echo esc_html($guest_name); ?></strong>
-    <?php else: ?>
-        dall&rsquo;ospite
+    da <strong><?php echo esc_html($payer_name ?: 'cliente'); ?></strong> la somma di <span class="amount"><?php echo esc_html($gross_label); ?></span>
+    relativa alla prenotazione<?php if ($is_platform && $platform_name !== ''): ?> gestita da <strong><?php echo esc_html($platform_name); ?></strong><?php endif; ?>.</p>
     <?php endif; ?>
-    la somma di <span class="amount"><?php echo esc_html($amount_label); ?></span>.</p>
 
-    <p class="note">La somma si intende al netto della tassa di soggiorno, ove applicabile.</p>
-
+    <?php if ($payer_name !== '' && $guest_name !== '' && strcasecmp($payer_name, $guest_name) !== 0): ?>
+    <p><strong>Intestatario ricevuta (pagante):</strong> <?php echo esc_html($payer_name); ?><br>
+    <strong>Ospite soggiornante:</strong> <?php echo esc_html($guest_name); ?></p>
     <?php endif; ?>
 
     <p>Importo riferito al soggiorno di <strong><?php echo (int) $nights; ?> notte/i</strong>
@@ -357,9 +342,22 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
 
     <p><strong>Periodo del soggiorno:</strong> <?php echo esc_html($period_label); ?></p>
 
+    <p><strong>Totale lordo prenotazione:</strong> <?php echo esc_html($gross_label); ?></p>
+    <?php if (!$is_no_show): ?>
+    <p><strong>Tassa di soggiorno (incassata direttamente):</strong> <?php echo esc_html($tax_label); ?></p>
+    <?php endif; ?>
+
     <?php if ($source_label !== ''): ?>
     <p><strong>Origine prenotazione:</strong> <?php echo esc_html($source_label); ?></p>
     <?php endif; ?>
+
+    <?php if ($is_no_show): ?>
+    <p class="note">Somma corrisposta a titolo di penale per recesso. Operazione esclusa dal campo di applicazione dell'IVA ai sensi dell'art. 15 del DPR 633/72</p>
+    <?php else: ?>
+    <p class="note">Operazione fuori campo IVA ai sensi dell'art. 1, comma 2, lett. c) della Legge 431/98 e dell'art. 4 del DL 50/2017</p>
+    <?php endif; ?>
+
+    <p class="note">Imposta di bollo da 2€ a carico del cliente per importi superiori a 77,47€</p>
 
     <div class="sign">
       <p><strong>Firma del locatore</strong></p>
@@ -406,6 +404,133 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
         }
 
         return $source;
+    }
+
+    private static function build_receipt_context($booking) {
+        $booking_id = (int) $booking->id;
+
+        $gross_total = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
+        $tourist_tax = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
+
+        $platform_data = self::detect_platform_data($booking);
+        $is_platform   = (bool) $platform_data['is_platform'];
+        $platform_name = (string) $platform_data['platform_name'];
+
+        // Keep backward compatibility with already-stored receipt metadata.
+        $stored_platform = (string) domilocus_get_booking_meta($booking_id, self::META_PLATFORM, true);
+        if ($stored_platform !== '') {
+            $platform_name = $stored_platform;
+        }
+        $stored_is_platform = domilocus_get_booking_meta($booking_id, self::META_IS_PLATFORM, true) === '1';
+        $is_platform = $is_platform || $stored_is_platform;
+
+        $is_no_show = self::is_no_show_booking($booking_id, $booking);
+        if ($is_no_show) {
+            $tourist_tax = 0.0;
+        }
+
+        return array(
+            'gross_total'   => max(0.0, $gross_total),
+            'tourist_tax'   => max(0.0, $tourist_tax),
+            'display_total' => max(0.0, $gross_total),
+            'is_platform'   => $is_platform,
+            'platform_name' => $platform_name,
+            'is_no_show'    => $is_no_show,
+        );
+    }
+
+    private static function detect_platform_data($booking) {
+        $source          = isset($booking->source) ? strtolower(trim((string) $booking->source)) : '';
+        $external_raw    = isset($booking->external_platform) ? trim((string) $booking->external_platform) : '';
+        $platform_name   = '';
+        $is_platform     = false;
+
+        if ($external_raw !== '') {
+            $is_platform = true;
+            $platform_name = strtoupper($external_raw);
+        }
+
+        // Covers all common OTA/import sources, not only Booking.com.
+        $platform_sources = array(
+            'ical_import',
+            'ical',
+            'platform',
+            'ota',
+            'airbnb',
+            'booking',
+            'bookingcom',
+            'booking.com',
+            'vrbo',
+            'expedia',
+        );
+
+        if (in_array($source, $platform_sources, true)) {
+            $is_platform = true;
+            if ($platform_name === '') {
+                $platform_name = ($source === 'ical_import' || $source === 'ical')
+                    ? 'iCal / piattaforma esterna'
+                    : strtoupper($source);
+            }
+        }
+
+        return array(
+            'is_platform'  => $is_platform,
+            'platform_name'=> $platform_name,
+        );
+    }
+
+    private static function is_no_show_booking($booking_id, $booking) {
+        $flag = strtolower(trim((string) domilocus_get_booking_meta((int) $booking_id, '_domilocus_receipt_no_show', true)));
+        if (in_array($flag, array('1', 'yes', 'true', 'on'), true)) {
+            return true;
+        }
+
+        $status = isset($booking->status) ? strtolower(trim((string) $booking->status)) : '';
+        return in_array($status, array('no_show', 'noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true);
+    }
+
+    private static function get_receipt_people($booking) {
+        $booking_id = (int) $booking->id;
+
+        $fallback_name = trim((string) (isset($booking->customer_name) ? $booking->customer_name : ''));
+        $fallback_name = self::normalize_person_name($fallback_name);
+
+        $payer_name = trim((string) domilocus_get_booking_meta($booking_id, '_domilocus_receipt_payer_name', true));
+        if ($payer_name === '') {
+            $payer_name = trim((string) domilocus_get_booking_meta($booking_id, '_domilocus_payer_name', true));
+        }
+        $payer_name = self::normalize_person_name($payer_name);
+        if ($payer_name === '') {
+            $payer_name = $fallback_name;
+        }
+
+        $guest_name = trim((string) domilocus_get_booking_meta($booking_id, '_domilocus_receipt_guest_name', true));
+        if ($guest_name === '') {
+            $guest_name = trim((string) domilocus_get_booking_meta($booking_id, '_domilocus_guest_name', true));
+        }
+        $guest_name = self::normalize_person_name($guest_name);
+        if ($guest_name === '') {
+            $guest_name = $fallback_name;
+        }
+
+        return array(
+            'payer_name' => $payer_name,
+            'guest_name' => $guest_name,
+        );
+    }
+
+    private static function normalize_person_name($name) {
+        $name = trim((string) $name);
+        if ($name === '') {
+            return '';
+        }
+
+        $invalid = array('not available', 'n/a', 'na', 'sconosciuto', 'unknown');
+        if (in_array(strtolower($name), $invalid, true)) {
+            return '';
+        }
+
+        return $name;
     }
 
     private static function get_booking($booking_id) {
