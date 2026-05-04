@@ -418,7 +418,7 @@ class Domilocus_Receipts {
     public static function get_admin_download_url($booking_id) {
         $booking_id = (int) $booking_id;
         $nonce = wp_create_nonce('domilocus_receipt_dl_' . $booking_id);
-        return admin_url('admin-post.php?action=domilocus_download_receipt&booking_id=' . $booking_id . '&_wpnonce=' . $nonce);
+        return admin_url('admin-post.php?action=domilocus_download_receipt&booking_id=' . $booking_id . '&mode=print&_wpnonce=' . $nonce);
     }
 
     public static function get_guest_download_url($booking_id, $booking_key = '') {
@@ -427,7 +427,7 @@ class Domilocus_Receipts {
             $booking = self::get_booking($booking_id);
             $booking_key = $booking ? self::build_receipt_key($booking) : '';
         }
-        return admin_url('admin-post.php?action=domilocus_download_receipt&booking_id=' . $booking_id . '&key=' . rawurlencode((string) $booking_key));
+        return admin_url('admin-post.php?action=domilocus_download_receipt&booking_id=' . $booking_id . '&mode=print&key=' . rawurlencode((string) $booking_key));
     }
 
     /**
