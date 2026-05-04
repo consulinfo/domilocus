@@ -284,7 +284,7 @@ class Domilocus_Receipts {
 
         global $wpdb;
         $table = $wpdb->prefix . 'domilocus_bookings';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->update(
             $table,
             array(
@@ -932,51 +932,50 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 
     private static function t($key) {
         $map = array(
-            'doc_title_non_fiscal_summary' => 'Prospetto Riepilogativo Soggiorno',
-            'doc_title_penalty_receipt' => 'Ricevuta Penale per Recesso',
-            'doc_title_receipt' => 'Ricevuta',
-            'subtitle_non_fiscal' => 'Documento non fiscale',
-            'header_host' => 'Locatore',
-            'header_guest' => 'Ospite / Intestatario',
-            'label_tax_code' => 'Codice Fiscale',
-            'label_property_address' => 'Indirizzo immobile',
-            'label_cin' => 'CIN',
-            'label_cir' => 'CIR',
-            'label_residence' => 'Residenza',
-            'label_country' => 'Nazione',
-            'label_property' => 'Immobile',
-            'label_issue_date' => 'Data di emissione',
-            'label_booking_date' => 'Data prenotazione',
-            'label_booking_source' => 'Origine prenotazione',
-            'source_direct_site' => 'Sito Diretto',
-            'declaration_platform' => 'Corrispettivo del soggiorno pari a {gross_amount}, corrisposto tramite l\'intermediario {platform_name}, incaricato della riscossione.',
-            'declaration_penalty' => 'Il sottoscritto {host_name} attesta l\'importo di {gross_amount} trattenuto a titolo di penale per mancato arrivo (no-show).',
-            'declaration_direct_receipt' => 'Io sottoscritto {host_name}, dichiaro di aver ricevuto in data {payment_date} da {guest_name} la somma di {gross_amount}.',
-            'noshow_penalty_line' => 'Importo trattenuto a titolo di penale per mancato arrivo (no-show).',
-            'noshow_iva_line' => 'Operazione esclusa dal campo di applicazione dell\'IVA ai sensi dell\'art. 15 del DPR 633/72.',
-            'footer_bollo_note' => 'Imposta di bollo, se dovuta, a carico dell\'ospite ai sensi del DPR 642/72.',
-            'label_total' => 'Totale complessivo',
-            'label_receipt_holder' => 'Intestatario ricevuta (pagante)',
-            'label_staying_guest' => 'Ospite soggiornante',
-            'section_stay_data' => 'Dati del Soggiorno',
-            'label_guest_name' => 'Nome ospite',
-            'label_check_in' => 'Check-in',
-            'label_check_out' => 'Check-out',
-            'label_nights' => 'Notti',
-            'label_guests' => 'Ospiti',
-            'section_financial_data' => 'Dati Economici',
-            'label_gross_amount' => 'Corrispettivo lordo',
-            'label_tourist_tax' => 'Tassa di soggiorno',
-            'label_collected_for_municipality' => 'Importo riscosso per conto del Comune',
-            'label_stamp_duty' => 'Imposta di bollo',
-            'standard_iva_line' => 'Operazione fuori campo IVA ai sensi dell\'art. 1, comma 2, lett. c) della Legge 431/98 e dell\'art. 4 del DL 50/2017',
-            'footer_non_fiscal' => 'Documento non fiscale emesso a fini riepilogativi.',
-            'footer_gross_income' => 'Il locatore dichiara il reddito al lordo delle commissioni trattenute dall\'intermediario.',
-            'platform_fallback' => 'intermediario di prenotazione',
+            'doc_title_non_fiscal_summary' => __('Prospetto Riepilogativo Soggiorno', 'domilocus'),
+            'doc_title_penalty_receipt'    => __('Ricevuta Penale per Recesso', 'domilocus'),
+            'doc_title_receipt'            => __('Ricevuta', 'domilocus'),
+            'subtitle_non_fiscal'          => __('Documento non fiscale', 'domilocus'),
+            'header_host'                  => __('Locatore', 'domilocus'),
+            'header_guest'                 => __('Ospite / Intestatario', 'domilocus'),
+            'label_tax_code'               => __('Codice Fiscale', 'domilocus'),
+            'label_property_address'       => __('Indirizzo immobile', 'domilocus'),
+            'label_cin'                    => __('CIN', 'domilocus'),
+            'label_cir'                    => __('CIR', 'domilocus'),
+            'label_residence'              => __('Residenza', 'domilocus'),
+            'label_country'                => __('Nazione', 'domilocus'),
+            'label_property'               => __('Immobile', 'domilocus'),
+            'label_issue_date'             => __('Data di emissione', 'domilocus'),
+            'label_booking_date'           => __('Data prenotazione', 'domilocus'),
+            'label_booking_source'         => __('Origine prenotazione', 'domilocus'),
+            'source_direct_site'           => __('Sito Diretto', 'domilocus'),
+            'declaration_platform'         => __('Corrispettivo del soggiorno pari a {gross_amount}, corrisposto tramite l\'intermediario {platform_name}, incaricato della riscossione.', 'domilocus'),
+            'declaration_penalty'          => __('Il sottoscritto {host_name} attesta l\'importo di {gross_amount} trattenuto a titolo di penale per mancato arrivo (no-show).', 'domilocus'),
+            'declaration_direct_receipt'   => __('Io sottoscritto {host_name}, dichiaro di aver ricevuto in data {payment_date} da {guest_name} la somma di {gross_amount}.', 'domilocus'),
+            'noshow_penalty_line'          => __('Importo trattenuto a titolo di penale per mancato arrivo (no-show).', 'domilocus'),
+            'noshow_iva_line'              => __('Operazione esclusa dal campo di applicazione dell\'IVA ai sensi dell\'art. 15 del DPR 633/72.', 'domilocus'),
+            'footer_bollo_note'            => __('Imposta di bollo, se dovuta, a carico dell\'ospite ai sensi del DPR 642/72.', 'domilocus'),
+            'label_total'                  => __('Totale complessivo', 'domilocus'),
+            'label_receipt_holder'         => __('Intestatario ricevuta (pagante)', 'domilocus'),
+            'label_staying_guest'          => __('Ospite soggiornante', 'domilocus'),
+            'section_stay_data'            => __('Dati del Soggiorno', 'domilocus'),
+            'label_guest_name'             => __('Nome ospite', 'domilocus'),
+            'label_check_in'               => __('Check-in', 'domilocus'),
+            'label_check_out'              => __('Check-out', 'domilocus'),
+            'label_nights'                 => __('Notti', 'domilocus'),
+            'label_guests'                 => __('Ospiti', 'domilocus'),
+            'section_financial_data'       => __('Dati Economici', 'domilocus'),
+            'label_gross_amount'           => __('Corrispettivo lordo', 'domilocus'),
+            'label_tourist_tax'            => __('Tassa di soggiorno', 'domilocus'),
+            'label_collected_for_municipality' => __('Importo riscosso per conto del Comune', 'domilocus'),
+            'label_stamp_duty'             => __('Imposta di bollo', 'domilocus'),
+            'standard_iva_line'            => __('Operazione fuori campo IVA ai sensi dell\'art. 1, comma 2, lett. c) della Legge 431/98 e dell\'art. 4 del DL 50/2017', 'domilocus'),
+            'footer_non_fiscal'            => __('Documento non fiscale emesso a fini riepilogativi.', 'domilocus'),
+            'footer_gross_income'          => __('Il locatore dichiara il reddito al lordo delle commissioni trattenute dall\'intermediario.', 'domilocus'),
+            'platform_fallback'            => __('intermediario di prenotazione', 'domilocus'),
         );
 
-        $text = isset($map[$key]) ? $map[$key] : $key;
-        return (string) __($text, 'domilocus');
+        return isset($map[$key]) ? (string) $map[$key] : $key;
     }
 
     private static function source_label($booking) {
