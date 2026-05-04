@@ -268,6 +268,12 @@ class Domilocus_Receipts {
             $host_name = '___________________'; // placeholder: compile "Nome titolare" in Impostazioni
         }
 
+        // Host fiscal code / VAT.
+        $host_fiscal_code = trim((string) get_option('domilocus_manager_fiscal_code', ''));
+
+        // Guest fiscal code / VAT (stored in the bookings table column).
+        $guest_fiscal_code = trim((string) (isset($booking->customer_fiscal_code) ? $booking->customer_fiscal_code : ''));
+
         $apartment_name    = '';
         $apartment_address = '';
         if (!empty($booking->apartment_id)) {
@@ -336,6 +342,10 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
     <strong>Ospite soggiornante:</strong> <?php echo esc_html($guest_name); ?></p>
     <?php endif; ?>
 
+    <?php if ($guest_fiscal_code !== ''): ?>
+    <p><strong>Codice Fiscale / P.IVA ospite:</strong> <?php echo esc_html($guest_fiscal_code); ?></p>
+    <?php endif; ?>
+
     <p>Importo riferito al soggiorno di <strong><?php echo (int) $nights; ?> notte/i</strong>
     presso l&rsquo;immobile sito in
     <strong><?php echo esc_html($apartment_address ?: ($apartment_name ?: 'indirizzo non specificato')); ?></strong>.</p>
@@ -360,7 +370,7 @@ h1   { font-size: 1.4em; margin-bottom: 2px; color: #0f172a; }
     <p class="note">Imposta di bollo da 2€ a carico del cliente per importi superiori a 77,47€</p>
 
     <div class="sign">
-      <p><strong>Firma del locatore</strong></p>
+      <p><strong>Firma del locatore</strong><?php if ($host_fiscal_code !== ''): ?> &mdash; C.F./P.IVA: <?php echo esc_html($host_fiscal_code); ?><?php endif; ?></p>
       <div class="sign-line"></div>
     </div>
 

@@ -57,6 +57,7 @@ class Domilocus_Booking_Form {
             'customer_name' => '',
             'customer_email' => '',
             'customer_phone' => '',
+            'customer_fiscal_code' => '',
             'check_in' => '',
             'check_out' => '',
             'guests' => 1,
@@ -185,6 +186,17 @@ class Domilocus_Booking_Form {
                                                 <input type="tel" id="customer_phone" name="customer_phone" 
                                                        value="<?php echo esc_attr($defaults['customer_phone']); ?>" 
                                                        class="regular-text">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="customer_fiscal_code">Codice Fiscale / P.IVA</label>
+                                            </th>
+                                            <td>
+                                                <input type="text" id="customer_fiscal_code" name="customer_fiscal_code"
+                                                       value="<?php echo esc_attr($defaults['customer_fiscal_code']); ?>"
+                                                       class="regular-text" maxlength="20">
+                                                <p class="description">Codice fiscale o partita IVA dell&rsquo;ospite / intestatario ricevuta.</p>
                                             </td>
                                         </tr>
                                     </table>
@@ -393,6 +405,7 @@ class Domilocus_Booking_Form {
                                     $current_code  = $booking->access_code ?? '';
                                     $ext_platform  = $booking->external_platform ?? '';
                                     $platform_code = $booking->platform_booking_code ?? '';
+                                    $ical_uid_val  = $booking->ical_uid ?? '';
                                     ?>
                                     <?php if (!empty($platform_code)) : ?>
                                     <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px">
@@ -417,15 +430,49 @@ class Domilocus_Booking_Form {
                                         <strong style="font-family:monospace;font-size:15px;letter-spacing:1px"><?php echo esc_html($platform_code); ?></strong>
                                     </div>
                                     <?php endif; ?>
+                                    <?php if (!empty($ical_uid_val)) : ?>
+                                    <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#f0f4ff;border-left:4px solid #7b9cda;border-radius:3px">
+                                        <span style="font-size:11px;color:#555;display:block;margin-bottom:4px"><?php esc_html_e('iCal UID (identificativo univoco feed)', 'domilocus'); ?></span>
+                                        <strong style="font-family:monospace;font-size:11px;word-break:break-all"><?php echo esc_html($ical_uid_val); ?></strong>
+                                    </div>
+                                    <?php endif; ?>
                                     <div class="misc-pub-section">
-                                        <label for="external_platform"><?php esc_html_e('Piattaforma', 'domilocus'); ?></label>
+                                        <label><?php esc_html_e('Piattaforma', 'domilocus'); ?></label>
+                                        <?php
+                                        $platform_icons = array(
+                                            'airbnb'      => '🏠',
+                                            'vrbo'        => '🏡',
+                                            'booking.com' => '🔵',
+                                            'expedia'     => '✈️',
+                                            'other'       => '📋',
+                                        );
+                                        $platform_names = array(
+                                            'airbnb'      => 'Airbnb',
+                                            'vrbo'        => 'VRBO',
+                                            'booking.com' => 'Booking.com',
+                                            'expedia'     => 'Expedia',
+                                            'other'       => __('Altra piattaforma', 'domilocus'),
+                                        );
+                                        if (!empty($ext_platform) && $ext_platform !== 'other' && isset($platform_names[$ext_platform])) :
+                                            $p_icon = $platform_icons[$ext_platform];
+                                            $p_name = $platform_names[$ext_platform];
+                                        ?>
+                                        <div style="margin-top:6px;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px">
+                                            <span style="font-size:18px"><?php echo esc_html($p_icon); ?></span>
+                                            <strong style="font-size:13px"><?php echo esc_html($p_name); ?></strong>
+                                            <span style="font-size:11px;color:#888;margin-left:auto"><?php esc_html_e('Rilevata da iCal', 'domilocus'); ?></span>
+                                        </div>
+                                        <input type="hidden" id="external_platform" name="external_platform" value="<?php echo esc_attr($ext_platform); ?>">
+                                        <?php else : ?>
                                         <select id="external_platform" name="external_platform" class="widefat" style="margin-top:5px">
                                             <option value="" <?php selected($ext_platform, ''); ?>><?php esc_html_e('-- Seleziona --', 'domilocus'); ?></option>
                                             <option value="booking.com" <?php selected($ext_platform, 'booking.com'); ?>>Booking.com</option>
                                             <option value="airbnb" <?php selected($ext_platform, 'airbnb'); ?>>Airbnb</option>
                                             <option value="vrbo" <?php selected($ext_platform, 'vrbo'); ?>>VRBO</option>
+                                            <option value="expedia" <?php selected($ext_platform, 'expedia'); ?>>Expedia</option>
                                             <option value="other" <?php selected($ext_platform, 'other'); ?>><?php esc_html_e('Altro', 'domilocus'); ?></option>
                                         </select>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="misc-pub-section" style="margin-top:12px">
                                         <label><?php esc_html_e('Codice generato', 'domilocus'); ?></label>
@@ -598,6 +645,7 @@ class Domilocus_Booking_Form {
             'customer_name' => $customer_name,
             'customer_email' => $customer_email,
             'customer_phone' => isset($_POST['customer_phone']) ? sanitize_text_field(wp_unslash($_POST['customer_phone'])) : '',
+            'customer_fiscal_code' => isset($_POST['customer_fiscal_code']) ? strtoupper(sanitize_text_field(wp_unslash($_POST['customer_fiscal_code']))) : '',
             'check_in' => $check_in,
             'check_out' => $check_out,
             'guests' => isset($_POST['guests']) ? intval(wp_unslash($_POST['guests'])) : 1,

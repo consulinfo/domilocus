@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,9 +180,13 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 
 == Changelog ==
 
+= 1.1.2 =
+* Added: guest fiscal code / VAT field on booking form (Codice Fiscale / P.IVA ospite), stored in bookings table.
+* Added: host fiscal code / VAT setting in General tab (Codice Fiscale / P.IVA titolare), shown on non-fiscal receipts.
+* Improved: non-fiscal receipt now displays guest fiscal code and host fiscal code / VAT for full Italian anagrafica fiscale compliance.
+
 = 1.1.1 =
-* Fixed: receipt platform detection is now OTA-wide (Booking.com, Airbnb, VRBO, Expedia, generic OTA and iCal imports), not Booking-only.
-* Improved: receipt context now keeps backward compatibility with existing stored platform metadata while correctly classifying legacy bookings.
+* Improved: non-fiscal receipt platform detection generalised to all OTA channels (Booking.com, Airbnb, VRBO, Expedia, generic OTA, iCal import) with backwards-compatible metadata.
 
 = 1.1.0 =
 * Added: non-fiscal receipt system with progressive annual numbering (e.g. 01/2026), available from admin and frontend booking confirmation.
