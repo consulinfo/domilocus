@@ -650,7 +650,22 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 .signature-name { font-family: "Dancing Script", cursive; font-size: 34px; line-height: 1.1; margin: 0 0 6px; }
 .signature-legal { font-size: 11px; color: #4b5563; max-width: 320px; margin: 8px auto 0; }
 .sign-line { border-top: 1px solid #374151; margin-top: 10px; }
-@media print { body { margin: 10px; background: #fff; } .doc { border-color: #bfc7d1; } .dml-print-bar { display: none !important; } }
+@media print {
+  body { margin: 6px; background: #fff; font-size: 11px; }
+  .doc { border-color: #bfc7d1; padding: 10px !important; }
+  .dml-print-bar, .dml-spacer { display: none !important; }
+  .head-grid { gap: 10px; }
+  .head-col p { margin-bottom: 2px; }
+  .title { font-size: 17px; margin: 8px 0 2px; }
+  .subtitle { margin-bottom: 10px; }
+  .doc p { margin-bottom: 6px; }
+  .section-title { margin: 10px 0 6px; font-size: 13px; }
+  .rows td { padding: 3px 0; }
+  .sign-bollo-row { margin-top: 18px; }
+  .signature-name { font-size: 24px; }
+  .footer-block { margin-top: 8px; padding-top: 6px; font-size: 11px; }
+  .meta { margin-top: 8px; }
+}
 </style>
 </head>
 <body>
@@ -658,7 +673,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     <span style="font-size:14px;font-weight:600;"><?php echo esc_html($document['title']); ?> <?php echo esc_html($number); ?> &mdash; Prenotazione #<?php echo esc_html((string) $booking_id); ?></span>
     <button onclick="window.print()" style="background:#fff;color:#1e3a5f;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ Stampa / Salva PDF</button>
   </div>
-  <div style="height:54px;"></div>
+  <div class="dml-spacer" style="height:54px;"></div>
   <div class="doc">
         <div class="head-grid">
             <div class="head-col">
@@ -668,8 +683,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
                 <p><strong><?php echo esc_html(self::t('label_tax_code')); ?>:</strong> <?php echo esc_html($host_fiscal_code); ?></p>
                 <?php endif; ?>
                 <p><strong><?php echo esc_html(self::t('label_property_address')); ?>:</strong> <?php echo esc_html($host_address); ?></p>
-                <p><strong><?php echo esc_html(self::t('label_cin')); ?>:</strong> <?php echo esc_html($host_cin); ?></p>
-                <p><strong><?php echo esc_html(self::t('label_cir')); ?>:</strong> <?php echo esc_html($host_cir); ?></p>
+                <p><strong><?php echo esc_html(self::t('label_cin')); ?>:</strong> <span style="word-break:break-all;"><?php echo esc_html($host_cin); ?></span><?php if ($host_cir !== ''): ?> &nbsp;|&nbsp; <strong><?php echo esc_html(self::t('label_cir')); ?>:</strong> <span style="word-break:break-all;"><?php echo esc_html($host_cir); ?></span><?php endif; ?></p>
             </div>
             <div class="head-col">
                 <h3><?php echo esc_html(self::t('header_guest')); ?></h3>
