@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,15 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.6 =
+* Improved: logica documento fiscale — prospetto riepilogativo OTA emesso per tutte le prenotazioni da piattaforma (Booking.com, Airbnb), indipendentemente dal metodo di pagamento registrato.
+* Added: riquadro marca da bollo (€ 2,00) nella ricevuta, visibile solo quando il corrispettivo lordo supera € 77,47.
+* Added: nota a piè di pagina «Imposta di bollo, se dovuta, a carico dell'ospite» per corrispettivi superiori a € 77,47.
+* Added: riga totale complessivo (corrispettivo lordo + tassa di soggiorno) nella sezione Dati Economici.
+* Fixed: tassa di soggiorno mostrata in una sola riga con dicitura «pagata in loco».
+* Fixed: testo art. 15 DPR 633/72 per penale no-show ora completo e corretto.
+* Fixed: Codice Fiscale host e ospite visibili solo in modalità stampa/PDF.
 
 = 1.1.5 =
 * Fixed: data di emissione nella ricevuta non fiscale ora mostra sempre la data di check-out.
