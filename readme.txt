@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.7 =
+* Fixed: CIN e CIR ora visualizzati su una sola riga nella ricevuta; i codici contenenti slash non vengono più troncati.
+* Fixed: rimossa riga duplicata nella ricevuta penale no-show.
+* Improved: layout stampa/PDF compresso per garantire l'output su pagina singola.
 
 = 1.1.6 =
 * Improved: logica documento fiscale — prospetto riepilogativo OTA emesso per tutte le prenotazioni da piattaforma (Booking.com, Airbnb), indipendentemente dal metodo di pagamento registrato.
