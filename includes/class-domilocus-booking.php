@@ -786,7 +786,65 @@ class Domilocus_Booking {
         
         return false;
     }
-    
+
+    /**
+     * Sync booking DB record from admin post save (metaboxes).
+     *
+     * @param int   $post_id      WP post ID of the booking CPT.
+     * @param array $booking_data Associative array of columns to update.
+     */
+    public static function sync_booking_from_admin_post($post_id, array $booking_data) {
+        global $wpdb;
+
+        $booking_id = isset($booking_data['booking_id']) ? (int) $booking_data['booking_id'] : 0;
+        if ($booking_id <= 0) {
+            return;
+        }
+
+        $allowed_columns = array(
+            'apartment_id'               => '%d',
+            'customer_name'              => '%s',
+            'customer_email'             => '%s',
+            'customer_phone'             => '%s',
+            'customer_fiscal_code'       => '%s',
+            'customer_residence_address' => '%s',
+            'customer_country'           => '%s',
+            'check_in'                   => '%s',
+            'check_out'                  => '%s',
+            'guests'                     => '%d',
+            'total_amount'               => '%f',
+            'status'                     => '%s',
+            'payment_status'             => '%s',
+            'payment_method'             => '%s',
+            'payment_id'                 => '%s',
+            'booking_notes'              => '%s',
+            'bed_configuration'          => '%s',
+        );
+
+        $data   = array();
+        $format = array();
+
+        foreach ($allowed_columns as $col => $fmt) {
+            if (array_key_exists($col, $booking_data)) {
+                $data[ $col ]   = $booking_data[ $col ];
+                $format[]       = $fmt;
+            }
+        }
+
+        if (empty($data)) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $wpdb->update(
+            $wpdb->prefix . 'domilocus_bookings',
+            $data,
+            array( 'id' => $booking_id ),
+            $format,
+            array( '%d' )
+        );
+    }
+
     /**
      * Handle booking status changes
      */

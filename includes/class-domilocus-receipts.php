@@ -173,7 +173,7 @@ class Domilocus_Receipts {
                     </p>
                     <p>
                         <label for="dml_guest_fiscal"><strong>Codice Fiscale / ID / P.IVA</strong></label><br>
-                        <input id="dml_guest_fiscal" name="customer_fiscal_code" type="text" class="regular-text" style="width:100%;max-width:420px;" value="" />
+                        <input id="dml_guest_fiscal" name="customer_fiscal_code" type="text" class="regular-text" style="width:100%;max-width:420px;" value="<?php echo esc_attr(isset($booking->customer_fiscal_code) ? (string) $booking->customer_fiscal_code : ''); ?>" />
                     </p>
                     <p>
                         <label for="dml_guest_address"><strong>Indirizzo di residenza</strong></label><br>

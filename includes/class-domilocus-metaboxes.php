@@ -675,6 +675,25 @@ class Domilocus_Metaboxes {
         $customer_name = get_post_meta($post->ID, '_domilocus_customer_name', true);
         $customer_email = get_post_meta($post->ID, '_domilocus_customer_email', true);
         $customer_phone = get_post_meta($post->ID, '_domilocus_customer_phone', true);
+        $customer_fiscal_code = get_post_meta($post->ID, '_domilocus_customer_fiscal_code', true);
+        $customer_residence_address = get_post_meta($post->ID, '_domilocus_customer_residence_address', true);
+        $customer_country = get_post_meta($post->ID, '_domilocus_customer_country', true);
+        // Fallback: leggi dal DB se il portale ha aggiornato direttamente la tabella
+        $booking_id_db = (int) get_post_meta($post->ID, '_domilocus_booking_id', true);
+        if ($booking_id_db > 0) {
+            $booking_db = Domilocus_Booking::get_booking($booking_id_db);
+            if ($booking_db) {
+                if ($customer_fiscal_code === '' && !empty($booking_db->customer_fiscal_code)) {
+                    $customer_fiscal_code = (string) $booking_db->customer_fiscal_code;
+                }
+                if ($customer_residence_address === '' && !empty($booking_db->customer_residence_address)) {
+                    $customer_residence_address = (string) $booking_db->customer_residence_address;
+                }
+                if ($customer_country === '' && !empty($booking_db->customer_country)) {
+                    $customer_country = (string) $booking_db->customer_country;
+                }
+            }
+        }
         
         ?>
         <table class="form-table">
@@ -702,7 +721,30 @@ class Domilocus_Metaboxes {
                     <input type="tel" id="domilocus_customer_phone" name="domilocus_customer_phone" value="<?php echo esc_attr($customer_phone); ?>" class="regular-text" />
                 </td>
             </tr>
-        </table>
+            <tr>
+                <th scope="row">
+                    <label for="domilocus_customer_fiscal_code"><?php esc_html_e('Codice Fiscale / P.IVA', 'domilocus'); ?></label>
+                </th>
+                <td>
+                    <input type="text" id="domilocus_customer_fiscal_code" name="domilocus_customer_fiscal_code" value="<?php echo esc_attr($customer_fiscal_code); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label for="domilocus_customer_residence_address"><?php esc_html_e('Indirizzo di residenza', 'domilocus'); ?></label>
+                </th>
+                <td>
+                    <input type="text" id="domilocus_customer_residence_address" name="domilocus_customer_residence_address" value="<?php echo esc_attr($customer_residence_address); ?>" class="regular-text" style="width:100%;max-width:520px;" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label for="domilocus_customer_country"><?php esc_html_e('Nazione', 'domilocus'); ?></label>
+                </th>
+                <td>
+                    <input type="text" id="domilocus_customer_country" name="domilocus_customer_country" value="<?php echo esc_attr($customer_country); ?>" class="regular-text" />
+                </td>
+            </tr>
         <?php
     }
     
@@ -964,6 +1006,9 @@ class Domilocus_Metaboxes {
             'domilocus_customer_name',
             'domilocus_customer_email',
             'domilocus_customer_phone',
+            'domilocus_customer_fiscal_code',
+            'domilocus_customer_residence_address',
+            'domilocus_customer_country',
             'domilocus_payment_status',
             'domilocus_payment_method',
             'domilocus_payment_id'
@@ -1042,6 +1087,21 @@ class Domilocus_Metaboxes {
                 case 'domilocus_customer_phone':
                     $value = sanitize_text_field($raw[$field]);
                     $booking_data['customer_phone'] = $value;
+                    break;
+
+                case 'domilocus_customer_fiscal_code':
+                    $value = strtoupper(sanitize_text_field($raw[$field]));
+                    $booking_data['customer_fiscal_code'] = $value;
+                    break;
+
+                case 'domilocus_customer_residence_address':
+                    $value = sanitize_text_field($raw[$field]);
+                    $booking_data['customer_residence_address'] = $value;
+                    break;
+
+                case 'domilocus_customer_country':
+                    $value = sanitize_text_field($raw[$field]);
+                    $booking_data['customer_country'] = $value;
                     break;
 
                 case 'domilocus_payment_status':
