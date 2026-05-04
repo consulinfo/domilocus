@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,12 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.4 =
+* Added: portale ricevuta ospite integrato nella pagina di conferma prenotazione — visualizzazione, stampa/PDF e aggiornamento dati direttamente dal link di conferma.
+* Added: impostazioni locatore (indirizzo, CIN/CIR struttura) nelle impostazioni generali — la ricevuta legge questi dati dal database invece delle costanti.
+* Added: box "Pagina ospite" nel pannello admin prenotazione con link diretto copiabile.
+* Fixed: supporto prenotazioni OTA/iCal senza email ospite — la chiave di accesso ora funziona anche per prenotazioni importate da piattaforme (Airbnb, Booking.com, ecc.).
 
 = 1.1.3 =
 * Added: stato prenotazione "Non presentato (no-show)" nel form admin — impostare questo stato genera automaticamente la ricevuta come penale per mancato arrivo (art. 15 DPR 633/72).

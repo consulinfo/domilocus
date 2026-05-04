@@ -49,6 +49,9 @@ class Domilocus_Admin_Settings {
         // General settings
         register_setting('domilocus_general', 'domilocus_manager_owner_name', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_fiscal_code', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_address', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_cin_cir', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_portal_page_id', array('sanitize_callback' => 'absint'));
         register_setting('domilocus_general', 'domilocus_manager_currency', array(
             'sanitize_callback' => 'sanitize_text_field'
         ));
@@ -271,6 +274,36 @@ class Domilocus_Admin_Settings {
                     <td>
                         <input type="text" id="domilocus_manager_fiscal_code" name="domilocus_manager_fiscal_code" class="regular-text" maxlength="20" value="<?php echo esc_attr(get_option('domilocus_manager_fiscal_code', '')); ?>" />
                         <p class="description">Codice fiscale o partita IVA del locatore/gestore, riportato nelle ricevute non fiscali.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_address">Indirizzo locatore</label></th>
+                    <td>
+                        <input type="text" id="domilocus_manager_address" name="domilocus_manager_address" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_address', '')); ?>" />
+                        <p class="description">Indirizzo completo del locatore/gestore, riportato nell&rsquo;intestazione delle ricevute.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_cin_cir">CIN / CIR Struttura</label></th>
+                    <td>
+                        <input type="text" id="domilocus_manager_cin_cir" name="domilocus_manager_cin_cir" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_cin_cir', '')); ?>" />
+                        <p class="description">Codice Identificativo Nazionale (CIN) o Codice Identificativo Regionale (CIR) della struttura.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_portal_page_id">Pagina portale ricevute ospiti</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_portal_page_id',
+                            'name'              => 'domilocus_portal_page_id',
+                            'selected'          => (int) get_option('domilocus_portal_page_id', 0),
+                            'show_option_none'  => '— Nessuna —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina che contiene lo shortcode <code>[domilocus_receipt_portal]</code>. Serve per generare i link diretti nella scheda prenotazione admin.</p>
                     </td>
                 </tr>
 
@@ -799,6 +832,9 @@ class Domilocus_Admin_Settings {
         $fields = array(
             'domilocus_manager_owner_name' => 'sanitize_text_field',
             'domilocus_manager_fiscal_code' => 'sanitize_text_field',
+            'domilocus_manager_address' => 'sanitize_text_field',
+            'domilocus_manager_cin_cir' => 'sanitize_text_field',
+            'domilocus_portal_page_id' => 'absint',
             'domilocus_manager_currency' => 'sanitize_text_field',
             'domilocus_manager_currency_position' => 'sanitize_text_field',
             'domilocus_manager_date_format' => 'sanitize_text_field',

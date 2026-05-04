@@ -560,6 +560,34 @@ class Domilocus_Booking_Form {
                             do_action( 'domilocus_booking_sidebar_boxes', $booking_id );
                             ?>
 
+                            <?php if ($is_edit): ?>
+                            <?php $portal_url = class_exists('Domilocus_Receipts') ? Domilocus_Receipts::get_direct_portal_url($booking_id) : ''; ?>
+                            <?php if ($portal_url !== ''): ?>
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2>🔗 Pagina ospite</h2>
+                                </div>
+                                <div class="inside" style="padding:10px 12px;">
+                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Link alla pagina personale di questa prenotazione. Copialo e invialo all'ospite.</p>
+                                    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+                                        <input type="text" id="dml_portal_url_<?php echo absint($booking_id); ?>" readonly value="<?php echo esc_attr($portal_url); ?>" class="widefat" style="font-size:11px;font-family:monospace;background:#f0f4ff;flex:1;" />
+                                        <button type="button" class="button" style="white-space:nowrap;" onclick="(function(btn){var i=document.getElementById('dml_portal_url_<?php echo absint($booking_id); ?>');navigator.clipboard.writeText(i.value).then(function(){var t=btn.textContent;btn.textContent='✓ Copiato';setTimeout(function(){btn.textContent=t;},1800);});})(this)">📋 Copia</button>
+                                    </div>
+                                    <a href="<?php echo esc_url($portal_url); ?>" target="_blank" rel="noopener" style="font-size:12px;">Apri pagina ospite →</a>
+                                </div>
+                            </div>
+                            <?php else: ?>
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2>🔗 Pagina ospite</h2>
+                                </div>
+                                <div class="inside" style="padding:10px 12px;">
+                                    <p style="margin:0;font-size:12px;color:#777;">Imposta la <strong>Pagina portale ricevute ospiti</strong> nelle Impostazioni Generali per generare il link diretto a questa prenotazione.</p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                            <?php endif; ?>
+
                             <!-- Publish -->
                             <div class="postbox">
                                 <div class="postbox-header">
