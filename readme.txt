@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.9 =
+* Fixed: campi Indirizzo di residenza e Nazione ospite aggiunti al form di creazione/modifica prenotazione admin (booking-form.php).
+* Fixed: indirizzo e nazione ospite ora salvati nel DB anche alla creazione di una nuova prenotazione dall'admin.
 
 = 1.1.8 =
 * Fixed: Codice fiscale host e ospite ora visibili correttamente nella stampa della ricevuta (aggiunto parametro mode=print all'URL di download).

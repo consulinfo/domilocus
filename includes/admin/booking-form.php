@@ -58,6 +58,8 @@ class Domilocus_Booking_Form {
             'customer_email' => '',
             'customer_phone' => '',
             'customer_fiscal_code' => '',
+            'customer_residence_address' => '',
+            'customer_country' => '',
             'check_in' => '',
             'check_out' => '',
             'guests' => 1,
@@ -197,6 +199,26 @@ class Domilocus_Booking_Form {
                                                        value="<?php echo esc_attr($defaults['customer_fiscal_code']); ?>"
                                                        class="regular-text" maxlength="20">
                                                 <p class="description">Codice fiscale o partita IVA dell&rsquo;ospite / intestatario ricevuta.</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="customer_residence_address">Indirizzo di residenza</label>
+                                            </th>
+                                            <td>
+                                                <input type="text" id="customer_residence_address" name="customer_residence_address"
+                                                       value="<?php echo esc_attr($defaults['customer_residence_address']); ?>"
+                                                       class="regular-text" style="width:100%;max-width:520px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="customer_country">Nazione</label>
+                                            </th>
+                                            <td>
+                                                <input type="text" id="customer_country" name="customer_country"
+                                                       value="<?php echo esc_attr($defaults['customer_country']); ?>"
+                                                       class="regular-text">
                                             </td>
                                         </tr>
                                     </table>
@@ -677,6 +699,8 @@ class Domilocus_Booking_Form {
             'customer_email' => $customer_email,
             'customer_phone' => isset($_POST['customer_phone']) ? sanitize_text_field(wp_unslash($_POST['customer_phone'])) : '',
             'customer_fiscal_code' => isset($_POST['customer_fiscal_code']) ? strtoupper(sanitize_text_field(wp_unslash($_POST['customer_fiscal_code']))) : '',
+            'customer_residence_address' => isset($_POST['customer_residence_address']) ? sanitize_text_field(wp_unslash($_POST['customer_residence_address'])) : '',
+            'customer_country' => isset($_POST['customer_country']) ? sanitize_text_field(wp_unslash($_POST['customer_country'])) : '',
             'check_in' => $check_in,
             'check_out' => $check_out,
             'guests' => isset($_POST['guests']) ? intval(wp_unslash($_POST['guests'])) : 1,
