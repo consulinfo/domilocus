@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,14 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.1.8 =
+* Fixed: Codice fiscale host e ospite ora visibili correttamente nella stampa della ricevuta (aggiunto parametro mode=print all'URL di download).
+* Fixed: metodo t() riscritto con stringhe letterali per piena compatibilità PHPCS (WordPress.WP.I18n).
+* Fixed: aggiunto phpcs:ignore NoCaching sulla query di aggiornamento dati ospite nel portale.
+* Added: campo Codice Fiscale ospite, Indirizzo residenza e Nazione nella metabox admin prenotazione.
+* Fixed: dati ospite (CF, indirizzo, nazione) ora salvati correttamente nel DB dall'admin tramite sync_booking_from_admin_post().
+* Fixed: campo Codice Fiscale ospite nel form portale ora pre-compilato con il valore salvato.
 
 = 1.1.7 =
 * Fixed: CIN e CIR ora visualizzati su una sola riga nella ricevuta; i codici contenenti slash non vengono più troncati.
