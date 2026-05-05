@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.2.0 =
+* Fixed: migrazione DB ora garantisce la creazione delle colonne customer_residence_address e customer_country anche se il transient di lock era già presente, evitando che siti aggiornati restino senza le colonne.
+* Added: pulsante "Esegui migrazione DB" nel tab Avanzate delle impostazioni per forzare la creazione delle colonne mancanti senza dover disattivare il plugin.
 
 = 1.1.9 =
 * Fixed: campi Indirizzo di residenza e Nazione ospite aggiunti al form di creazione/modifica prenotazione admin (booking-form.php).

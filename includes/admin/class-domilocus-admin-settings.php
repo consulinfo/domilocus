@@ -21,6 +21,7 @@ class Domilocus_Admin_Settings {
         add_action('admin_init', array(__CLASS__, 'register_settings'));
         add_action('admin_post_domilocus_save_settings', array(__CLASS__, 'save_settings'));
         add_action('admin_post_domilocus_send_test_email', array(__CLASS__, 'send_test_email'));
+        add_action('admin_post_domilocus_repair_db', array(__CLASS__, 'handle_repair_db'));
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_settings_assets'));
     }
 
@@ -743,13 +744,29 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_remove_data_on_uninstall"><?php esc_html_e('Remove Data on Uninstall', 'domilocus'); ?></label></th>
+                    <th scope="row"><?php esc_html_e('Remove Data on Uninstall', 'domilocus'); ?></th>
                     <td>
                         <label>
                             <input type="checkbox" id="domilocus_manager_remove_data_on_uninstall" name="domilocus_manager_remove_data_on_uninstall" value="1" <?php checked(get_option('domilocus_manager_remove_data_on_uninstall', 1)); ?> />
                             <?php esc_html_e('Permanently delete plugin data on uninstall', 'domilocus'); ?>
                         </label>
                         <p class="description"><?php esc_html_e('Warning: apartments, bookings and settings will be deleted.', 'domilocus'); ?></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php esc_html_e('Ripara Database', 'domilocus'); ?></th>
+                    <td>
+                        <?php
+                        $repair_url = wp_nonce_url(
+                            add_query_arg(array('action' => 'domilocus_repair_db'), admin_url('admin-post.php')),
+                            'domilocus_repair_db'
+                        );
+                        ?>
+                        <a href="<?php echo esc_url($repair_url); ?>" class="button button-secondary">
+                            <?php esc_html_e('Esegui migrazione DB', 'domilocus'); ?>
+                        </a>
+                        <p class="description"><?php esc_html_e('Aggiunge le colonne mancanti alla tabella prenotazioni (customer_fiscal_code, customer_residence_address, customer_country).', 'domilocus'); ?></p>
                     </td>
                 </tr>
             </tbody>
@@ -794,6 +811,25 @@ class Domilocus_Admin_Settings {
             'page' => 'domilocus-settings',
             'tab' => $tab,
             'settings-updated' => 'true',
+        ), admin_url('admin.php')));
+        exit;
+    }
+
+    /**
+     * Handle DB repair request (forces migrate_database).
+     */
+    public static function handle_repair_db() {
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_repair_db')) {
+            wp_die(esc_html__('Security check failed.', 'domilocus'));
+        }
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'domilocus'));
+        }
+        Domilocus_Install::force_migrate_database();
+        wp_safe_redirect(add_query_arg(array(
+            'page'             => 'domilocus-settings',
+            'tab'              => 'advanced',
+            'settings-updated' => 'db-repaired',
         ), admin_url('admin.php')));
         exit;
     }

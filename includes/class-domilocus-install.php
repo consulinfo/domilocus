@@ -89,6 +89,13 @@ class Domilocus_Install {
     /**
      * Migrate database schema for existing installations
      */
+    public static function force_migrate_database() {
+        self::migrate_database();
+        $lock_key = 'domilocus_manager_schema_check_' . DOMILOCUS_VERSION;
+        delete_transient($lock_key);
+        set_transient($lock_key, 1, 12 * HOUR_IN_SECONDS);
+    }
+
     private static function migrate_database() {
         global $wpdb;
         
@@ -156,6 +163,16 @@ class Domilocus_Install {
             if (!in_array('customer_fiscal_code', $columns)) {
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN customer_fiscal_code varchar(20) DEFAULT NULL AFTER platform_booking_code");
+            }
+
+            if (!in_array('customer_residence_address', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN customer_residence_address varchar(255) DEFAULT NULL AFTER customer_fiscal_code");
+            }
+
+            if (!in_array('customer_country', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN customer_country varchar(100) DEFAULT NULL AFTER customer_residence_address");
             }
 
             // Data-repair: bookings edited from admin that were originally iCal-imported
@@ -275,6 +292,9 @@ class Domilocus_Install {
             external_platform varchar(50) DEFAULT NULL,
             ical_uid varchar(255) DEFAULT NULL,
             platform_booking_code varchar(100) DEFAULT NULL,
+            customer_fiscal_code varchar(20) DEFAULT NULL,
+            customer_residence_address varchar(255) DEFAULT NULL,
+            customer_country varchar(100) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -456,7 +476,7 @@ class Domilocus_Install {
      */
     public static function check_database_update() {
         $installed_version = get_option('domilocus_manager_db_version');
-        
+
         if ($installed_version !== DOMILOCUS_VERSION) {
             self::create_tables();
             update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
@@ -464,6 +484,16 @@ class Domilocus_Install {
 
         $lock_key = 'domilocus_manager_schema_check_' . DOMILOCUS_VERSION;
         if (get_transient($lock_key)) {
+            // Transient presente: verifica comunque le colonne critiche (ALTER è no-op se esistono già).
+            global $wpdb;
+            $bookings_table = $wpdb->prefix . 'domilocus_bookings';
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+            $columns = $wpdb->get_col("DESCRIBE $bookings_table");
+            if (!in_array('customer_residence_address', $columns, true) || !in_array('customer_country', $columns, true)) {
+                delete_transient($lock_key);
+                self::migrate_database();
+                set_transient($lock_key, 1, 12 * HOUR_IN_SECONDS);
+            }
             return;
         }
 
