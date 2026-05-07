@@ -76,6 +76,8 @@ class Domilocus_Receipts {
                 </div>
             <?php endif; ?>
 
+            <?php $online_checkin_enabled = self::is_online_checkin_documents_enabled(); ?>
+
             <?php
             $status_raw  = strtolower(trim((string) (isset($booking->status) ? $booking->status : '')));
             $is_noshow   = in_array($status_raw, array('no_show', 'noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true);
@@ -160,6 +162,7 @@ class Domilocus_Receipts {
             <!-- Data form -->
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:10px;">
                 <h3 style="margin:0 0 4px;font-size:15px;">✏️ Dati ospite per la ricevuta</h3>
+                <?php if ($online_checkin_enabled): ?>
                 <p style="margin:0 0 16px;color:#4b5563;font-size:13px;">Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.</p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('domilocus_receipt_portal_save', 'domilocus_receipt_portal_save_nonce'); ?>
@@ -193,6 +196,9 @@ class Domilocus_Receipts {
                         <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">💾 Salva dati</button>
                     </p>
                 </form>
+                <?php else: ?>
+                <p style="margin:0;color:#6b7280;font-size:13px;">La raccolta online dei dati documento e disponibile dal piano Professional.</p>
+                <?php endif; ?>
             </div>
         </div>
         <?php
@@ -261,6 +267,19 @@ class Domilocus_Receipts {
         $booking = self::get_booking($booking_id);
         if (!$booking || $post_booking_key === '' || !hash_equals(self::build_receipt_key($booking), $post_booking_key)) {
             wp_safe_redirect(add_query_arg('dml_rcpt_err', 'access_denied', $redirect_to));
+            exit;
+        }
+
+        if (!self::is_online_checkin_documents_enabled()) {
+            $return_url = add_query_arg(
+                array(
+                    'booking_id'   => (int) $booking->id,
+                    'key'          => $post_booking_key,
+                    'dml_rcpt_err' => 'feature_locked',
+                ),
+                $redirect_to
+            );
+            wp_safe_redirect($return_url);
             exit;
         }
 
@@ -1146,9 +1165,19 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
                 return 'Accesso non autorizzato.';
             case 'privacy_required':
                 return 'Devi fornire il consenso privacy per proseguire.';
+            case 'feature_locked':
+                return 'Funzione disponibile dal piano Professional.';
             default:
                 return 'Si e verificato un errore. Riprova.';
         }
+    }
+
+    private static function is_online_checkin_documents_enabled() {
+        if (class_exists('Domilocus_License') && method_exists('Domilocus_License', 'is_feature_enabled')) {
+            return (bool) Domilocus_License::is_feature_enabled('online_checkin_documents');
+        }
+
+        return true;
     }
 
     private static function find_booking_by_reference($booking_ref) {

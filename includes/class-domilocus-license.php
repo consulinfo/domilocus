@@ -150,6 +150,12 @@ class Domilocus_License {
                 'plan_required' => 'professional',
                 'group' => 'documents'
             ),
+            'online_checkin_documents' => array(
+                'label' => __('Check-in Online (Dati Documento)', 'domilocus'),
+                'description' => __('Raccolta online dati anagrafici e documento ospite prima dell\'arrivo', 'domilocus'),
+                'plan_required' => 'professional',
+                'group' => 'documents'
+            ),
             'statistics_basic' => array(
                 'label' => __('Statistiche Base', 'domilocus'),
                 'description' => __('Occupazione, fatturato, report mensili', 'domilocus'),
@@ -191,6 +197,12 @@ class Domilocus_License {
             'api_access' => array(
                 'label' => __('API Avanzate', 'domilocus'),
                 'description' => __('Integrazioni custom e automazioni', 'domilocus'),
+                'plan_required' => 'premium',
+                'group' => 'integrations'
+            ),
+            'smart_checkin' => array(
+                'label' => __('Smart Check-in', 'domilocus'),
+                'description' => __('Automazioni accesso ospite via API (codici/PIN temporanei e flussi self check-in)', 'domilocus'),
                 'plan_required' => 'premium',
                 'group' => 'integrations'
             ),

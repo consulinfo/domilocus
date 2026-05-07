@@ -50,6 +50,7 @@ function domilocus_display_plan_features() {
                         'pricing' => __('Gestione Prezzi', 'domilocus'),
                         'payments' => __('Payments', 'domilocus'),
                         'communication' => __('Comunicazione', 'domilocus'),
+                        'documents' => __('Documenti e Check-in', 'domilocus'),
                         'analytics' => __('Statistiche e Report', 'domilocus'),
                         'integrations' => __('Integrazioni', 'domilocus'),
                         'branding' => __('Personalizzazione', 'domilocus'),

@@ -417,7 +417,7 @@ class Domilocus_Booking_Form {
                             </div>
                             
                             <!-- Codice Accesso APP -->
-                            <?php if ($is_edit): ?>
+                            <?php if ($is_edit && self::is_smart_checkin_enabled()): ?>
                             <div class="postbox">
                                 <div class="postbox-header">
                                     <h2>📱 <?php esc_html_e('Codice Accesso APP', 'domilocus'); ?></h2>
@@ -568,6 +568,17 @@ class Domilocus_Booking_Form {
                                         });
                                     })();
                                     </script>
+                                </div>
+                            </div>
+                            <?php elseif ($is_edit): ?>
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2>📱 <?php esc_html_e('Codice Accesso APP', 'domilocus'); ?></h2>
+                                </div>
+                                <div class="inside">
+                                    <p class="description" style="margin:0;">
+                                        <?php esc_html_e('Funzione Smart Check-in disponibile dal piano Premium.', 'domilocus'); ?>
+                                    </p>
                                 </div>
                             </div>
                             <?php endif; ?>
@@ -835,6 +846,9 @@ class Domilocus_Booking_Form {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( 'Permission denied' );
         }
+        if ( ! self::is_smart_checkin_enabled() ) {
+            wp_send_json_error( 'Smart Check-in disponibile dal piano Premium.' );
+        }
         $booking_id = isset( $_POST['booking_id'] ) ? intval( $_POST['booking_id'] ) : 0;
         if ( ! $booking_id || ! isset( $_POST['nonce'] ) ||
              ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'domilocus_access_code_' . $booking_id ) ) {
@@ -870,6 +884,9 @@ class Domilocus_Booking_Form {
     public static function ajax_send_access_code() {
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( 'Permission denied' );
+        }
+        if ( ! self::is_smart_checkin_enabled() ) {
+            wp_send_json_error( 'Smart Check-in disponibile dal piano Premium.' );
         }
         $booking_id = isset( $_POST['booking_id'] ) ? intval( $_POST['booking_id'] ) : 0;
         if ( ! $booking_id || ! isset( $_POST['nonce'] ) ||
@@ -913,6 +930,14 @@ class Domilocus_Booking_Form {
         } else {
             wp_send_json_error( 'Impossibile inviare l\'email. Controlla la configurazione SMTP.' );
         }
+    }
+
+    private static function is_smart_checkin_enabled() {
+        if ( class_exists( 'Domilocus_License' ) && method_exists( 'Domilocus_License', 'is_feature_enabled' ) ) {
+            return (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' );
+        }
+
+        return true;
     }
 }
 
