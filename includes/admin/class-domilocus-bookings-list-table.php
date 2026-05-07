@@ -237,11 +237,28 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!empty($_GET['s'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $search = '%' . $wpdb->esc_like(sanitize_text_field(wp_unslash($_GET['s']))) . '%';
-            $where[] = $wpdb->prepare(
-                '(customer_name LIKE %s OR customer_email LIKE %s OR customer_phone LIKE %s)',
-                $search, $search, $search
-            );
+            $raw_search = sanitize_text_field(wp_unslash($_GET['s']));
+            $search = '%' . $wpdb->esc_like($raw_search) . '%';
+            if (is_numeric($raw_search)) {
+                $where[] = $wpdb->prepare(
+                    '(customer_name LIKE %s OR customer_email LIKE %s OR customer_phone LIKE %s OR source LIKE %s OR external_platform LIKE %s OR id = %d)',
+                    $search,
+                    $search,
+                    $search,
+                    $search,
+                    $search,
+                    (int) $raw_search
+                );
+            } else {
+                $where[] = $wpdb->prepare(
+                    '(customer_name LIKE %s OR customer_email LIKE %s OR customer_phone LIKE %s OR source LIKE %s OR external_platform LIKE %s)',
+                    $search,
+                    $search,
+                    $search,
+                    $search,
+                    $search
+                );
+            }
         }
         
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -254,6 +271,42 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         if (!empty($_GET['apartment_id'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $where[] = $wpdb->prepare('apartment_id = %d', intval(wp_unslash($_GET['apartment_id'])));
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!empty($_GET['source'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $where[] = $wpdb->prepare('source = %s', sanitize_text_field(wp_unslash($_GET['source'])));
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!empty($_GET['checkin_from'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $checkin_from = sanitize_text_field(wp_unslash($_GET['checkin_from']));
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $checkin_from)) {
+                $where[] = $wpdb->prepare('check_in >= %s', $checkin_from);
+            }
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!empty($_GET['checkin_to'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $checkin_to = sanitize_text_field(wp_unslash($_GET['checkin_to']));
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $checkin_to)) {
+                $where[] = $wpdb->prepare('check_in <= %s', $checkin_to);
+            }
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['min_amount']) && $_GET['min_amount'] !== '') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $where[] = $wpdb->prepare('total_amount >= %f', (float) wp_unslash($_GET['min_amount']));
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['max_amount']) && $_GET['max_amount'] !== '') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $where[] = $wpdb->prepare('total_amount <= %f', (float) wp_unslash($_GET['max_amount']));
         }
         
         $where_sql = implode(' AND ', $where);
@@ -284,6 +337,38 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         return array(
             'delete' => __('Delete', 'domilocus')
         );
+    }
+
+    protected function extra_tablenav($which) {
+        if ('top' !== $which) {
+            return;
+        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $source = isset($_GET['source']) ? sanitize_text_field(wp_unslash($_GET['source'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $checkin_from = isset($_GET['checkin_from']) ? sanitize_text_field(wp_unslash($_GET['checkin_from'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $checkin_to = isset($_GET['checkin_to']) ? sanitize_text_field(wp_unslash($_GET['checkin_to'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $min_amount = isset($_GET['min_amount']) ? sanitize_text_field(wp_unslash($_GET['min_amount'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $max_amount = isset($_GET['max_amount']) ? sanitize_text_field(wp_unslash($_GET['max_amount'])) : '';
+        ?>
+        <div class="alignleft actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select name="source">
+                <option value=""><?php esc_html_e('Tutte le fonti', 'domilocus'); ?></option>
+                <option value="direct" <?php selected($source, 'direct'); ?>><?php esc_html_e('Dirette', 'domilocus'); ?></option>
+                <option value="booking" <?php selected($source, 'booking'); ?>><?php esc_html_e('Booking', 'domilocus'); ?></option>
+                <option value="airbnb" <?php selected($source, 'airbnb'); ?>><?php esc_html_e('Airbnb', 'domilocus'); ?></option>
+                <option value="app_guest" <?php selected($source, 'app_guest'); ?>><?php esc_html_e('App Ospite', 'domilocus'); ?></option>
+            </select>
+            <input type="date" name="checkin_from" value="<?php echo esc_attr($checkin_from); ?>" placeholder="<?php esc_attr_e('Check-in da', 'domilocus'); ?>" />
+            <input type="date" name="checkin_to" value="<?php echo esc_attr($checkin_to); ?>" placeholder="<?php esc_attr_e('Check-in a', 'domilocus'); ?>" />
+            <input type="number" step="0.01" min="0" name="min_amount" value="<?php echo esc_attr($min_amount); ?>" placeholder="<?php esc_attr_e('Importo min', 'domilocus'); ?>" style="width:120px;" />
+            <input type="number" step="0.01" min="0" name="max_amount" value="<?php echo esc_attr($max_amount); ?>" placeholder="<?php esc_attr_e('Importo max', 'domilocus'); ?>" style="width:120px;" />
+            <?php submit_button(__('Filtra', 'domilocus'), 'button', 'filter_action', false); ?>
+        </div>
+        <?php
     }
     
     protected function get_views() {
