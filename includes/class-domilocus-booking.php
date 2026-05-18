@@ -2094,40 +2094,90 @@ class Domilocus_Booking {
             return '';
         }
 
-        if (empty($booking_key)) {
-            $booking = self::get_booking($booking_id);
-            if (!$booking) {
-                return '';
-            }
-            $booking_key = self::generate_booking_key($booking_id, $booking->customer_email);
+        $booking = self::get_booking($booking_id);
+        if (!$booking) {
+            return '';
         }
 
-        $page_id = get_option('domilocus_manager_page_booking_confirmation');
+        if (empty($booking_key)) {
+            if (class_exists('Domilocus_Receipts') && method_exists('Domilocus_Receipts', 'build_receipt_key')) {
+                $booking_key = (string) Domilocus_Receipts::build_receipt_key($booking);
+            }
+
+            if ($booking_key === '') {
+                $booking_key = self::generate_booking_key($booking_id, $booking->customer_email);
+            }
+        }
+
+        // BONIFICA 2026-05-11: legacy single-page option disabled — use domilocus_manager_page_booking_confirmation_local/ota instead.
+        // $legacy_page_id = (int) get_option('domilocus_manager_page_booking_confirmation', 0);
+        // if ($legacy_page_id > 0) {
+        //     $legacy_page = get_post($legacy_page_id);
+        //     if ($legacy_page && $legacy_page->post_status === 'publish') {
+        //         return add_query_arg(
+        //             array(
+        //                 'booking_id' => $booking_id,
+        //                 'key' => $booking_key,
+        //             ),
+        //             (string) add_query_arg(array('page_id' => $legacy_page_id), home_url('/'))
+        //         );
+        //     }
+        // }
+
+        $source_raw = strtolower(trim((string) ($booking->source ?? '')));
+        $external_platform_raw = strtolower(trim((string) ($booking->external_platform ?? '')));
+
+        $is_platform_booking = false;
+        if (class_exists('Domilocus_Receipts') && method_exists('Domilocus_Receipts', 'is_platform_booking')) {
+            $is_platform_booking = (bool) Domilocus_Receipts::is_platform_booking($booking);
+        }
+
+        if (!$is_platform_booking) {
+            $is_platform_booking = ($external_platform_raw !== '') || in_array(
+                $source_raw,
+                array('ical_import', 'ical', 'booking', 'bookingcom', 'booking.com', 'booking_com', 'airbnb', 'vrbo', 'expedia', 'ota', 'platform'),
+                true
+            );
+        }
+
+        $page_option = $is_platform_booking
+            ? 'domilocus_manager_page_booking_confirmation_ota'
+            : 'domilocus_manager_page_booking_confirmation_local';
+
+        $shortcode_tag = $is_platform_booking
+            ? '[domilocus_booking_confirmation_ota]'
+            : '[domilocus_booking_confirmation_local]';
+
+        $page_id = get_option($page_option);
         $page = $page_id ? get_post($page_id) : null;
 
         if (!$page || $page->post_status !== 'publish') {
             $page_id = 0;
 
-            // Try to recover an existing page containing the confirmation shortcode.
+            // Try to recover an existing page containing the dedicated confirmation shortcode.
             $existing_pages = get_posts(array(
                 'post_type'      => 'page',
                 'post_status'    => 'publish',
                 'posts_per_page' => 1,
-                's'              => '[domilocus_booking_confirmation]'
+                's'              => $shortcode_tag
             ));
 
             if (!empty($existing_pages)) {
                 $page = $existing_pages[0];
                 $page_id = $page->ID;
-                update_option('domilocus_manager_page_booking_confirmation', $page_id);
+                update_option($page_option, $page_id);
             }
         }
 
         if (!$page_id) {
-            // Create the confirmation page on the fly if it does not exist.
+            // Create the dedicated confirmation page on the fly if it does not exist.
+            $page_title = $is_platform_booking
+                ? __('Riepilogo Prenotazione OTA', 'domilocus')
+                : __('Riepilogo Prenotazione Locale', 'domilocus');
+
             $page_id = wp_insert_post(array(
-                'post_title'     => __('Booking Confirmation', 'domilocus'),
-                'post_content'   => '[domilocus_booking_confirmation]',
+                'post_title'     => $page_title,
+                'post_content'   => $shortcode_tag,
                 'post_status'    => 'publish',
                 'post_type'      => 'page',
                 'comment_status' => 'closed',
@@ -2135,17 +2185,21 @@ class Domilocus_Booking {
             ));
 
             if (!is_wp_error($page_id) && $page_id) {
-                update_option('domilocus_manager_page_booking_confirmation', $page_id);
+                update_option($page_option, $page_id);
                 $page = get_post($page_id);
             } else {
                 $page_id = 0;
             }
         }
 
-        $base_url = $page_id ? get_permalink($page_id) : home_url('/');
+        $base_url = '';
+        if ($page_id > 0) {
+            // Use page_id based URL to avoid rewrite/permalink 404 edge cases.
+            $base_url = (string) add_query_arg(array('page_id' => $page_id), home_url('/'));
+        }
 
-        if (!$base_url) {
-            return '';
+        if ($base_url === '') {
+            $base_url = (string) home_url('/');
         }
 
         return add_query_arg(

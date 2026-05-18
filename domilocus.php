@@ -91,7 +91,9 @@ final class Domilocus {
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-translations.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-translation-helper.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-pricing-manager.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-alloggiati-locations.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-booking-meta.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-alloggiati-export.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-receipts.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-events-manager.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-eventbrite-api-validator.php';
@@ -149,6 +151,9 @@ final class Domilocus {
         
         // Initialize pricing manager
         Domilocus_Pricing_Manager::init();
+
+        // Initialize official datasets and REST endpoints for Alloggiati locations.
+        Domilocus_Alloggiati_Locations::init();
 
         // Initialize receipts (non-fiscal)
         Domilocus_Receipts::init();

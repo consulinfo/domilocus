@@ -16,16 +16,36 @@ class Domilocus_Shortcodes {
      * Initialize shortcodes.
      */
     public static function init() {
+        // Keep portal/document shortcodes always available for guest access links.
+        add_shortcode('domilocus_checkin_documents', array(__CLASS__, 'checkin_documents_shortcode'));
+        add_shortcode('domilocus_receipt_portal', array(__CLASS__, 'checkin_documents_shortcode'));
+
+        // Keep booking summary shortcodes always registered to avoid raw shortcode output in pages.
+        // Guard against double-registration: domilocus-starter also registers domilocus_booking_confirmation.
+        if (!shortcode_exists('domilocus_booking_confirmation')) {
+            add_shortcode('domilocus_booking_confirmation', array(__CLASS__, 'booking_confirmation_shortcode'));
+        }
+        add_shortcode('domilocus_booking_confirmation_local', array(__CLASS__, 'booking_confirmation_local_shortcode'));
+        add_shortcode('domilocus_booking_confirmation_ota', array(__CLASS__, 'booking_confirmation_ota_shortcode'));
+
         // Shortcodes are premium features - check license before registering
-        if (!Domilocus_License::is_feature_enabled('frontend_booking')) {
+        if (!class_exists('Domilocus_License') || !Domilocus_License::is_feature_enabled('frontend_booking')) {
             return;
         }
         
-        add_shortcode('domilocus_apartment', array(__CLASS__, 'apartment_shortcode'));
-        add_shortcode('domilocus_apartments', array(__CLASS__, 'apartments_shortcode'));
-        add_shortcode('domilocus_booking_form', array(__CLASS__, 'booking_form_shortcode'));
-        add_shortcode('domilocus_calendar', array(__CLASS__, 'calendar_shortcode'));
-        add_shortcode('domilocus_booking_confirmation', array(__CLASS__, 'booking_confirmation_shortcode'));
+        // Guard against double-registration with domilocus-starter premium plugin.
+        if (!shortcode_exists('domilocus_apartment')) {
+            add_shortcode('domilocus_apartment', array(__CLASS__, 'apartment_shortcode'));
+        }
+        if (!shortcode_exists('domilocus_apartments')) {
+            add_shortcode('domilocus_apartments', array(__CLASS__, 'apartments_shortcode'));
+        }
+        if (!shortcode_exists('domilocus_booking_form')) {
+            add_shortcode('domilocus_booking_form', array(__CLASS__, 'booking_form_shortcode'));
+        }
+        if (!shortcode_exists('domilocus_calendar')) {
+            add_shortcode('domilocus_calendar', array(__CLASS__, 'calendar_shortcode'));
+        }
         add_shortcode('domilocus_search', array(__CLASS__, 'search_shortcode'));
     }
     
@@ -1095,27 +1115,789 @@ class Domilocus_Shortcodes {
                 </div>
             <?php endif; ?>
             
-            <div class="confirmation-actions">
+            <?php
+            $receipt_action_url = '';
+            $self_checkin_action_url = '';
+            if (class_exists('Domilocus_Receipts')) {
+                if (method_exists('Domilocus_Receipts', 'get_direct_receipt_url')) {
+                    $receipt_action_url = (string) Domilocus_Receipts::get_direct_receipt_url((int) $booking->id);
+                } else {
+                    $receipt_action_url = (string) Domilocus_Receipts::get_guest_download_url((int) $booking->id, (string) $booking_key);
+                }
+                if (method_exists('Domilocus_Receipts', 'get_direct_checkin_url')) {
+                    $self_checkin_action_url = (string) Domilocus_Receipts::get_direct_checkin_url((int) $booking->id);
+                }
+            }
+            $show_receipt_section = ($receipt_action_url !== '');
+            $show_self_checkin_section = ($self_checkin_action_url !== '');
+            $ui_scope_id = 'dml-confirmation-switcher-' . (int) $booking->id;
+            ?>
+
+            <div class="confirmation-actions" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                <?php if ($show_receipt_section): ?>
+                    <button type="button"
+                            id="<?php echo esc_attr($ui_scope_id . '-btn-receipt'); ?>"
+                            class="button secondary"
+                            aria-pressed="false">
+                        <?php esc_html_e('Mostra Ricevuta', 'domilocus'); ?>
+                    </button>
+                <?php endif; ?>
+
+                <?php if ($show_self_checkin_section): ?>
+                    <button type="button"
+                            id="<?php echo esc_attr($ui_scope_id . '-btn-self-checkin'); ?>"
+                            class="button primary"
+                            aria-pressed="false">
+                        <?php esc_html_e('Mostra Self Check-in', 'domilocus'); ?>
+                    </button>
+                <?php endif; ?>
+
                 <?php if ($apartment): ?>
                     <a href="<?php echo esc_url(get_permalink($apartment->ID)); ?>" class="button secondary">
                         <?php esc_html_e('View Apartment', 'domilocus'); ?>
                     </a>
                 <?php endif; ?>
-                <?php if (class_exists('Domilocus_Receipts')): ?>
-                    <a href="<?php echo esc_url(Domilocus_Receipts::get_guest_download_url((int) $booking->id, (string) $booking_key)); ?>"
-                       class="button secondary"
-                       target="_blank"
-                       rel="noopener">
-                        <?php esc_html_e('Scarica ricevuta (non fiscale)', 'domilocus'); ?>
-                    </a>
-                <?php endif; ?>
+
                 <button type="button" onclick="window.print()" class="button">
                     <?php esc_html_e('Print Confirmation', 'domilocus'); ?>
                 </button>
             </div>
+
+            <div id="<?php echo esc_attr($ui_scope_id); ?>" style="margin-top:12px;">
+                <?php if ($show_receipt_section): ?>
+                    <div id="<?php echo esc_attr($ui_scope_id . '-receipt'); ?>" style="display:none;border:1px solid #d1d5db;border-radius:8px;padding:12px;background:#fff;margin-bottom:10px;">
+                        <h4 style="margin:0 0 8px;"><?php esc_html_e('Ricevuta', 'domilocus'); ?></h4>
+                        <a href="<?php echo esc_url($receipt_action_url); ?>" class="button secondary" target="_blank" rel="noopener">
+                            <?php esc_html_e('Scarica ricevuta (non fiscale)', 'domilocus'); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($show_self_checkin_section): ?>
+                    <div id="<?php echo esc_attr($ui_scope_id . '-self-checkin'); ?>" style="display:none;border:1px solid #d1d5db;border-radius:8px;padding:12px;background:#fff;margin-bottom:10px;">
+                        <h4 style="margin:0 0 8px;"><?php esc_html_e('Self Check-in', 'domilocus'); ?></h4>
+                        <a href="<?php echo esc_url($self_checkin_action_url); ?>" class="button primary">
+                            <?php esc_html_e('Apri modulo documenti', 'domilocus'); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <script>
+            (function() {
+                var receiptPanel = document.getElementById('<?php echo esc_js($ui_scope_id . '-receipt'); ?>');
+                var selfCheckinPanel = document.getElementById('<?php echo esc_js($ui_scope_id . '-self-checkin'); ?>');
+                var receiptBtn = document.getElementById('<?php echo esc_js($ui_scope_id . '-btn-receipt'); ?>');
+                var selfCheckinBtn = document.getElementById('<?php echo esc_js($ui_scope_id . '-btn-self-checkin'); ?>');
+                var activeSection = 'none';
+
+                function syncUi() {
+                    if (receiptPanel) {
+                        receiptPanel.style.display = activeSection === 'receipt' ? 'block' : 'none';
+                    }
+                    if (selfCheckinPanel) {
+                        selfCheckinPanel.style.display = activeSection === 'self_checkin' ? 'block' : 'none';
+                    }
+                    if (receiptBtn) {
+                        receiptBtn.setAttribute('aria-pressed', activeSection === 'receipt' ? 'true' : 'false');
+                    }
+                    if (selfCheckinBtn) {
+                        selfCheckinBtn.setAttribute('aria-pressed', activeSection === 'self_checkin' ? 'true' : 'false');
+                    }
+                }
+
+                function setActive(section) {
+                    activeSection = (activeSection === section) ? 'none' : section;
+                    syncUi();
+                }
+
+                if (receiptBtn) {
+                    receiptBtn.addEventListener('click', function() {
+                        setActive('receipt');
+                    });
+                }
+                if (selfCheckinBtn) {
+                    selfCheckinBtn.addEventListener('click', function() {
+                        setActive('self_checkin');
+                    });
+                }
+
+                syncUi();
+            })();
+            </script>
         </div>
         <?php
         return ob_get_clean();
+    }
+
+    // -------------------------------------------------------------------------
+    // PAGINA CONFERMA PRENOTAZIONE LOCALE
+    // Shortcode: [domilocus_booking_confirmation_local]
+    // Per prenotazioni effettuate direttamente sul sito.
+    // Mostra: dettagli prenotazione, pagamento, firma contratto,
+    //         pulsanti opzionali "Ricevuta" e "Self Check-in".
+    // -------------------------------------------------------------------------
+
+    /**
+     * Pagina di conferma per prenotazioni LOCALI (dirette sul sito).
+     * [domilocus_booking_confirmation_local]
+     */
+    public static function booking_confirmation_local_shortcode($atts) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_id  = isset($_GET['booking_id']) ? intval(wp_unslash($_GET['booking_id'])) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
+
+        if (!$booking_id || !$booking_key) {
+            return '<p>' . esc_html__('Link di conferma prenotazione non valido.', 'domilocus') . '</p>';
+        }
+
+        $booking = Domilocus_Booking::get_booking($booking_id);
+        if (!$booking) {
+            return '<p>' . esc_html__('Prenotazione non trovata.', 'domilocus') . '</p>';
+        }
+
+        $is_valid = false;
+        if (class_exists('Domilocus_Receipts') && method_exists('Domilocus_Receipts', 'build_receipt_key')) {
+            $is_valid = hash_equals((string) Domilocus_Receipts::build_receipt_key($booking), (string) $booking_key);
+        }
+        if (!$is_valid) {
+            $expected_key = Domilocus_Booking::generate_booking_key($booking_id, $booking->customer_email);
+            $is_valid = hash_equals((string) $expected_key, (string) $booking_key);
+        }
+        if (!$is_valid) {
+            return '<p>' . esc_html__('Link di conferma non valido.', 'domilocus') . '</p>';
+        }
+
+        $inactive_statuses = array('cancelled', 'refunded', 'failed', 'trash', 'deleted');
+        if (in_array(strtolower((string) $booking->status), $inactive_statuses, true)) {
+            return '<p>' . esc_html__('Questa prenotazione non è più disponibile. Contattaci per qualsiasi informazione.', 'domilocus') . '</p>';
+        }
+
+        $apartment    = get_post((int) $booking->apartment_id);
+        $date_format  = get_option('date_format', 'd/m/Y');
+        $nights       = 0;
+        try {
+            $ci_dt  = new DateTime($booking->check_in);
+            $co_dt  = new DateTime($booking->check_out);
+            $nights = max(0, $ci_dt->diff($co_dt)->days);
+        } catch (Exception $e) {
+            $nights = 0;
+        }
+
+        $currency         = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));
+        $total_formatted  = number_format((float) $booking->total_amount, 2, ',', '.') . ' ' . $currency;
+        $payment_method   = strtolower((string) $booking->payment_method);
+        $is_bank_transfer = ($payment_method === 'bank_transfer');
+        $payment_pending  = ($booking->payment_status !== 'paid');
+
+        // Signature/contract section (extensible for premium add-ons).
+        $signature_url = (string) apply_filters(
+            'domilocus_local_confirmation_signature_url',
+            '',
+            $booking,
+            $booking_key
+        );
+        $signature_status = (string) apply_filters(
+            'domilocus_local_confirmation_signature_status',
+            '',
+            $booking,
+            $booking_key
+        );
+
+        if ($signature_status === '') {
+            $signature_signed_at = function_exists('domilocus_get_booking_meta')
+                ? (string) domilocus_get_booking_meta((int) $booking->id, '_domilocus_contract_signed_at', true)
+                : '';
+
+            if ($signature_signed_at !== '') {
+                $signature_status = sprintf(
+                    /* translators: %s = date/time */
+                    __('Documento firmato il %s', 'domilocus'),
+                    date_i18n($date_format . ' H:i', strtotime($signature_signed_at))
+                );
+            } else {
+                $signature_status = __('Documento da firmare', 'domilocus');
+            }
+        }
+
+        // --- URL ricevuta e self check-in ---
+        $receipt_url      = '';
+        $self_checkin_url = '';
+        if (class_exists('Domilocus_Receipts')) {
+            if (method_exists('Domilocus_Receipts', 'get_direct_receipt_url')) {
+                $receipt_url = (string) Domilocus_Receipts::get_direct_receipt_url((int) $booking->id);
+            } else {
+                $receipt_url = (string) Domilocus_Receipts::get_guest_download_url((int) $booking->id, (string) $booking_key);
+            }
+            if (method_exists('Domilocus_Receipts', 'get_direct_checkin_url')) {
+                $self_checkin_url = (string) Domilocus_Receipts::get_direct_checkin_url((int) $booking->id);
+            }
+        }
+
+        // --- Dati bonifico ---
+        $bank_details = array();
+        if ($is_bank_transfer && class_exists('Domilocus_Payment') && method_exists('Domilocus_Payment', 'get_bank_transfer_details')) {
+            $bank_details = Domilocus_Payment::get_bank_transfer_details();
+        }
+
+        $scope_id = 'dml-local-' . (int) $booking->id;
+
+        // Etichette stato
+        $status_raw = strtolower(trim((string) $booking->status));
+        $status_map = array(
+            'confirmed'  => 'Confermata',
+            'pending'    => 'In attesa',
+            'cancelled'  => 'Cancellata',
+            'no_show'    => 'No-Show',
+        );
+        $status_label = isset($status_map[$status_raw]) ? $status_map[$status_raw] : ucfirst($status_raw);
+        $status_colors = array(
+            'confirmed' => array('#065f46', '#ecfdf5'),
+            'pending'   => array('#92400e', '#fffbeb'),
+            'cancelled' => array('#991b1b', '#fef2f2'),
+            'no_show'   => array('#7c3aed', '#f5f3ff'),
+        );
+        $sc = isset($status_colors[$status_raw]) ? $status_colors[$status_raw] : array('#1f2937', '#f9fafb');
+
+        ob_start();
+        ?>
+        <div class="domilocus-booking-confirmation" style="max-width:860px;margin:20px auto;">
+
+            <!-- Intestazione -->
+            <div style="background:#fff;border:1px solid #d1d5db;border-radius:10px;padding:22px;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                    <h2 style="margin:0;font-size:20px;">✅ Prenotazione confermata!</h2>
+                    <span style="background:<?php echo esc_attr($sc[1]); ?>;color:<?php echo esc_attr($sc[0]); ?>;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid <?php echo esc_attr($sc[0]); ?>;"><?php echo esc_html($status_label); ?></span>
+                </div>
+                <p style="margin:0;color:#4b5563;">Grazie per aver prenotato! Di seguito i dettagli della tua prenotazione.</p>
+            </div>
+
+            <!-- Dettagli prenotazione -->
+            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 20px;margin-bottom:14px;">
+                <h3 style="margin:0 0 12px;font-size:16px;">📋 Dettagli prenotazione #<?php echo (int) $booking->id; ?></h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Ospite</span><strong><?php echo esc_html($booking->customer_name); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Email</span><strong><?php echo esc_html($booking->customer_email); ?></strong></div>
+                    <?php if (!empty($booking->customer_phone)): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Telefono</span><strong><?php echo esc_html($booking->customer_phone); ?></strong></div>
+                    <?php endif; ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-in</span><strong><?php echo esc_html(date_i18n($date_format, strtotime((string) $booking->check_in))); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-out</span><strong><?php echo esc_html(date_i18n($date_format, strtotime((string) $booking->check_out))); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Durata</span><strong><?php echo (int) $nights; ?> notte/i</strong></div>
+                    <?php if (!empty($booking->guests)): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Ospiti</span><strong><?php echo (int) $booking->guests; ?></strong></div>
+                    <?php endif; ?>
+                    <?php if ($apartment): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Struttura</span><strong><?php echo esc_html($apartment->post_title); ?></strong></div>
+                    <?php endif; ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Importo totale</span><strong><?php echo esc_html($total_formatted); ?></strong></div>
+                </div>
+            </div>
+
+            <!-- Sezione pagamento -->
+            <div style="background:#fff;border:1px solid #<?php echo $payment_pending ? 'fbbf24' : 'a7f3d0'; ?>;border-radius:8px;padding:16px 20px;margin-bottom:14px;">
+                <h3 style="margin:0 0 10px;font-size:16px;">💳 Pagamento</h3>
+                <?php if ($payment_pending): ?>
+                    <div style="background:#fefce8;border:1px solid #fde68a;border-radius:6px;padding:10px 14px;margin-bottom:12px;">
+                        <strong style="color:#92400e;">⚠ Pagamento in attesa</strong>
+                        <p style="margin:6px 0 0;font-size:13px;color:#78350f;">Importo da pagare: <strong><?php echo esc_html($total_formatted); ?></strong></p>
+                    </div>
+                    <?php if ($is_bank_transfer): ?>
+                        <p style="font-size:14px;color:#4b5563;margin-bottom:10px;">Effettua un bonifico bancario con i seguenti dati:</p>
+                        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:12px;">
+                            <?php if (!empty($bank_details['account_name'])): ?>
+                            <p style="margin:0 0 6px;font-size:13px;"><strong>Intestatario:</strong> <?php echo esc_html($bank_details['account_name']); ?></p>
+                            <?php endif; ?>
+                            <?php if (!empty($bank_details['iban'])): ?>
+                            <p style="margin:0 0 6px;font-size:13px;"><strong>IBAN:</strong> <code><?php echo esc_html($bank_details['iban']); ?></code></p>
+                            <?php endif; ?>
+                            <?php if (!empty($bank_details['bic'])): ?>
+                            <p style="margin:0 0 6px;font-size:13px;"><strong>BIC/SWIFT:</strong> <?php echo esc_html($bank_details['bic']); ?></p>
+                            <?php endif; ?>
+                            <p style="margin:0;font-size:13px;"><strong>Causale:</strong> Prenotazione #<?php echo (int) $booking->id; ?> – <?php echo esc_html($booking->customer_name); ?></p>
+                        </div>
+                    <?php else: ?>
+                        <p style="font-size:14px;color:#4b5563;">Metodo di pagamento: <strong><?php echo esc_html($payment_method ?: 'da definire'); ?></strong></p>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:6px;padding:10px 14px;">
+                        <strong style="color:#065f46;">✅ Pagamento registrato</strong>
+                        <p style="margin:4px 0 0;font-size:13px;color:#064e3b;">Importo: <?php echo esc_html($total_formatted); ?> – Nessuna ulteriore azione richiesta.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Sezione firma documento -->
+            <div style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:16px 20px;margin-bottom:14px;">
+                <h3 style="margin:0 0 10px;font-size:16px;">✍️ Firma documento</h3>
+                <p style="margin:0 0 8px;color:#4b5563;font-size:13px;"><?php echo esc_html($signature_status); ?></p>
+
+                <?php if ($signature_url !== ''): ?>
+                    <a href="<?php echo esc_url($signature_url); ?>"
+                       style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                        ✍️ <?php esc_html_e('Apri documento da firmare', 'domilocus'); ?>
+                    </a>
+                <?php else: ?>
+                    <p style="margin:0;color:#6b7280;font-size:13px;">
+                        <?php esc_html_e('Il link firma non è configurato in questa installazione.', 'domilocus'); ?>
+                    </p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Pulsanti opzionali -->
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                <?php if ($receipt_url !== ''): ?>
+                <button type="button" id="<?php echo esc_attr($scope_id); ?>-btn-rcpt"
+                        style="padding:9px 20px;background:#2271b1;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                    📄 Ricevuta
+                </button>
+                <?php endif; ?>
+                <?php if ($self_checkin_url !== ''): ?>
+                <button type="button" id="<?php echo esc_attr($scope_id); ?>-btn-checkin"
+                        style="padding:9px 20px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                    ✍️ Self Check-in
+                </button>
+                <?php endif; ?>
+                <button type="button" onclick="window.print()"
+                        style="padding:9px 20px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                    🖨️ Stampa
+                </button>
+                <?php if ($apartment): ?>
+                <a href="<?php echo esc_url(get_permalink($apartment->ID)); ?>"
+                   style="display:inline-flex;align-items:center;padding:9px 20px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;font-weight:600;font-size:14px;text-decoration:none;">
+                    🏠 Visualizza struttura
+                </a>
+                <?php endif; ?>
+            </div>
+
+            <!-- Pannello Ricevuta (nascosto di default) -->
+            <?php if ($receipt_url !== ''): ?>
+            <div id="<?php echo esc_attr($scope_id); ?>-panel-rcpt"
+                 style="display:none;background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:16px 20px;margin-bottom:12px;">
+                <h3 style="margin:0 0 10px;font-size:15px;">📄 Ricevuta non fiscale</h3>
+                <p style="margin:0 0 12px;color:#4b5563;font-size:13px;">Visualizza, stampa o salva in PDF la ricevuta del tuo soggiorno.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener"
+                       style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                        👁 Visualizza ricevuta
+                    </a>
+                    <a href="<?php echo esc_url(add_query_arg('mode', 'print', $receipt_url)); ?>" target="_blank" rel="noopener"
+                       style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                        🖨️ Stampa / Salva PDF
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Pannello Self Check-in (nascosto di default) -->
+            <?php if ($self_checkin_url !== ''): ?>
+            <div id="<?php echo esc_attr($scope_id); ?>-panel-checkin"
+                 style="display:none;background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:16px 20px;margin-bottom:12px;">
+                <h3 style="margin:0 0 10px;font-size:15px;">✍️ Self Check-in online</h3>
+                <p style="margin:0 0 12px;color:#4b5563;font-size:13px;">Compila i tuoi dati per il check-in online e la documentazione necessaria.</p>
+                <a href="<?php echo esc_url($self_checkin_url); ?>"
+                   style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                    ✍️ Apri modulo check-in
+                </a>
+            </div>
+            <?php endif; ?>
+
+        </div>
+        <script>
+        (function() {
+            var sid = '<?php echo esc_js($scope_id); ?>';
+            function toggle(panelId, btnId) {
+                var panel = document.getElementById(panelId);
+                var btn   = document.getElementById(btnId);
+                if (!panel) return;
+                var isOpen = panel.style.display !== 'none';
+                // Chiudi tutti i pannelli
+                ['rcpt', 'checkin'].forEach(function(k) {
+                    var p = document.getElementById(sid + '-panel-' + k);
+                    if (p) p.style.display = 'none';
+                });
+                // Se era chiuso, aprilo
+                if (!isOpen) {
+                    panel.style.display = 'block';
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+            var btnRcpt    = document.getElementById(sid + '-btn-rcpt');
+            var btnCheckin = document.getElementById(sid + '-btn-checkin');
+            if (btnRcpt)    btnRcpt.addEventListener('click',    function() { toggle(sid + '-panel-rcpt',    sid + '-btn-rcpt'); });
+            if (btnCheckin) btnCheckin.addEventListener('click', function() { toggle(sid + '-panel-checkin', sid + '-btn-checkin'); });
+        })();
+        </script>
+        <?php
+        return (string) ob_get_clean();
+    }
+
+    // -------------------------------------------------------------------------
+    // PAGINA CONFERMA PRENOTAZIONE OTA
+    // Shortcode: [domilocus_booking_confirmation_ota]
+    // Per prenotazioni via Airbnb, Booking.com, VRBO, ecc.
+    // NON mostra pagamento né firma contratto.
+    // Mostra solo pulsanti opzionali "Ricevuta" e "Self Check-in".
+    // -------------------------------------------------------------------------
+
+    /**
+     * Pagina di conferma per prenotazioni OTA (Airbnb, Booking.com, VRBO, ecc.).
+     * [domilocus_booking_confirmation_ota]
+     */
+    public static function booking_confirmation_ota_shortcode($atts) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_id  = isset($_GET['booking_id']) ? intval(wp_unslash($_GET['booking_id'])) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
+
+        if (!$booking_id || !$booking_key) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $search_checkin = isset($_GET['dml_ota_checkin']) ? sanitize_text_field(wp_unslash($_GET['dml_ota_checkin'])) : '';
+
+            ob_start();
+            ?>
+            <div style="max-width:680px;margin:20px auto;padding:22px;background:#fff;border:1px solid #d1d5db;border-radius:10px;">
+                <h2 style="margin-top:0;">📅 Accedi alla tua prenotazione OTA</h2>
+                <p style="color:#4b5563;">Inserisci la data di check-in. In questa pagina viene gestita una sola prenotazione per giorno di arrivo.</p>
+                <form method="get" action="">
+                    <input type="hidden" name="page_id" value="<?php echo esc_attr(get_the_ID()); ?>" />
+                    <p>
+                        <label for="dml_ota_checkin"><strong>Data di check-in</strong></label><br>
+                        <input id="dml_ota_checkin" name="dml_ota_checkin" type="date" required
+                               value="<?php echo esc_attr($search_checkin); ?>"
+                               style="width:100%;max-width:280px;padding:8px;border:1px solid #d1d5db;border-radius:5px;font-size:14px;" />
+                    </p>
+                    <p>
+                        <button type="submit"
+                                style="padding:9px 20px;background:#2271b1;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                            🔍 Apri prenotazione
+                        </button>
+                    </p>
+                </form>
+                <?php
+                if ($search_checkin !== '') {
+                    global $wpdb;
+                    $table = $wpdb->prefix . 'domilocus_bookings';
+                    $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                        $wpdb->prepare(
+                            "SELECT *
+                             FROM {$table}
+                             WHERE check_in = %s
+                               AND source != 'manual'
+                             ORDER BY id DESC
+                             LIMIT 2",
+                            $search_checkin
+                        )
+                    );
+
+                    if (count($results) === 1) {
+                        $resolved_booking = $results[0];
+                        $resolved_key = '';
+                        if (class_exists('Domilocus_Receipts') && method_exists('Domilocus_Receipts', 'build_receipt_key')) {
+                            $resolved_key = (string) Domilocus_Receipts::build_receipt_key($resolved_booking);
+                        }
+                        if ($resolved_key === '') {
+                            $resolved_key = (string) Domilocus_Booking::generate_booking_key((int) $resolved_booking->id, (string) $resolved_booking->customer_email);
+                        }
+
+                        $resolved_link = add_query_arg(
+                            array(
+                                'booking_id' => (int) $resolved_booking->id,
+                                'key'        => $resolved_key,
+                            ),
+                            get_permalink()
+                        );
+                        ?>
+                        <div style="margin-top:16px;background:#ecfdf5;border:1px solid #a7f3d0;padding:12px 14px;border-radius:8px;color:#065f46;">
+                            Prenotazione trovata. <a href="<?php echo esc_url($resolved_link); ?>" style="font-weight:600;">Apri il riepilogo OTA</a>.
+                        </div>
+                        <?php
+                    } elseif (count($results) > 1) {
+                        echo '<p style="margin-top:12px;color:#92400e;">Sono state trovate piu prenotazioni con questo check-in. In questo caso usa il link diretto dalla scheda admin.</p>';
+                    } else {
+                        echo '<p style="margin-top:12px;color:#991b1b;">Nessuna prenotazione OTA trovata per questa data.</p>';
+                    }
+                }
+                ?>
+            </div>
+            <?php
+            return (string) ob_get_clean();
+        }
+
+        // -- Con booking_id e key: mostra la pagina di conferma OTA --
+        $booking = Domilocus_Booking::get_booking($booking_id);
+        if (!$booking) {
+            return '<p>' . esc_html__('Prenotazione non trovata.', 'domilocus') . '</p>';
+        }
+
+        $is_valid = false;
+        if (class_exists('Domilocus_Receipts') && method_exists('Domilocus_Receipts', 'build_receipt_key')) {
+            $is_valid = hash_equals((string) Domilocus_Receipts::build_receipt_key($booking), (string) $booking_key);
+        }
+        if (!$is_valid) {
+            $expected_key = Domilocus_Booking::generate_booking_key($booking_id, $booking->customer_email);
+            $is_valid = hash_equals((string) $expected_key, (string) $booking_key);
+        }
+        if (!$is_valid) {
+            return '<p>' . esc_html__('Link non valido o scaduto.', 'domilocus') . '</p>';
+        }
+
+        $apartment   = get_post((int) $booking->apartment_id);
+        $date_format = get_option('date_format', 'd/m/Y');
+        $nights      = 0;
+        try {
+            $ci_dt  = new DateTime($booking->check_in);
+            $co_dt  = new DateTime($booking->check_out);
+            $nights = max(0, $ci_dt->diff($co_dt)->days);
+        } catch (Exception $e) {
+            $nights = 0;
+        }
+
+        // Piattaforma di origine
+        $source_label_map = array(
+            'airbnb'   => 'Airbnb',
+            'booking'  => 'Booking.com',
+            'vrbo'     => 'VRBO',
+            'homeaway' => 'HomeAway',
+            'expedia'  => 'Expedia',
+        );
+        $source_raw   = strtolower((string) ($booking->source ?? ''));
+        $ext_platform = strtolower((string) ($booking->external_platform ?? ''));
+        $platform_label = 'Piattaforma OTA';
+        foreach ($source_label_map as $key_p => $lbl) {
+            if (stripos($source_raw, $key_p) !== false || stripos($ext_platform, $key_p) !== false) {
+                $platform_label = $lbl;
+                break;
+            }
+        }
+
+        // URL ricevuta e self check-in
+        $receipt_url      = '';
+        $self_checkin_url = '';
+        if (class_exists('Domilocus_Receipts')) {
+            if (method_exists('Domilocus_Receipts', 'get_direct_receipt_url')) {
+                $receipt_url = (string) Domilocus_Receipts::get_direct_receipt_url((int) $booking->id);
+            } else {
+                $receipt_url = (string) Domilocus_Receipts::get_guest_download_url((int) $booking->id, (string) $booking_key);
+            }
+            if (method_exists('Domilocus_Receipts', 'get_direct_checkin_url')) {
+                $self_checkin_url = (string) Domilocus_Receipts::get_direct_checkin_url((int) $booking->id);
+            }
+        }
+
+        $scope_id = 'dml-ota-' . (int) $booking->id;
+
+        ob_start();
+        ?>
+        <div class="domilocus-booking-confirmation" style="max-width:860px;margin:20px auto;">
+
+            <!-- Intestazione OTA -->
+            <div style="background:#fff;border:1px solid #d1d5db;border-radius:10px;padding:22px;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                    <h2 style="margin:0;font-size:20px;">👋 Benvenuto/a!</h2>
+                    <span style="background:#f0f9ff;color:#0369a1;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid #0369a1;"><?php echo esc_html($platform_label); ?></span>
+                </div>
+                <p style="margin:0;color:#4b5563;">
+                    La tua prenotazione tramite <strong><?php echo esc_html($platform_label); ?></strong> è confermata.
+                    Pagamento e contratto sono già stati gestiti dalla piattaforma.
+                </p>
+            </div>
+
+            <!-- Riepilogo soggiorno -->
+            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 20px;margin-bottom:14px;">
+                <h3 style="margin:0 0 12px;font-size:16px;">📋 Riepilogo soggiorno</h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-in</span><strong><?php echo esc_html(date_i18n($date_format, strtotime((string) $booking->check_in))); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-out</span><strong><?php echo esc_html(date_i18n($date_format, strtotime((string) $booking->check_out))); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Durata</span><strong><?php echo (int) $nights; ?> notte/i</strong></div>
+                    <?php if (!empty($booking->guests) && (int) $booking->guests > 0): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Ospiti</span><strong><?php echo (int) $booking->guests; ?></strong></div>
+                    <?php endif; ?>
+                    <?php if ($apartment): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Struttura</span><strong><?php echo esc_html($apartment->post_title); ?></strong></div>
+                    <?php endif; ?>
+                    <?php if (!empty($booking->platform_booking_code)): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Codice piattaforma</span><strong><?php echo esc_html($booking->platform_booking_code); ?></strong></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Messaggio informativo: niente pagamento né contratto per OTA -->
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:14px;">
+                <p style="margin:0;font-size:13px;color:#166534;">
+                    ✅ <strong>Pagamento e contratto già gestiti da <?php echo esc_html($platform_label); ?>.</strong>
+                    Non è necessaria alcuna azione aggiuntiva per confermare il soggiorno.
+                </p>
+            </div>
+
+            <!-- Pulsanti opzionali -->
+            <?php if ($receipt_url !== '' || $self_checkin_url !== ''): ?>
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:14px;">
+                <h3 style="margin:0 0 8px;font-size:15px;">Servizi opzionali</h3>
+                <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">Puoi facoltativamente richiedere la ricevuta del soggiorno e/o completare il check-in online.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <?php if ($receipt_url !== ''): ?>
+                    <button type="button" id="<?php echo esc_attr($scope_id); ?>-btn-rcpt"
+                            style="padding:9px 20px;background:#2271b1;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                        📄 Ricevuta soggiorno
+                    </button>
+                    <?php endif; ?>
+                    <?php if ($self_checkin_url !== ''): ?>
+                    <button type="button" id="<?php echo esc_attr($scope_id); ?>-btn-checkin"
+                            style="padding:9px 20px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">
+                        ✍️ Check-in online
+                    </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Pannello Ricevuta (nascosto) -->
+            <?php if ($receipt_url !== ''): ?>
+            <div id="<?php echo esc_attr($scope_id); ?>-panel-rcpt"
+                 style="display:none;background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:16px 20px;margin-bottom:12px;">
+                <h3 style="margin:0 0 10px;font-size:15px;">📄 Ricevuta del soggiorno</h3>
+                <p style="margin:0 0 8px;color:#4b5563;font-size:13px;">
+                    Se hai bisogno di una ricevuta per i tuoi archivi o per una nota spese, la trovi qui.
+                    <?php if (!empty($booking->customer_name) && $booking->customer_name !== 'Airbnb (Not available)'): ?>
+                    I dati ospite già inseriti appariranno nella ricevuta.
+                    <?php else: ?>
+                    Per personalizzarla con i tuoi dati, usa il modulo di check-in online.
+                    <?php endif; ?>
+                </p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener"
+                       style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                        👁 Visualizza ricevuta
+                    </a>
+                    <a href="<?php echo esc_url(add_query_arg('mode', 'print', $receipt_url)); ?>" target="_blank" rel="noopener"
+                       style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                        🖨️ Stampa / Salva PDF
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Pannello Self Check-in (nascosto) -->
+            <?php if ($self_checkin_url !== ''): ?>
+            <div id="<?php echo esc_attr($scope_id); ?>-panel-checkin"
+                 style="display:none;background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:16px 20px;margin-bottom:12px;">
+                <h3 style="margin:0 0 10px;font-size:15px;">✍️ Check-in online</h3>
+                <p style="margin:0 0 12px;color:#4b5563;font-size:13px;">
+                    Compila i tuoi dati personali per velocizzare l'arrivo e generare la documentazione necessaria
+                    (nome, cognome, indirizzo, codice fiscale).
+                </p>
+                <a href="<?php echo esc_url($self_checkin_url); ?>"
+                   style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
+                    ✍️ Apri modulo check-in
+                </a>
+            </div>
+            <?php endif; ?>
+
+        </div>
+        <script>
+        (function() {
+            var sid = '<?php echo esc_js($scope_id); ?>';
+            function toggle(panelId) {
+                var panel = document.getElementById(panelId);
+                if (!panel) return;
+                var isOpen = panel.style.display !== 'none';
+                ['rcpt', 'checkin'].forEach(function(k) {
+                    var p = document.getElementById(sid + '-panel-' + k);
+                    if (p) p.style.display = 'none';
+                });
+                if (!isOpen) {
+                    panel.style.display = 'block';
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+            var btnRcpt    = document.getElementById(sid + '-btn-rcpt');
+            var btnCheckin = document.getElementById(sid + '-btn-checkin');
+            if (btnRcpt)    btnRcpt.addEventListener('click',    function() { toggle(sid + '-panel-rcpt'); });
+            if (btnCheckin) btnCheckin.addEventListener('click', function() { toggle(sid + '-panel-checkin'); });
+        })();
+        </script>
+        <?php
+        return (string) ob_get_clean();
+    }
+
+    /**
+     * Dedicated guest documents shortcodes.
+     * [domilocus_checkin_documents] => check-in form view
+     * [domilocus_receipt_portal] => receipt view
+     */
+    public static function checkin_documents_shortcode($atts, $content = null, $tag = '') {
+        if (!class_exists('Domilocus_Receipts') || !method_exists('Domilocus_Receipts', 'render_portal_block')) {
+            return '<p>' . esc_html__('Modulo documenti non disponibile.', 'domilocus') . '</p>';
+        }
+
+        $atts = shortcode_atts(array(
+            'view' => '',
+        ), (array) $atts, 'domilocus_checkin_documents');
+
+        $view = strtolower(trim((string) $atts['view']));
+        if ($view !== 'receipt' && $view !== 'checkin') {
+            $view = ($tag === 'domilocus_receipt_portal') ? 'receipt' : 'checkin';
+        }
+
+        $login_title = ($view === 'receipt') ? 'Ricevuta soggiorno' : 'Check-in online documenti';
+        $login_description = ($view === 'receipt')
+            ? 'Inserisci numero prenotazione e cognome ospite per accedere alla ricevuta e completare i dati.'
+            : 'Inserisci numero prenotazione e cognome ospite per accedere al modulo documenti.';
+        $login_button = ($view === 'receipt') ? 'Accedi alla ricevuta' : 'Accedi al modulo documenti';
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_id = isset($_GET['booking_id']) ? intval(wp_unslash($_GET['booking_id'])) : 0;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $booking_key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
+
+        if ($booking_id <= 0 || $booking_key === '') {
+            ob_start();
+            ?>
+            <div class="domilocus-checkin-documents" style="max-width:760px;margin:20px auto;padding:22px;background:#fff;border:1px solid #d1d5db;border-radius:10px;">
+                <h2 style="margin-top:0;"><?php echo esc_html($login_title); ?></h2>
+                <p><?php echo esc_html($login_description); ?></p>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <?php wp_nonce_field('domilocus_receipt_portal_login', 'domilocus_receipt_portal_login_nonce'); ?>
+                    <input type="hidden" name="action" value="domilocus_receipt_portal_login" />
+                    <input type="hidden" name="redirect_to" value="<?php echo esc_url(get_permalink()); ?>" />
+                    <p>
+                        <label for="dml_booking_ref"><strong><?php esc_html_e('Numero prenotazione', 'domilocus'); ?></strong></label><br>
+                        <input id="dml_booking_ref" name="booking_ref" type="text" required class="regular-text" style="width:100%;max-width:320px;" />
+                    </p>
+                    <p>
+                        <label for="dml_guest_surname"><strong><?php esc_html_e('Cognome ospite', 'domilocus'); ?></strong></label><br>
+                        <input id="dml_guest_surname" name="guest_surname" type="text" required class="regular-text" style="width:100%;max-width:320px;" />
+                    </p>
+                    <p>
+                        <button type="submit" class="button button-primary"><?php echo esc_html($login_button); ?></button>
+                    </p>
+                </form>
+            </div>
+            <?php
+            return (string) ob_get_clean();
+        }
+
+        $booking = Domilocus_Booking::get_booking($booking_id);
+        if (!$booking) {
+            return '<p>' . esc_html__('Prenotazione non trovata.', 'domilocus') . '</p>';
+        }
+
+        $is_valid = false;
+        if (method_exists('Domilocus_Receipts', 'build_receipt_key')) {
+            $is_valid = hash_equals((string) Domilocus_Receipts::build_receipt_key($booking), (string) $booking_key);
+        }
+        if (!$is_valid) {
+            $fallback_key = Domilocus_Booking::generate_booking_key((int) $booking_id, (string) $booking->customer_email);
+            $is_valid = hash_equals((string) $fallback_key, (string) $booking_key);
+        }
+
+        if (!$is_valid) {
+            return '<p>' . esc_html__('Link non valido o scaduto.', 'domilocus') . '</p>';
+        }
+
+        return (string) Domilocus_Receipts::render_portal_block($booking, (string) $booking_key, $view);
     }
     
     /**

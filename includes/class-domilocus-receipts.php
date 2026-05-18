@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Domilocus Receipts.
  *
@@ -50,24 +50,38 @@ class Domilocus_Receipts {
         self::ensure_receipt_for_booking($booking);
     }
 
-    public static function render_portal_block($booking, $receipt_key) {
+    public static function render_portal_block($booking, $receipt_key, $view = 'checkin') {
         // $booking and $receipt_key are already validated by the caller.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $message_code = isset($_GET['dml_rcpt_msg']) ? sanitize_key(wp_unslash($_GET['dml_rcpt_msg'])) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $error_code = isset($_GET['dml_rcpt_err']) ? sanitize_key(wp_unslash($_GET['dml_rcpt_err'])) : '';
 
+        $view = strtolower(trim((string) $view));
+        if (!in_array($view, array('receipt', 'checkin'), true)) {
+            $view = 'checkin';
+        }
+
         ob_start();
         $context   = self::build_receipt_context($booking);
         $document  = self::resolve_document_profile($booking, $context);
         $doc_title = (string) $document['title'];
         $doc_type  = (string) $document['type'];
+        $portal_title = ($view === 'receipt') ? $doc_title : 'Check-in online';
+        $form_title = ($view === 'receipt')
+            ? '✏️ Completa i dati per la ricevuta'
+            : '✏️ Dati ospite per il check-in online';
+        $form_description = ($view === 'receipt')
+            ? 'Completa o correggi i dati intestatario. La ricevuta verra generata con le informazioni piu aggiornate.'
+            : 'Compila i dati richiesti per velocizzare l\'arrivo e completare il check-in online.';
         ?>
         <div class="domilocus-receipt-portal" style="max-width:860px;margin:20px auto;padding:22px;background:#fff;border:1px solid #d1d5db;border-radius:10px;">
-            <h2 style="margin-top:0;"><?php echo esc_html($doc_title); ?></h2>
+            <h2 style="margin-top:0;"><?php echo esc_html($portal_title); ?></h2>
 
             <?php if ($message_code === 'saved'): ?>
-                <div style="background:#ecfdf5;border:1px solid #a7f3d0;padding:10px 12px;margin-bottom:14px;border-radius:8px;color:#065f46;">Dati aggiornati correttamente. Ora puoi scaricare la ricevuta.</div>
+                <div style="background:#ecfdf5;border:1px solid #a7f3d0;padding:10px 12px;margin-bottom:14px;border-radius:8px;color:#065f46;">
+                    <?php echo esc_html($view === 'receipt' ? 'Dati aggiornati correttamente. Ora puoi visualizzare o stampare la ricevuta.' : 'Dati check-in aggiornati correttamente.'); ?>
+                </div>
             <?php endif; ?>
 
             <?php if ($error_code !== ''): ?>
@@ -75,8 +89,6 @@ class Domilocus_Receipts {
                     <?php echo esc_html(self::portal_error_label($error_code)); ?>
                 </div>
             <?php endif; ?>
-
-            <?php $online_checkin_enabled = self::is_online_checkin_documents_enabled(); ?>
 
             <?php
             $status_raw  = strtolower(trim((string) (isset($booking->status) ? $booking->status : '')));
@@ -142,6 +154,7 @@ class Domilocus_Receipts {
             </div>
 
             <!-- Receipt section -->
+            <?php if ($view === 'receipt'): ?>
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:18px;">
                 <h3 style="margin:0 0 10px;font-size:15px;">📄 <?php echo esc_html($doc_title); ?></h3>
                 <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">
@@ -158,12 +171,13 @@ class Domilocus_Receipts {
                     <a href="<?php echo esc_url($print_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">🖨️ Stampa / Salva PDF</a>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Data form -->
+            <?php if ($view === 'receipt' || $view === 'checkin'): ?>
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:10px;">
-                <h3 style="margin:0 0 4px;font-size:15px;">✏️ Dati ospite per la ricevuta</h3>
-                <?php if ($online_checkin_enabled): ?>
-                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;">Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.</p>
+                <h3 style="margin:0 0 4px;font-size:15px;"><?php echo esc_html($form_title); ?></h3>
+                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;"><?php echo esc_html($form_description); ?></p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('domilocus_receipt_portal_save', 'domilocus_receipt_portal_save_nonce'); ?>
                     <input type="hidden" name="action" value="domilocus_receipt_portal_save" />
@@ -196,10 +210,8 @@ class Domilocus_Receipts {
                         <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">💾 Salva dati</button>
                     </p>
                 </form>
-                <?php else: ?>
-                <p style="margin:0;color:#6b7280;font-size:13px;">La raccolta online dei dati documento e disponibile dal piano Professional.</p>
-                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
         <?php
         return (string) ob_get_clean();
@@ -267,19 +279,6 @@ class Domilocus_Receipts {
         $booking = self::get_booking($booking_id);
         if (!$booking || $post_booking_key === '' || !hash_equals(self::build_receipt_key($booking), $post_booking_key)) {
             wp_safe_redirect(add_query_arg('dml_rcpt_err', 'access_denied', $redirect_to));
-            exit;
-        }
-
-        if (!self::is_online_checkin_documents_enabled()) {
-            $return_url = add_query_arg(
-                array(
-                    'booking_id'   => (int) $booking->id,
-                    'key'          => $post_booking_key,
-                    'dml_rcpt_err' => 'feature_locked',
-                ),
-                $redirect_to
-            );
-            wp_safe_redirect($return_url);
             exit;
         }
 
@@ -450,22 +449,49 @@ class Domilocus_Receipts {
     }
 
     /**
-     * Returns the direct portal URL for a booking (pre-authenticated link for admin).
-     * Requires the portal page to be configured in settings (domilocus_portal_page_id).
+     * Backward-compatible alias for direct check-in URL.
      */
     public static function get_direct_portal_url($booking_id) {
+        return self::get_direct_checkin_url($booking_id);
+    }
+
+    /**
+     * Returns the direct receipt page URL for a booking (pre-authenticated).
+     */
+    public static function get_direct_receipt_url($booking_id) {
+        return self::build_direct_portal_url($booking_id, 'domilocus_receipt_page_id');
+    }
+
+    /**
+     * Returns the direct check-in page URL for a booking (pre-authenticated).
+     */
+    public static function get_direct_checkin_url($booking_id) {
+        return self::build_direct_portal_url($booking_id, 'domilocus_checkin_page_id');
+    }
+
+    /**
+     * Build a direct frontend URL with booking auth params.
+     */
+    private static function build_direct_portal_url($booking_id, $option_name) {
         $booking_id = (int) $booking_id;
         if ($booking_id <= 0) {
             return '';
         }
-        $portal_page_id = (int) get_option('domilocus_portal_page_id', 0);
+
+        $portal_page_id = (int) get_option($option_name, 0);
+        if (!$portal_page_id) {
+            // Backward compatibility with old single-page setup.
+            $portal_page_id = (int) get_option('domilocus_portal_page_id', 0);
+        }
         if (!$portal_page_id) {
             return '';
         }
+
         $booking = self::get_booking($booking_id);
         if (!$booking) {
             return '';
         }
+
         $key = self::build_receipt_key($booking);
         return (string) add_query_arg(
             array(
@@ -1165,19 +1191,9 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
                 return 'Accesso non autorizzato.';
             case 'privacy_required':
                 return 'Devi fornire il consenso privacy per proseguire.';
-            case 'feature_locked':
-                return 'Funzione disponibile dal piano Professional.';
             default:
                 return 'Si e verificato un errore. Riprova.';
         }
-    }
-
-    private static function is_online_checkin_documents_enabled() {
-        if (class_exists('Domilocus_License') && method_exists('Domilocus_License', 'is_feature_enabled')) {
-            return (bool) Domilocus_License::is_feature_enabled('online_checkin_documents');
-        }
-
-        return true;
     }
 
     private static function find_booking_by_reference($booking_ref) {

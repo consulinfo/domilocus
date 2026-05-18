@@ -327,7 +327,12 @@ class Domilocus_Booking_Form {
                         
                         <!-- Sidebar -->
                         <div id="postbox-container-1" class="postbox-container">
-                            
+                            <?php
+                            $is_ota_booking = $is_edit && (
+                                !empty($booking->external_platform)
+                                || in_array(($booking->source ?? ''), array('ical_import', 'ical', 'booking.com', 'airbnb', 'vrbo', 'expedia', 'ota'), true)
+                            );
+                            ?>
                             <!-- Status -->
                             <div class="postbox">
                                 <div class="postbox-header">
@@ -355,6 +360,18 @@ class Domilocus_Booking_Form {
                                         </select>
                                     </div>
                                     
+                                    <?php if ($is_ota_booking): ?>
+                                    <div class="misc-pub-section" style="margin-top:15px;padding:8px 10px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px;">
+                                        <span style="font-size:12px;color:#7a5c00;">
+                                            <?php
+                                            $ota_label = !empty($booking->external_platform) ? strtoupper((string) $booking->external_platform) : 'Piattaforma esterna';
+                                            // translators: %s: platform name (e.g. AIRBNB, BOOKING.COM)
+                                            printf(esc_html__('Pagamento gestito da %s. Non modificabile da qui.', 'domilocus'), esc_html($ota_label));
+                                            ?>
+                                        </span>
+                                        <input type="hidden" name="payment_status" value="<?php echo esc_attr($defaults['payment_status']); ?>">
+                                    </div>
+                                    <?php else: ?>
                                     <div class="misc-pub-section" style="margin-top: 15px;">
                                         <label for="payment_status"><?php esc_html_e('Payment Status', 'domilocus'); ?></label>
                                         <select id="payment_status" name="payment_status" class="widefat" style="margin-top: 5px;">
@@ -372,10 +389,12 @@ class Domilocus_Booking_Form {
                                             </option>
                                         </select>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
                             <!-- Payment Details -->
+                            <?php if (!$is_ota_booking): ?>
                             <div class="postbox">
                                 <div class="postbox-header">
                                     <h2><?php esc_html_e('Payment Details', 'domilocus'); ?></h2>
@@ -415,6 +434,7 @@ class Domilocus_Booking_Form {
                                     </div>
                                 </div>
                             </div>
+                            <?php endif; /* !$is_ota_booking */ ?>
                             
                             <!-- Codice Accesso APP -->
                             <?php if ($is_edit && self::is_smart_checkin_enabled()): ?>
@@ -594,19 +614,19 @@ class Domilocus_Booking_Form {
                             ?>
 
                             <?php if ($is_edit): ?>
-                            <?php $portal_url = class_exists('Domilocus_Receipts') ? Domilocus_Receipts::get_direct_portal_url($booking_id) : ''; ?>
-                            <?php if ($portal_url !== ''): ?>
+                            <?php $guest_summary_url = class_exists('Domilocus_Booking') ? Domilocus_Booking::get_confirmation_url($booking_id) : ''; ?>
+                            <?php if ($guest_summary_url !== ''): ?>
                             <div class="postbox">
                                 <div class="postbox-header">
                                     <h2>🔗 Pagina ospite</h2>
                                 </div>
                                 <div class="inside" style="padding:10px 12px;">
-                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Link alla pagina personale di questa prenotazione. Copialo e invialo all'ospite.</p>
+                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Link al riepilogo prenotazione di questa prenotazione (Locale/OTA). Copialo e invialo all'ospite.</p>
                                     <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-                                        <input type="text" id="dml_portal_url_<?php echo absint($booking_id); ?>" readonly value="<?php echo esc_attr($portal_url); ?>" class="widefat" style="font-size:11px;font-family:monospace;background:#f0f4ff;flex:1;" />
-                                        <button type="button" class="button" style="white-space:nowrap;" onclick="(function(btn){var i=document.getElementById('dml_portal_url_<?php echo absint($booking_id); ?>');navigator.clipboard.writeText(i.value).then(function(){var t=btn.textContent;btn.textContent='✓ Copiato';setTimeout(function(){btn.textContent=t;},1800);});})(this)">📋 Copia</button>
+                                        <input type="text" id="dml_summary_url_<?php echo absint($booking_id); ?>" readonly value="<?php echo esc_attr($guest_summary_url); ?>" class="widefat" style="font-size:11px;font-family:monospace;background:#f0f4ff;flex:1;" />
+                                        <button type="button" class="button" style="white-space:nowrap;" onclick="(function(btn){var i=document.getElementById('dml_summary_url_<?php echo absint($booking_id); ?>');navigator.clipboard.writeText(i.value).then(function(){var t=btn.textContent;btn.textContent='✓ Copiato';setTimeout(function(){btn.textContent=t;},1800);});})(this)">📋 Copia</button>
                                     </div>
-                                    <a href="<?php echo esc_url($portal_url); ?>" target="_blank" rel="noopener" style="font-size:12px;">Apri pagina ospite →</a>
+                                    <a href="<?php echo esc_url($guest_summary_url); ?>" target="_blank" rel="noopener" style="font-size:12px;">Apri riepilogo prenotazione →</a>
                                 </div>
                             </div>
                             <?php else: ?>
@@ -615,10 +635,30 @@ class Domilocus_Booking_Form {
                                     <h2>🔗 Pagina ospite</h2>
                                 </div>
                                 <div class="inside" style="padding:10px 12px;">
-                                    <p style="margin:0;font-size:12px;color:#777;">Imposta la <strong>Pagina portale ricevute ospiti</strong> nelle Impostazioni Generali per generare il link diretto a questa prenotazione.</p>
+                                    <p style="margin:0;font-size:12px;color:#777;">Imposta le pagine <strong>Conferma Prenotazione Locale</strong> e <strong>Conferma Prenotazione OTA</strong> nelle Impostazioni Generali per generare il link diretto al riepilogo.</p>
                                 </div>
                             </div>
                             <?php endif; ?>
+
+                            <?php
+                            $alloggiati_booking_url = wp_nonce_url(
+                                admin_url(
+                                    'admin.php?page=domilocus-alloggiati&domilocus_action=download_alloggiati_booking&booking_id=' . absint($booking_id)
+                                ),
+                                'domilocus_alloggiati_booking_export'
+                            );
+                            ?>
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2>🛂 Export Alloggiati</h2>
+                                </div>
+                                <div class="inside" style="padding:10px 12px;">
+                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Genera il TXT della prenotazione usando solo codici ufficiali Stati/Comuni salvati sugli ospiti.</p>
+                                    <a href="<?php echo esc_url($alloggiati_booking_url); ?>" class="button button-primary" style="width:100%;text-align:center;">
+                                        Scarica TXT Alloggiati
+                                    </a>
+                                </div>
+                            </div>
                             <?php endif; ?>
 
                             <!-- Publish -->
@@ -933,11 +973,41 @@ class Domilocus_Booking_Form {
     }
 
     private static function is_smart_checkin_enabled() {
+        // Always allow Smart Check-in in local/dev environments for testing.
+        if ( self::is_local_dev_environment() ) {
+            return true;
+        }
+
         if ( class_exists( 'Domilocus_License' ) && method_exists( 'Domilocus_License', 'is_feature_enabled' ) ) {
             return (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' );
         }
 
         return true;
+    }
+
+    /**
+     * Detect local/development environments.
+     */
+    private static function is_local_dev_environment() {
+        // Preferred WordPress-native environment flag.
+        if ( function_exists( 'wp_get_environment_type' ) && wp_get_environment_type() === 'local' ) {
+            return true;
+        }
+
+        $host = isset( $_SERVER['HTTP_HOST'] ) ? strtolower( (string) $_SERVER['HTTP_HOST'] ) : '';
+        $host = strtok( $host, ':' ); // strip port if present
+
+        if (
+            $host === 'localhost' ||
+            $host === '::1' ||
+            str_starts_with( $host, '127.0.0.1' ) ||
+            str_ends_with( $host, '.local' ) ||
+            str_ends_with( $host, '.test' )
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
 

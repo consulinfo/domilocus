@@ -38,6 +38,8 @@ class Domilocus_Install {
     public static function deactivate() {
         // Flush rewrite rules
         flush_rewrite_rules();
+
+        wp_clear_scheduled_hook('domilocus_refresh_alloggiati_locations');
         
         do_action('domilocus_manager_deactivated');
     }
@@ -68,6 +70,10 @@ class Domilocus_Install {
             $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}domilocus_pricing");
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}domilocus_ical_feeds");
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}domilocus_countries");
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}domilocus_municipalities");
             
             // Remove all plugin options
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
@@ -378,6 +384,10 @@ class Domilocus_Install {
         dbDelta($availability_sql);
         dbDelta($pricing_sql);
         dbDelta($ical_sql);
+
+        if (class_exists('Domilocus_Alloggiati_Locations')) {
+            Domilocus_Alloggiati_Locations::create_tables();
+        }
         
         // Update database version
         update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
@@ -480,6 +490,10 @@ class Domilocus_Install {
         if ($installed_version !== DOMILOCUS_VERSION) {
             self::create_tables();
             update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
+        }
+
+        if (class_exists('Domilocus_Alloggiati_Locations')) {
+            Domilocus_Alloggiati_Locations::create_tables();
         }
 
         $lock_key = 'domilocus_manager_schema_check_' . DOMILOCUS_VERSION;

@@ -22,6 +22,7 @@ class Domilocus_Admin_Settings {
         add_action('admin_post_domilocus_save_settings', array(__CLASS__, 'save_settings'));
         add_action('admin_post_domilocus_send_test_email', array(__CLASS__, 'send_test_email'));
         add_action('admin_post_domilocus_repair_db', array(__CLASS__, 'handle_repair_db'));
+        add_action('admin_post_domilocus_regenerate_confirmation_pages', array(__CLASS__, 'handle_regenerate_confirmation_pages'));
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_settings_assets'));
     }
 
@@ -53,6 +54,15 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_general', 'domilocus_manager_address', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_cin_cir', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_portal_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_receipt_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_checkin_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_local', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_ota', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_receipt_requirement', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_documents_requirement', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_receipt_optional_visibility', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_documents_optional_visibility', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_currency', array(
             'sanitize_callback' => 'sanitize_text_field'
         ));
@@ -249,6 +259,23 @@ class Domilocus_Admin_Settings {
                 );
             }
         }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!empty($_GET['domilocus-confirmation-pages'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $status = sanitize_key($_GET['domilocus-confirmation-pages']);
+            if ($status === 'regenerated') {
+                printf(
+                    '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                    esc_html__('Pagine portale e conferma rigenerate correttamente.', 'domilocus')
+                );
+            } elseif ($status === 'error') {
+                printf(
+                    '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
+                    esc_html__('Errore durante la rigenerazione delle pagine portale/conferma.', 'domilocus')
+                );
+            }
+        }
     }
 
     /**
@@ -295,16 +322,118 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_portal_page_id">Pagina portale ricevute ospiti</label></th>
+                    <th scope="row"><label for="domilocus_receipt_page_id">Pagina ricevuta ospiti</label></th>
                     <td>
                         <?php wp_dropdown_pages(array(
-                            'id'                => 'domilocus_portal_page_id',
-                            'name'              => 'domilocus_portal_page_id',
-                            'selected'          => (int) get_option('domilocus_portal_page_id', 0),
+                            'id'                => 'domilocus_receipt_page_id',
+                            'name'              => 'domilocus_receipt_page_id',
+                            'selected'          => (int) get_option('domilocus_receipt_page_id', 0),
                             'show_option_none'  => '— Nessuna —',
                             'option_none_value' => '0',
                         )); ?>
-                        <p class="description">Pagina che contiene lo shortcode <code>[domilocus_receipt_portal]</code>. Serve per generare i link diretti nella scheda prenotazione admin.</p>
+                        <p class="description">Pagina dedicata alla ricevuta con shortcode <code>[domilocus_receipt_portal]</code>.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_checkin_page_id">Pagina check-in online</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_checkin_page_id',
+                            'name'              => 'domilocus_checkin_page_id',
+                            'selected'          => (int) get_option('domilocus_checkin_page_id', 0),
+                            'show_option_none'  => '— Nessuna —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al modulo check-in con shortcode <code>[domilocus_checkin_documents]</code>.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_local">Pagina riepilogo prenotazione Locale</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_manager_page_booking_confirmation_local',
+                            'name'              => 'domilocus_manager_page_booking_confirmation_local',
+                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_local', 0),
+                            'show_option_none'  => '— Auto —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al riepilogo Locale con shortcode <code>[domilocus_booking_confirmation_local]</code>. Se vuota, viene creata automaticamente.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_ota">Pagina riepilogo prenotazione OTA</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_manager_page_booking_confirmation_ota',
+                            'name'              => 'domilocus_manager_page_booking_confirmation_ota',
+                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_ota', 0),
+                            'show_option_none'  => '— Auto —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al riepilogo OTA con shortcode <code>[domilocus_booking_confirmation_ota]</code>. Se vuota, viene creata automaticamente.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Rigenera pagine conferma/ospite</th>
+                    <td>
+                        <?php
+                        $regenerate_url = wp_nonce_url(
+                            add_query_arg(array('action' => 'domilocus_regenerate_confirmation_pages'), admin_url('admin-post.php')),
+                            'domilocus_regenerate_confirmation_pages'
+                        );
+                        ?>
+                        <a href="<?php echo esc_url($regenerate_url); ?>" class="button button-secondary">
+                            <?php esc_html_e('Rigenera pagine conferma, ricevuta e check-in', 'domilocus'); ?>
+                        </a>
+                        <p class="description">Crea automaticamente le 4 pagine necessarie: <strong>Riepilogo Locale</strong>, <strong>Riepilogo OTA</strong>, <strong>Ricevuta Ospite</strong> e <strong>Check-in Online</strong>. Se esistono già, aggiorna solo gli ID nelle impostazioni.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_receipt_requirement">Visualizzazione ricevuta ospite</label></th>
+                    <td>
+                        <select id="domilocus_manager_receipt_requirement" name="domilocus_manager_receipt_requirement">
+                            <option value="optional" <?php selected(get_option('domilocus_manager_receipt_requirement', 'optional'), 'optional'); ?>>Opzionale</option>
+                            <option value="required" <?php selected(get_option('domilocus_manager_receipt_requirement', 'optional'), 'required'); ?>>Obbligatoria (step richiesto)</option>
+                        </select>
+                        <p class="description">Se Obbligatoria, la ricevuta è uno step richiesto nel flusso conferma. Se Opzionale, decide il menu sotto se mostrare solo il pulsante o nascondere lo step. Per prenotazioni locali resta disponibile solo dal giorno di check-out.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_receipt_optional_visibility">Ricevuta quando opzionale</label></th>
+                    <td>
+                        <select id="domilocus_manager_receipt_optional_visibility" name="domilocus_manager_receipt_optional_visibility">
+                            <option value="button" <?php selected(get_option('domilocus_manager_receipt_optional_visibility', 'button'), 'button'); ?>>Opzionale: mostra pulsante</option>
+                            <option value="hidden" <?php selected(get_option('domilocus_manager_receipt_optional_visibility', 'button'), 'hidden'); ?>>Opzionale: nascondi step</option>
+                        </select>
+                        <p class="description">Valido solo quando la ricevuta è impostata su Opzionale.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_documents_requirement">Compilazione documenti check-in</label></th>
+                    <td>
+                        <select id="domilocus_manager_documents_requirement" name="domilocus_manager_documents_requirement">
+                            <option value="optional" <?php selected(get_option('domilocus_manager_documents_requirement', 'optional'), 'optional'); ?>>Opzionale</option>
+                            <option value="required" <?php selected(get_option('domilocus_manager_documents_requirement', 'optional'), 'required'); ?>>Obbligatoria (step richiesto)</option>
+                        </select>
+                        <p class="description">Se Obbligatoria, i documenti sono uno step richiesto. Se Opzionale, decide il menu sotto se mostrare solo il pulsante o nascondere lo step.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_documents_optional_visibility">Documenti quando opzionale</label></th>
+                    <td>
+                        <select id="domilocus_manager_documents_optional_visibility" name="domilocus_manager_documents_optional_visibility">
+                            <option value="button" <?php selected(get_option('domilocus_manager_documents_optional_visibility', 'button'), 'button'); ?>>Opzionale: mostra pulsante</option>
+                            <option value="hidden" <?php selected(get_option('domilocus_manager_documents_optional_visibility', 'button'), 'hidden'); ?>>Opzionale: nascondi step</option>
+                        </select>
+                        <p class="description">Valido solo quando i documenti sono impostati su Opzionale. In modalità opzionale non viene mostrato l'inserimento inline nella pagina conferma.</p>
                     </td>
                 </tr>
 
@@ -835,6 +964,102 @@ class Domilocus_Admin_Settings {
     }
 
     /**
+     * Create/recover a confirmation page by option and shortcode.
+     *
+     * @param string $option_name Option key storing page id.
+     * @param string $title       Fallback page title.
+     * @param string $shortcode   Required shortcode.
+     * @return int                Page ID or 0 on failure.
+     */
+    private static function ensure_confirmation_page($option_name, $title, $shortcode) {
+        $page_id = (int) get_option($option_name, 0);
+
+        if ($page_id > 0) {
+            $page = get_post($page_id);
+            if ($page && $page->post_status === 'publish') {
+                return $page_id;
+            }
+        }
+
+        $existing = get_posts(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            's' => $shortcode,
+            'fields' => 'ids',
+        ));
+
+        if (!empty($existing[0])) {
+            $page_id = (int) $existing[0];
+            update_option($option_name, $page_id);
+            return $page_id;
+        }
+
+        $created = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => $title,
+            'post_content' => $shortcode,
+            'comment_status' => 'closed',
+            'ping_status' => 'closed',
+        ), true);
+
+        if (is_wp_error($created) || (int) $created <= 0) {
+            return 0;
+        }
+
+        $page_id = (int) $created;
+        update_option($option_name, $page_id);
+        return $page_id;
+    }
+
+    /**
+     * Handle manual regeneration of booking confirmation pages.
+     */
+    public static function handle_regenerate_confirmation_pages() {
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_regenerate_confirmation_pages')) {
+            wp_die(esc_html__('Security check failed.', 'domilocus'));
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'domilocus'));
+        }
+
+        $receipt_id = self::ensure_confirmation_page(
+            'domilocus_receipt_page_id',
+            __('Ricevuta Ospite', 'domilocus'),
+            '[domilocus_receipt_portal]'
+        );
+
+        $checkin_id = self::ensure_confirmation_page(
+            'domilocus_checkin_page_id',
+            __('Check-in Online Ospite', 'domilocus'),
+            '[domilocus_checkin_documents]'
+        );
+
+        $local_id = self::ensure_confirmation_page(
+            'domilocus_manager_page_booking_confirmation_local',
+            __('Riepilogo Prenotazione Locale', 'domilocus'),
+            '[domilocus_booking_confirmation_local]'
+        );
+
+        $ota_id = self::ensure_confirmation_page(
+            'domilocus_manager_page_booking_confirmation_ota',
+            __('Riepilogo Prenotazione OTA', 'domilocus'),
+            '[domilocus_booking_confirmation_ota]'
+        );
+
+        $status = ($receipt_id > 0 && $checkin_id > 0 && $local_id > 0 && $ota_id > 0) ? 'regenerated' : 'error';
+
+        wp_safe_redirect(add_query_arg(array(
+            'page' => 'domilocus-settings',
+            'tab' => 'general',
+            'domilocus-confirmation-pages' => $status,
+        ), admin_url('admin.php')));
+        exit;
+    }
+
+    /**
      * Handle test email submission.
      */
     public static function send_test_email() {
@@ -871,6 +1096,15 @@ class Domilocus_Admin_Settings {
             'domilocus_manager_address' => 'sanitize_text_field',
             'domilocus_manager_cin_cir' => 'sanitize_text_field',
             'domilocus_portal_page_id' => 'absint',
+            'domilocus_receipt_page_id' => 'absint',
+            'domilocus_checkin_page_id' => 'absint',
+            'domilocus_manager_page_booking_confirmation' => 'absint',
+            'domilocus_manager_page_booking_confirmation_local' => 'absint',
+            'domilocus_manager_page_booking_confirmation_ota' => 'absint',
+            'domilocus_manager_receipt_requirement' => 'sanitize_text_field',
+            'domilocus_manager_documents_requirement' => 'sanitize_text_field',
+            'domilocus_manager_receipt_optional_visibility' => 'sanitize_text_field',
+            'domilocus_manager_documents_optional_visibility' => 'sanitize_text_field',
             'domilocus_manager_currency' => 'sanitize_text_field',
             'domilocus_manager_currency_position' => 'sanitize_text_field',
             'domilocus_manager_date_format' => 'sanitize_text_field',
