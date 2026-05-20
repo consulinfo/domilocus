@@ -246,7 +246,8 @@ class Domilocus_License {
      */
     public static function get_current_plan() {
         $data = self::get_license_data();
-        $plan = !empty($data['plan']) ? $data['plan'] : 'free';
+        $plan_raw = !empty($data['plan']) ? sanitize_text_field($data['plan']) : 'free';
+        $plan = strtolower(trim($plan_raw));
         
         // Map plan variations to standard names
         $plan_mapping = array(
@@ -257,7 +258,25 @@ class Domilocus_License {
             'enterprise' => 'enterprise'
         );
 
-        return isset($plan_mapping[$plan]) ? $plan_mapping[$plan] : $plan;
+        if (isset($plan_mapping[$plan])) {
+            return $plan_mapping[$plan];
+        }
+
+        // Normalize common variants from external license servers.
+        if (strpos($plan, 'enterprise') !== false) {
+            return 'enterprise';
+        }
+        if (strpos($plan, 'premium') !== false) {
+            return 'premium';
+        }
+        if (strpos($plan, 'professional') !== false || $plan === 'pro') {
+            return 'professional';
+        }
+        if (strpos($plan, 'starter') !== false || strpos($plan, 'basic') !== false) {
+            return 'starter';
+        }
+
+        return $plan;
     }
 
     /**

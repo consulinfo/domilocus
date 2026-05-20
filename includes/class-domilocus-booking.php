@@ -788,6 +788,223 @@ class Domilocus_Booking {
     }
 
     /**
+     * Check if a booking is ready for archival.
+     * Returns array with 'ready' boolean and 'missing_fields' array of missing field labels.
+     */
+    public static function is_archive_ready($booking) {
+        if (is_numeric($booking)) {
+            $booking = self::get_booking((int) $booking);
+        }
+        if (!$booking || !is_object($booking)) {
+            return array('ready' => false, 'missing_fields' => array(__('Prenotazione non trovata', 'domilocus')));
+        }
+
+        $missing = self::get_missing_checkout_required_fields($booking);
+        $deadline_passed = self::is_checkout_deadline_passed($booking);
+
+        if (!$deadline_passed) {
+            return array('ready' => false, 'missing_fields' => array(__('Orario checkout non raggiunto', 'domilocus')));
+        }
+
+        if (!empty($missing)) {
+            return array('ready' => false, 'missing_fields' => $missing);
+        }
+
+        return array('ready' => true, 'missing_fields' => array());
+    }
+
+    /**
+     * Automatically move bookings to completed after checkout time,
+     * unless mandatory check-in data is missing (then keep/set pending).
+     */
+    public static function maybe_sync_checkout_archival_state($force = false) {
+        global $wpdb;
+
+        $lock_key = 'domilocus_checkout_archival_sync_lock';
+        if (!$force && get_transient($lock_key)) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $bookings = $wpdb->get_results(
+            "SELECT id, apartment_id, check_out, status, customer_name, customer_email, customer_phone, total_amount
+             FROM {$wpdb->prefix}domilocus_bookings
+             WHERE check_out <= CURDATE()"
+        );
+
+        if (!is_array($bookings) || empty($bookings)) {
+            set_transient($lock_key, 1, 10 * MINUTE_IN_SECONDS);
+            return;
+        }
+
+        $ignored_statuses = array('cancelled', 'refunded', 'failed', 'trash', 'deleted');
+
+        foreach ($bookings as $booking) {
+            $current_status = strtolower(trim((string) ($booking->status ?? '')));
+            if (in_array($current_status, $ignored_statuses, true)) {
+                continue;
+            }
+
+            if (!self::is_checkout_deadline_passed($booking)) {
+                continue;
+            }
+
+            $missing = self::get_missing_checkout_required_fields($booking);
+            $target_status = empty($missing) ? 'completed' : 'pending';
+
+            if ($current_status !== $target_status) {
+                self::update_booking_status((int) $booking->id, $target_status);
+            }
+        }
+
+        set_transient($lock_key, 1, 10 * MINUTE_IN_SECONDS);
+    }
+
+    /**
+     * Returns dashboard warnings for bookings that cannot be archived
+     * because required check-in/closure data is missing.
+     */
+    public static function get_pending_checkout_warnings($limit = 10) {
+        global $wpdb;
+
+        self::maybe_sync_checkout_archival_state();
+
+        $limit = max(1, (int) $limit);
+
+        // Read a wider set, then filter by exact checkout-time deadline in PHP.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        $bookings = $wpdb->get_results($wpdb->prepare(
+            "SELECT id, apartment_id, check_out, status, customer_name, customer_email, customer_phone, total_amount
+             FROM {$wpdb->prefix}domilocus_bookings
+             WHERE check_out <= CURDATE() AND LOWER(COALESCE(status, '')) = 'pending'
+             ORDER BY check_out DESC, id DESC
+             LIMIT %d",
+            max($limit * 5, 30)
+        ));
+
+        $warnings = array();
+
+        foreach ((array) $bookings as $booking) {
+            if (!self::is_checkout_deadline_passed($booking)) {
+                continue;
+            }
+
+            $missing = self::get_missing_checkout_required_fields($booking);
+            if (empty($missing)) {
+                continue;
+            }
+
+            $warnings[] = array(
+                'id' => (int) $booking->id,
+                'apartment_id' => isset($booking->apartment_id) ? (int) $booking->apartment_id : 0,
+                'customer_name' => (string) ($booking->customer_name ?? ''),
+                'check_out' => (string) ($booking->check_out ?? ''),
+                'missing_fields' => array_values($missing),
+            );
+
+            if (count($warnings) >= $limit) {
+                break;
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * True when booking checkout date+time has already passed.
+     */
+    protected static function is_checkout_deadline_passed($booking) {
+        $deadline = self::get_checkout_deadline_timestamp($booking);
+        if (!$deadline) {
+            return false;
+        }
+
+        return current_time('timestamp') >= $deadline;
+    }
+
+    /**
+     * Resolve checkout deadline timestamp using apartment override or global setting.
+     */
+    protected static function get_checkout_deadline_timestamp($booking) {
+        if (is_numeric($booking)) {
+            $booking = self::get_booking((int) $booking);
+        }
+        if (!$booking || !is_object($booking) || empty($booking->check_out)) {
+            return null;
+        }
+
+        $timezone = function_exists('wp_timezone') ? wp_timezone() : new DateTimeZone('UTC');
+
+        $checkout_time = Domilocus_Settings::get('domilocus_manager_checkout_time', '11:00');
+        if (empty($checkout_time)) {
+            $checkout_time = '11:00';
+        }
+
+        $apartment_id = isset($booking->apartment_id) ? (int) $booking->apartment_id : 0;
+        if ($apartment_id > 0) {
+            $apartment_checkout_time = get_post_meta($apartment_id, '_domilocus_checkout_time', true);
+            if (!empty($apartment_checkout_time)) {
+                $checkout_time = $apartment_checkout_time;
+            }
+        }
+
+        $hour = 11;
+        $minute = 0;
+        if (preg_match('/^(\d{1,2}):(\d{2})$/', (string) $checkout_time, $matches)) {
+            $hour = min(23, max(0, (int) $matches[1]));
+            $minute = min(59, max(0, (int) $matches[2]));
+        }
+        $normalized_time = sprintf('%02d:%02d', $hour, $minute);
+
+        $checkout_date = (string) $booking->check_out;
+        $checkout_dt = DateTime::createFromFormat('Y-m-d H:i', $checkout_date . ' ' . $normalized_time, $timezone);
+        if (!$checkout_dt) {
+            $checkout_dt = DateTime::createFromFormat('Y-m-d', $checkout_date, $timezone);
+            if ($checkout_dt) {
+                $checkout_dt->setTime($hour, $minute, 0);
+            }
+        }
+
+        return $checkout_dt instanceof DateTime ? $checkout_dt->getTimestamp() : null;
+    }
+
+    /**
+     * Mandatory fields that must exist before a booking can be archived as completed.
+     */
+    protected static function get_missing_checkout_required_fields($booking) {
+        if (is_numeric($booking)) {
+            $booking = self::get_booking((int) $booking);
+        }
+        if (!$booking || !is_object($booking)) {
+            return array();
+        }
+
+        $missing = array();
+
+        $customer_name = trim((string) ($booking->customer_name ?? ''));
+        if ($customer_name === '') {
+            $missing[] = __('Nome cliente', 'domilocus');
+        }
+
+        $customer_email = trim((string) ($booking->customer_email ?? ''));
+        if ($customer_email === '' || !is_email($customer_email)) {
+            $missing[] = __('Email cliente', 'domilocus');
+        }
+
+        $customer_phone = trim((string) ($booking->customer_phone ?? ''));
+        if ($customer_phone === '') {
+            $missing[] = __('Telefono cliente', 'domilocus');
+        }
+
+        $total_amount = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
+        if ($total_amount <= 0) {
+            $missing[] = __('Importo prenotazione', 'domilocus');
+        }
+
+        return $missing;
+    }
+
+    /**
      * Sync booking DB record from admin post save (metaboxes).
      *
      * @param int   $post_id      WP post ID of the booking CPT.

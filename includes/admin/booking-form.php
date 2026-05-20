@@ -960,7 +960,20 @@ class Domilocus_Booking_Form {
         }
 
         if ( class_exists( 'Domilocus_License' ) && method_exists( 'Domilocus_License', 'is_feature_enabled' ) ) {
-            return (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' );
+            if ( (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' ) ) {
+                return true;
+            }
+
+            // Fallback: if license is active and current plan is premium/enterprise,
+            // do not block Smart Check-in due to remote plan naming mismatch.
+            if ( method_exists( 'Domilocus_License', 'is_premium_active' ) && method_exists( 'Domilocus_License', 'get_current_plan' ) ) {
+                $current_plan = strtolower( (string) Domilocus_License::get_current_plan() );
+                if ( Domilocus_License::is_premium_active() && in_array( $current_plan, array( 'premium', 'enterprise' ), true ) ) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         return true;

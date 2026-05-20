@@ -70,11 +70,56 @@ class Domilocus_Dashboard_Widget {
      */
     public static function render_dashboard_widget() {
         echo '<div class="domilocus-dashboard-widget">';
+        self::render_checkout_pending_warnings();
         self::render_news_content();
         echo '</div>';
         self::render_widget_styles();
     }
     
+    /**
+     * Render warnings for bookings that cannot be archived due to missing required data.
+     */
+    private static function render_checkout_pending_warnings() {
+        if (!class_exists('Domilocus_Booking') || !method_exists('Domilocus_Booking', 'get_pending_checkout_warnings')) {
+            return;
+        }
+
+        $warnings = Domilocus_Booking::get_pending_checkout_warnings(6);
+        if (empty($warnings)) {
+            return;
+        }
+
+        echo '<div style="border:1px solid #f59e0b;background:#fffbeb;border-radius:8px;padding:12px 14px;margin:0 0 14px;">';
+        echo '<p style="margin:0 0 8px;font-weight:700;color:#92400e;">⚠️ ' . esc_html__('Prenotazioni non archiviabili: dati mancanti', 'domilocus') . '</p>';
+        echo '<ul style="margin:0;padding-left:18px;">';
+
+        foreach ($warnings as $warning) {
+            $booking_id = isset($warning['id']) ? (int) $warning['id'] : 0;
+            if ($booking_id <= 0) {
+                continue;
+            }
+
+            $edit_url = admin_url('admin.php?page=domilocus-bookings&action=edit&booking_id=' . $booking_id);
+            $customer = !empty($warning['customer_name']) ? $warning['customer_name'] : __('Cliente non indicato', 'domilocus');
+            $check_out = !empty($warning['check_out']) ? date_i18n(get_option('date_format'), strtotime((string) $warning['check_out'])) : '—';
+            $missing = isset($warning['missing_fields']) && is_array($warning['missing_fields'])
+                ? implode(', ', array_map('sanitize_text_field', $warning['missing_fields']))
+                : '';
+
+            echo '<li style="margin:0 0 6px;">';
+            echo '<a href="' . esc_url($edit_url) . '"><strong>#' . esc_html((string) $booking_id) . '</strong></a> ';
+            echo esc_html($customer) . ' - ';
+            echo esc_html__('Check-out', 'domilocus') . ': ' . esc_html($check_out);
+            if ($missing !== '') {
+                echo '<br><small style="color:#7c2d12;">' . esc_html__('Mancano:', 'domilocus') . ' ' . esc_html($missing) . '</small>';
+            }
+            echo '</li>';
+        }
+
+        echo '</ul>';
+        echo '</div>';
+    }
+
     /**
      * Render news content (can be used in multiple places).
      */
