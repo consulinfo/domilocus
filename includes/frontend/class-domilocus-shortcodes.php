@@ -1579,14 +1579,11 @@ class Domilocus_Shortcodes {
                 if ($search_checkin !== '') {
                     global $wpdb;
                     $table = $wpdb->prefix . 'domilocus_bookings';
+                    $table_safe = esc_sql($table);
                     $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                         $wpdb->prepare(
-                            "SELECT *
-                             FROM {$table}
-                             WHERE check_in = %s
-                               AND source != 'manual'
-                             ORDER BY id DESC
-                             LIMIT 2",
+                            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                            "SELECT * FROM {$table_safe} WHERE check_in = %s AND source != 'manual' ORDER BY id DESC LIMIT 2",
                             $search_checkin
                         )
                     );

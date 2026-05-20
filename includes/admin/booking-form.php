@@ -640,25 +640,6 @@ class Domilocus_Booking_Form {
                             </div>
                             <?php endif; ?>
 
-                            <?php
-                            $alloggiati_booking_url = wp_nonce_url(
-                                admin_url(
-                                    'admin.php?page=domilocus-alloggiati&domilocus_action=download_alloggiati_booking&booking_id=' . absint($booking_id)
-                                ),
-                                'domilocus_alloggiati_booking_export'
-                            );
-                            ?>
-                            <div class="postbox">
-                                <div class="postbox-header">
-                                    <h2>🛂 Export Alloggiati</h2>
-                                </div>
-                                <div class="inside" style="padding:10px 12px;">
-                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Genera il TXT della prenotazione usando solo codici ufficiali Stati/Comuni salvati sugli ospiti.</p>
-                                    <a href="<?php echo esc_url($alloggiati_booking_url); ?>" class="button button-primary" style="width:100%;text-align:center;">
-                                        Scarica TXT Alloggiati
-                                    </a>
-                                </div>
-                            </div>
                             <?php endif; ?>
 
                             <!-- Publish -->
@@ -994,7 +975,9 @@ class Domilocus_Booking_Form {
             return true;
         }
 
-        $host = isset( $_SERVER['HTTP_HOST'] ) ? strtolower( (string) $_SERVER['HTTP_HOST'] ) : '';
+        $host = isset( $_SERVER['HTTP_HOST'] )
+            ? strtolower( sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_HOST'] ) ) )
+            : '';
         $host = strtok( $host, ':' ); // strip port if present
 
         if (

@@ -38,8 +38,6 @@ class Domilocus_Install {
     public static function deactivate() {
         // Flush rewrite rules
         flush_rewrite_rules();
-
-        wp_clear_scheduled_hook('domilocus_refresh_alloggiati_locations');
         
         do_action('domilocus_manager_deactivated');
     }
@@ -385,10 +383,6 @@ class Domilocus_Install {
         dbDelta($pricing_sql);
         dbDelta($ical_sql);
 
-        if (class_exists('Domilocus_Alloggiati_Locations')) {
-            Domilocus_Alloggiati_Locations::create_tables();
-        }
-        
         // Update database version
         update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
     }
@@ -492,17 +486,13 @@ class Domilocus_Install {
             update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
         }
 
-        if (class_exists('Domilocus_Alloggiati_Locations')) {
-            Domilocus_Alloggiati_Locations::create_tables();
-        }
-
         $lock_key = 'domilocus_manager_schema_check_' . DOMILOCUS_VERSION;
         if (get_transient($lock_key)) {
             // Transient presente: verifica comunque le colonne critiche (ALTER è no-op se esistono già).
             global $wpdb;
             $bookings_table = $wpdb->prefix . 'domilocus_bookings';
-            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
-            $columns = $wpdb->get_col("DESCRIBE $bookings_table");
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $columns = $wpdb->get_col('DESCRIBE ' . esc_sql($bookings_table));
             if (!in_array('customer_residence_address', $columns, true) || !in_array('customer_country', $columns, true)) {
                 delete_transient($lock_key);
                 self::migrate_database();

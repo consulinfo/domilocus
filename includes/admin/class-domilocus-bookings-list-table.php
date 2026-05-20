@@ -300,13 +300,19 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['min_amount']) && $_GET['min_amount'] !== '') {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $where[] = $wpdb->prepare('total_amount >= %f', (float) wp_unslash($_GET['min_amount']));
+            $min_amount = sanitize_text_field(wp_unslash($_GET['min_amount']));
+            if (is_numeric($min_amount)) {
+                $where[] = $wpdb->prepare('total_amount >= %f', (float) $min_amount);
+            }
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['max_amount']) && $_GET['max_amount'] !== '') {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $where[] = $wpdb->prepare('total_amount <= %f', (float) wp_unslash($_GET['max_amount']));
+            $max_amount = sanitize_text_field(wp_unslash($_GET['max_amount']));
+            if (is_numeric($max_amount)) {
+                $where[] = $wpdb->prepare('total_amount <= %f', (float) $max_amount);
+            }
         }
         
         $where_sql = implode(' AND ', $where);

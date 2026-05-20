@@ -115,16 +115,6 @@ class Domilocus_Admin_Menus {
          */
         do_action('domilocus_admin_menu', $translations, $current_language);
 
-        // Alloggiati Web
-        add_submenu_page(
-            'domilocus',
-            __('Alloggiati Web', 'domilocus'),
-            __('Alloggiati Web', 'domilocus'),
-            'manage_options',
-            'domilocus-alloggiati',
-            array(__CLASS__, 'alloggiati_page')
-        );
-
         // Hidden fallback pages for add-ons (avoid 404 if add-on is missing).
         add_submenu_page(
             'domilocus',
@@ -1200,191 +1190,19 @@ class Domilocus_Admin_Menus {
                     break;
 
                 case 'download_alloggiati_mock':
-                    if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_alloggiati_mock')) {
-                        if (!function_exists('generate_alloggiati_file')) {
-                            wp_die(esc_html__('Funzione Alloggiati non disponibile.', 'domilocus'));
-                        }
-                        $guests = domilocus_alloggiati_mock_guests();
-                        $result = generate_alloggiati_file($guests);
-                        nocache_headers();
-                        header('Content-Type: text/plain; charset=US-ASCII');
-                        header('Content-Disposition: attachment; filename="' . esc_attr($result['filename']) . '"');
-                        header('Content-Length: ' . strlen($result['content']));
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                        echo $result['content'];
-                        exit;
-                    }
-                    break;
-
                 case 'refresh_alloggiati_locations':
-                    if (
-                        isset($_GET['_wpnonce'])
-                        && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_refresh_alloggiati_locations')
-                        && class_exists('Domilocus_Alloggiati_Locations')
-                    ) {
-                        $refresh = Domilocus_Alloggiati_Locations::refresh_datasets();
-                        $import = Domilocus_Alloggiati_Locations::import_datasets_to_db();
-
-                        $redirect = add_query_arg(
-                            array(
-                                'page' => 'domilocus-alloggiati',
-                                'locations_refreshed' => 1,
-                                'countries' => (int) ($import['countries'] ?? 0),
-                                'municipalities' => (int) ($import['municipalities'] ?? 0),
-                                'countries_source' => (int) ($refresh['countries'] ?? 0),
-                                'municipalities_source' => (int) ($refresh['municipalities'] ?? 0),
-                            ),
-                            admin_url('admin.php')
-                        );
-                        wp_safe_redirect($redirect);
-                        exit;
-                    }
-                    break;
-
                 case 'download_alloggiati_booking':
-                    if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_alloggiati_booking_export')) {
-                        if (!function_exists('generate_alloggiati_file') || !function_exists('domilocus_alloggiati_guests_from_booking')) {
-                            wp_die(esc_html__('Funzioni Alloggiati non disponibili.', 'domilocus'));
-                        }
-
-                        $booking_id = isset($_GET['booking_id']) ? absint(wp_unslash($_GET['booking_id'])) : 0;
-                        if ($booking_id <= 0 || !class_exists('Domilocus_Booking') || !method_exists('Domilocus_Booking', 'get_booking')) {
-                            wp_die(esc_html__('Prenotazione non valida.', 'domilocus'));
-                        }
-
-                        $booking = Domilocus_Booking::get_booking($booking_id);
-                        if (!$booking || empty($booking->id)) {
-                            wp_die(esc_html__('Prenotazione non trovata.', 'domilocus'));
-                        }
-
-                        $guests = domilocus_alloggiati_guests_from_booking($booking);
-                        if (empty($guests)) {
-                            wp_die(esc_html__('Nessun ospite esportabile trovato per questa prenotazione.', 'domilocus'));
-                        }
-
-                        try {
-                            $result = generate_alloggiati_file(
-                                $guests,
-                                array(
-                                    'require_official_codes' => true,
-                                    'include_non_leader_documents' => true,
-                                    'strict_non_leader_documents' => true,
-                                )
-                            );
-                        } catch (Exception $e) {
-                            wp_die(esc_html($e->getMessage()));
-                        }
-
-                        nocache_headers();
-                        header('Content-Type: text/plain; charset=US-ASCII');
-                        header('Content-Disposition: attachment; filename="' . esc_attr($result['filename']) . '"');
-                        header('Content-Length: ' . strlen($result['content']));
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                        echo $result['content'];
+                    // Alloggiati/check-in export moved to DomiCheck plugin.
+                    $target = admin_url('admin.php?page=domicheck-settings');
+                    if (function_exists('is_plugin_active') && is_plugin_active('domicheck/domicheck.php')) {
+                        wp_safe_redirect($target);
                         exit;
                     }
+
+                    wp_die(esc_html__('Le funzioni Alloggiati/Check-in sono gestite da DomiCheck. Installa/attiva il plugin DomiCheck.', 'domilocus'));
                     break;
             }
         }
     }
-
-    /**
-     * Pagina admin Alloggiati Web.
-     */
-    public static function alloggiati_page() {
-        if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('Accesso non autorizzato.', 'domilocus'));
-        }
-
-        $mock_url = wp_nonce_url(
-            admin_url('admin.php?page=domilocus-alloggiati&domilocus_action=download_alloggiati_mock'),
-            'domilocus_alloggiati_mock'
-        );
-
-        $refresh_url = wp_nonce_url(
-            admin_url('admin.php?page=domilocus-alloggiati&domilocus_action=refresh_alloggiati_locations'),
-            'domilocus_refresh_alloggiati_locations'
-        );
-
-        // Tracciato campi per la tabella descrittiva.
-        $fields = array(
-            array('Tipo alloggiato',  2,  '16=Singolo, 17=CapoFamiglia, 18=CapoGruppo, 19=Familiare, 20=MembroGruppo'),
-            array('Cognome',         50,  'Uppercase ASCII'),
-            array('Nome',            30,  'Uppercase ASCII'),
-            array('Sesso',            1,  '1=Maschio, 2=Femmina'),
-            array('Data nascita',    10,  'GG/MM/AAAA'),
-            array('Comune nascita',   9,  'Codice numerico tabella Comuni o Stati (per esteri)'),
-            array('Provincia',        2,  'Sigla oppure EE per nati all\'estero'),
-            array('Stato nascita',    9,  'Codice numerico tabella Stati'),
-            array('Cittadinanza',     9,  'Codice numerico tabella Stati'),
-            array('Tipo documento',   5,  'IDENT, PASOR, PATEN, IDELE, …'),
-            array('Numero documento',20,  'Alfanumerico'),
-            array('Luogo rilascio',   9,  'Codice numerico comune o stato'),
-            array('Data rilascio',   10,  'GG/MM/AAAA'),
-            array('Data arrivo',     10,  'GG/MM/AAAA'),
-            array('Numero notti',     4,  'Es. 0003'),
-        );
-
-        ?>
-        <div class="wrap">
-            <h1><?php esc_html_e('Alloggiati Web', 'domilocus'); ?></h1>
-            <p><?php esc_html_e('Genera file TXT a lunghezza fissa per la comunicazione obbligatoria al Portale Alloggiati Web della Polizia di Stato.', 'domilocus'); ?></p>
-
-            <?php if (!empty($_GET['locations_refreshed'])) : ?>
-                <div class="notice notice-success is-dismissible">
-                    <p>
-                        <?php
-                        echo esc_html(
-                            sprintf(
-                                'Dataset ufficiali aggiornati. Import DB completato: %d stati, %d comuni (download: %d stati, %d comuni).',
-                                isset($_GET['countries']) ? absint(wp_unslash($_GET['countries'])) : 0,
-                                isset($_GET['municipalities']) ? absint(wp_unslash($_GET['municipalities'])) : 0,
-                                isset($_GET['countries_source']) ? absint(wp_unslash($_GET['countries_source'])) : 0,
-                                isset($_GET['municipalities_source']) ? absint(wp_unslash($_GET['municipalities_source'])) : 0
-                            )
-                        );
-                        ?>
-                    </p>
-                </div>
-            <?php endif; ?>
-
-            <h2><?php esc_html_e('Dataset ufficiali Stati/Comuni', 'domilocus'); ?></h2>
-            <p><?php esc_html_e('Scarica e normalizza i dataset ufficiali (con fallback), poi reimporta nelle tabelle custom usate da autocomplete, validazioni e export.', 'domilocus'); ?></p>
-            <p>
-                <a href="<?php echo esc_url($refresh_url); ?>" class="button button-secondary">
-                    <?php esc_html_e('Aggiorna dataset + Reimport DB', 'domilocus'); ?>
-                </a>
-            </p>
-
-            <h2><?php esc_html_e('Tracciato ufficiale (180 caratteri per riga)', 'domilocus'); ?></h2>
-            <table class="widefat fixed striped" style="max-width:700px">
-                <thead>
-                    <tr>
-                        <th><?php esc_html_e('Campo', 'domilocus'); ?></th>
-                        <th style="width:50px"><?php esc_html_e('Lung.', 'domilocus'); ?></th>
-                        <th><?php esc_html_e('Note', 'domilocus'); ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($fields as $f) : ?>
-                    <tr>
-                        <td><?php echo esc_html($f[0]); ?></td>
-                        <td style="text-align:center"><code><?php echo esc_html($f[1]); ?></code></td>
-                        <td><?php echo esc_html($f[2]); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-
-            <h2 style="margin-top:2em"><?php esc_html_e('Test con dati mock', 'domilocus'); ?></h2>
-            <p><?php esc_html_e('Genera e scarica un file di esempio con 8 ospiti fittizi (italiani e stranieri, tutti i tipi alloggiato, documenti diversi).', 'domilocus'); ?></p>
-            <a href="<?php echo esc_url($mock_url); ?>" class="button button-primary">
-                <?php esc_html_e('Scarica file mock (alloggiati_YYYYMMDD.txt)', 'domilocus'); ?>
-            </a>
-        </div>
-        <?php
-    }
-
-    
 
 }
