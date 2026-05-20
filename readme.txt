@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.1 =
+* Added: colonna "Pronta per archivio" nella lista prenotazioni con stato SI/NO e motivazione.
+* Added: supporto operativo per evidenziare subito i dati mancanti prima dell'archiviazione.
+* Fixed: allineamento della logica di idoneita archivio tra sincronizzazione automatica e interfaccia admin.
 
 = 1.4.0 =
 * Changed: le funzionalita check-in e Alloggiati Web non sono piu gestite da Domilocus e vengono demandate al plugin DomiCheck.
