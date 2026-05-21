@@ -724,6 +724,20 @@ class Domilocus_Booking_Form {
             exit;
         }
         
+        $raw_status = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : 'pending';
+        $normalized_status = strtolower(trim((string) $raw_status));
+        $normalized_status = str_replace(' ', '_', $normalized_status);
+        if (in_array($normalized_status, array('noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true)) {
+            $normalized_status = 'no_show';
+        }
+
+        $allowed_statuses = array('pending', 'confirmed', 'cancelled', 'completed', 'no_show');
+        if (!in_array($normalized_status, $allowed_statuses, true)) {
+            $normalized_status = $is_edit && $booking && isset($booking->status)
+                ? sanitize_text_field((string) $booking->status)
+                : 'pending';
+        }
+
         // Prepare booking data
         $booking_data = array(
             'apartment_id' => $apartment_id,
@@ -737,7 +751,7 @@ class Domilocus_Booking_Form {
             'check_out' => $check_out,
             'guests' => isset($_POST['guests']) ? intval(wp_unslash($_POST['guests'])) : 1,
             'total_amount' => isset($_POST['total_amount']) ? floatval(wp_unslash($_POST['total_amount'])) : 0,
-            'status' => isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : 'pending',
+            'status' => $normalized_status,
             'payment_status' => isset($_POST['payment_status']) ? sanitize_text_field(wp_unslash($_POST['payment_status'])) : 'unpaid',
             'payment_method' => isset($_POST['payment_method']) ? sanitize_text_field(wp_unslash($_POST['payment_method'])) : '',
             'payment_id' => isset($_POST['payment_id']) ? sanitize_text_field(wp_unslash($_POST['payment_id'])) : '',

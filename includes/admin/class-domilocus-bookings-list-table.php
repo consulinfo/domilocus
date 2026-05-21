@@ -140,6 +140,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'confirmed' => '#5cb85c',
             'pending-payment' => '#ff9800',
             'cancelled' => '#d9534f',
+            'no_show' => '#6f42c1',
             'completed' => '#5bc0de'
         );
         
@@ -148,11 +149,17 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'confirmed' => __('Confirmed', 'domilocus'),
             'pending-payment' => __('In attesa integrazione', 'domilocus'),
             'cancelled' => __('Cancelled', 'domilocus'),
+            'no_show' => __('No-show', 'domilocus'),
             'completed' => __('Completed', 'domilocus')
         );
-        
-        $color = $colors[$item->status] ?? '#999';
-        $label = $labels[$item->status] ?? ucfirst($item->status);
+
+        $status_key = strtolower(trim((string) $item->status));
+        if (in_array($status_key, array('noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true)) {
+            $status_key = 'no_show';
+        }
+
+        $color = $colors[$status_key] ?? '#999';
+        $label = $labels[$status_key] ?? ucfirst((string) $item->status);
         
         return sprintf(
             '<span style="color: %s; font-weight: bold;">%s</span>',

@@ -788,6 +788,20 @@ class Domilocus_Booking {
     }
 
     /**
+     * Normalize booking status values and map no-show variants.
+     */
+    protected static function normalize_booking_status_key($status) {
+        $key = strtolower(trim((string) $status));
+        $key = str_replace(' ', '_', $key);
+
+        if (in_array($key, array('no_show', 'noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true)) {
+            return 'no_show';
+        }
+
+        return $key;
+    }
+
+    /**
      * Check if a booking is ready for archival.
      * Returns array with 'ready' boolean and 'missing_fields' array of missing field labels.
      */
@@ -840,9 +854,21 @@ class Domilocus_Booking {
         $ignored_statuses = array('cancelled', 'refunded', 'failed', 'trash', 'deleted');
 
         foreach ($bookings as $booking) {
-            $current_status = strtolower(trim((string) ($booking->status ?? '')));
-            if (in_array($current_status, $ignored_statuses, true)) {
+            $current_status = self::normalize_booking_status_key($booking->status ?? '');
+
+            // Preserve historical no-show records that were stored as "cancelled"
+            // with explicit no-show meta flag.
+            $is_no_show_meta = false;
+            if (function_exists('domilocus_get_booking_meta')) {
+                $is_no_show_meta = '1' === (string) domilocus_get_booking_meta((int) $booking->id, '_domilocus_receipt_no_show', true);
+            }
+
+            if (in_array($current_status, $ignored_statuses, true) && !$is_no_show_meta) {
                 continue;
+            }
+
+            if ('cancelled' === $current_status && $is_no_show_meta) {
+                $current_status = 'no_show';
             }
 
             if (!self::is_checkout_deadline_passed($booking)) {

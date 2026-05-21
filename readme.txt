@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.3 =
+* Fixed: normalizzazione stato no-show (no_show / no-show / noshow) durante il salvataggio prenotazione.
+* Fixed: sincronizzazione archivio checkout ora gestisce correttamente anche prenotazioni no-show.
+* Improved: visualizzazione stato no-show nella lista prenotazioni admin.
 
 = 1.4.2 =
 * Fixed: azione di gruppo "Elimina" nella lista prenotazioni ora eseguita correttamente.
