@@ -70,6 +70,7 @@ class Domilocus_Booking_Form {
             'payment_id' => '',
             'booking_notes' => '',
             'source' => 'admin',
+            'external_platform' => '',
             'notes' => ''
         );
         
@@ -359,6 +360,64 @@ class Domilocus_Booking_Form {
                                             </option>
                                         </select>
                                     </div>
+
+                                    <?php
+                                    $source_value = strtolower(trim((string) ($defaults['source'] ?? 'admin')));
+                                    $platform_value = strtolower(trim((string) ($defaults['external_platform'] ?? '')));
+                                    if ($platform_value === '' && $source_value === 'booking') {
+                                        $platform_value = 'booking.com';
+                                    }
+                                    ?>
+                                    <div class="misc-pub-section" style="margin-top: 15px;">
+                                        <label for="booking_source"><?php esc_html_e('Fonte prenotazione', 'domilocus'); ?></label>
+                                        <select id="booking_source" name="booking_source" class="widefat" style="margin-top: 5px;">
+                                            <option value="admin" <?php selected($source_value, 'admin'); ?>><?php esc_html_e('Diretta / Inserimento manuale', 'domilocus'); ?></option>
+                                            <option value="booking" <?php selected($source_value, 'booking'); ?>>Booking.com</option>
+                                            <option value="airbnb" <?php selected($source_value, 'airbnb'); ?>>Airbnb</option>
+                                            <option value="vrbo" <?php selected($source_value, 'vrbo'); ?>>VRBO</option>
+                                            <option value="expedia" <?php selected($source_value, 'expedia'); ?>>Expedia</option>
+                                            <option value="app_guest" <?php selected($source_value, 'app_guest'); ?>><?php esc_html_e('App Ospite', 'domilocus'); ?></option>
+                                            <option value="ota" <?php selected($source_value, 'ota'); ?>><?php esc_html_e('Altra piattaforma', 'domilocus'); ?></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="misc-pub-section" style="margin-top: 12px;">
+                                        <label for="booking_external_platform"><?php esc_html_e('Piattaforma esterna', 'domilocus'); ?></label>
+                                        <select id="booking_external_platform" name="booking_external_platform" class="widefat" style="margin-top: 5px;">
+                                            <option value="" <?php selected($platform_value, ''); ?>><?php esc_html_e('-- Nessuna --', 'domilocus'); ?></option>
+                                            <option value="booking.com" <?php selected($platform_value, 'booking.com'); ?>>Booking.com</option>
+                                            <option value="airbnb" <?php selected($platform_value, 'airbnb'); ?>>Airbnb</option>
+                                            <option value="vrbo" <?php selected($platform_value, 'vrbo'); ?>>VRBO</option>
+                                            <option value="expedia" <?php selected($platform_value, 'expedia'); ?>>Expedia</option>
+                                            <option value="other" <?php selected($platform_value, 'other'); ?>><?php esc_html_e('Altro', 'domilocus'); ?></option>
+                                        </select>
+                                    </div>
+
+                                    <script>
+                                    (function(){
+                                        var sourceEl = document.getElementById('booking_source');
+                                        var platformEl = document.getElementById('booking_external_platform');
+                                        if (!sourceEl || !platformEl) {
+                                            return;
+                                        }
+
+                                        var map = {
+                                            booking: 'booking.com',
+                                            airbnb: 'airbnb',
+                                            vrbo: 'vrbo',
+                                            expedia: 'expedia'
+                                        };
+
+                                        sourceEl.addEventListener('change', function(){
+                                            var value = sourceEl.value || '';
+                                            if (map[value]) {
+                                                platformEl.value = map[value];
+                                            } else if (value === 'admin' || value === 'app_guest') {
+                                                platformEl.value = '';
+                                            }
+                                        });
+                                    })();
+                                    </script>
                                     
                                     <?php if ($is_ota_booking): ?>
                                     <div class="misc-pub-section" style="margin-top:15px;padding:8px 10px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px;">
@@ -731,6 +790,39 @@ class Domilocus_Booking_Form {
             $normalized_status = 'no_show';
         }
 
+        $raw_source = isset($_POST['booking_source'])
+            ? sanitize_text_field(wp_unslash($_POST['booking_source']))
+            : (isset($_POST['source']) ? sanitize_text_field(wp_unslash($_POST['source'])) : 'admin');
+        $normalized_source = strtolower(trim((string) $raw_source));
+        $allowed_sources = array('admin', 'direct', 'booking', 'airbnb', 'vrbo', 'expedia', 'app_guest', 'ota', 'ical_import', 'ical');
+        if (!in_array($normalized_source, $allowed_sources, true)) {
+            $normalized_source = 'admin';
+        }
+        if ('direct' === $normalized_source) {
+            $normalized_source = 'admin';
+        }
+
+        $raw_external_platform = isset($_POST['booking_external_platform'])
+            ? sanitize_text_field(wp_unslash($_POST['booking_external_platform']))
+            : (isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '');
+        $normalized_external_platform = strtolower(trim((string) $raw_external_platform));
+        $allowed_platforms = array('', 'booking.com', 'airbnb', 'vrbo', 'expedia', 'other');
+        if (!in_array($normalized_external_platform, $allowed_platforms, true)) {
+            $normalized_external_platform = '';
+        }
+
+        if ('' === $normalized_external_platform) {
+            if ('booking' === $normalized_source) {
+                $normalized_external_platform = 'booking.com';
+            } elseif (in_array($normalized_source, array('airbnb', 'vrbo', 'expedia'), true)) {
+                $normalized_external_platform = $normalized_source;
+            }
+        }
+
+        if (in_array($normalized_source, array('admin', 'app_guest'), true)) {
+            $normalized_external_platform = '';
+        }
+
         $allowed_statuses = array('pending', 'confirmed', 'cancelled', 'completed', 'no_show');
         if (!in_array($normalized_status, $allowed_statuses, true)) {
             $normalized_status = $is_edit && $booking && isset($booking->status)
@@ -757,8 +849,8 @@ class Domilocus_Booking_Form {
             'payment_id' => isset($_POST['payment_id']) ? sanitize_text_field(wp_unslash($_POST['payment_id'])) : '',
             'booking_notes' => isset($_POST['booking_notes']) ? sanitize_textarea_field(wp_unslash($_POST['booking_notes'])) : '',
             'notes' => isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '',
-            'external_platform' => isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '',
-            'source' => 'admin',
+            'external_platform' => $normalized_external_platform,
+            'source' => $normalized_source,
         );
 
         // When editing an existing booking, preserve source and ical_uid so that

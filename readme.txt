@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.4 =
+* Added: selezione esplicita della fonte prenotazione nel form admin (diretta, Booking.com, Airbnb, VRBO, Expedia, App Ospite, altra piattaforma).
+* Added: selezione piattaforma esterna disponibile anche per inserimenti manuali.
+* Fixed: salvataggio coerente dei campi source/external_platform nelle prenotazioni create manualmente.
 
 = 1.4.3 =
 * Fixed: normalizzazione stato no-show (no_show / no-show / noshow) durante il salvataggio prenotazione.
