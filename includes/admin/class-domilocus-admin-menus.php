@@ -682,6 +682,33 @@ class Domilocus_Admin_Menus {
                 <div class="notice notice-success is-dismissible">
                     <p><?php esc_html_e('Booking deleted successfully.', 'domilocus'); ?></p>
                 </div>
+            <?php
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            elseif (isset($_GET['message']) && $_GET['message'] === 'bulk_deleted'):
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $deleted_count = isset($_GET['deleted_count']) ? max(0, (int) $_GET['deleted_count']) : 0;
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $skipped_paid = isset($_GET['skipped_paid']) ? max(0, (int) $_GET['skipped_paid']) : 0;
+                ?>
+                <div class="notice notice-success is-dismissible">
+                    <p>
+                        <?php
+                        printf(
+                            /* translators: %d: number of deleted bookings */
+                            esc_html(_n('%d booking deleted.', '%d bookings deleted.', $deleted_count, 'domilocus')),
+                            $deleted_count
+                        );
+                        if ($skipped_paid > 0) {
+                            echo ' ';
+                            printf(
+                                /* translators: %d: number of paid bookings skipped in bulk delete */
+                                esc_html(_n('%d paid booking was skipped.', '%d paid bookings were skipped.', $skipped_paid, 'domilocus')),
+                                $skipped_paid
+                            );
+                        }
+                        ?>
+                    </p>
+                </div>
             <?php endif; ?>
             
             <form method="get">
@@ -697,22 +724,25 @@ class Domilocus_Admin_Menus {
     }
     
     /**
-     * Delete a booking
+     * Delete booking record and unblock dates.
+     *
+     * @param int $booking_id Booking ID.
+     * @return bool True on successful deletion.
      */
-    private static function delete_booking($booking_id) {
+    private static function delete_booking_record($booking_id) {
         global $wpdb;
-        
+
         // Get booking data to unblock dates
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $booking = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
             $booking_id
         ));
-        
+
         if (!$booking) {
-            return;
+            return false;
         }
-        
+
         // Unblock dates in calendar
         if (class_exists('Domilocus_Booking')) {
             Domilocus_Booking::unblock_dates(
@@ -722,14 +752,23 @@ class Domilocus_Admin_Menus {
                 $booking_id
             );
         }
-        
+
         // Delete from database
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-        $wpdb->delete(
+        $deleted = $wpdb->delete(
             $wpdb->prefix . 'domilocus_bookings',
             array('id' => $booking_id),
             array('%d')
         );
+
+        return $deleted !== false;
+    }
+
+    /**
+     * Delete a booking
+     */
+    private static function delete_booking($booking_id) {
+        self::delete_booking_record($booking_id);
         
         // Redirect to bookings list with success message
         wp_safe_redirect(admin_url('admin.php?page=domilocus-bookings&message=deleted'));
@@ -1136,6 +1175,62 @@ class Domilocus_Admin_Menus {
      * Handle admin actions
      */
     public static function handle_admin_actions() {
+        // Handle bulk delete from bookings list table.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : '';
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $action2 = isset($_GET['action2']) ? sanitize_text_field(wp_unslash($_GET['action2'])) : '';
+            $bulk_action = ('-1' !== $action && '' !== $action) ? $action : $action2;
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if ('delete' === $bulk_action && isset($_GET['booking']) && is_array($_GET['booking'])) {
+                if (!current_user_can('manage_options')) {
+                    wp_die(esc_html__('You do not have permission to delete bookings.', 'domilocus'));
+                }
+
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+                if (!wp_verify_nonce($nonce, 'bulk-bookings')) {
+                    wp_die(esc_html__('Security check failed for bulk delete.', 'domilocus'));
+                }
+
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $booking_ids = array_map('intval', wp_unslash($_GET['booking']));
+                $booking_ids = array_values(array_unique(array_filter($booking_ids)));
+
+                $deleted_count = 0;
+                $skipped_paid = 0;
+
+                foreach ($booking_ids as $booking_id) {
+                    global $wpdb;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                    $booking = $wpdb->get_row($wpdb->prepare(
+                        "SELECT payment_status FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                        $booking_id
+                    ));
+
+                    if ($booking && isset($booking->payment_status) && 'paid' === $booking->payment_status) {
+                        $skipped_paid++;
+                        continue;
+                    }
+
+                    if (self::delete_booking_record($booking_id)) {
+                        $deleted_count++;
+                    }
+                }
+
+                wp_safe_redirect(add_query_arg(array(
+                    'page' => 'domilocus-bookings',
+                    'message' => 'bulk_deleted',
+                    'deleted_count' => $deleted_count,
+                    'skipped_paid' => $skipped_paid,
+                ), admin_url('admin.php')));
+                exit;
+            }
+        }
+
         // Handle booking deletion
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['booking_id'])) {

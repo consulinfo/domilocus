@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.2 =
+* Fixed: azione di gruppo "Elimina" nella lista prenotazioni ora eseguita correttamente.
+* Added: feedback in admin con conteggio prenotazioni eliminate e prenotazioni pagate saltate.
 
 = 1.4.1 =
 * Added: colonna "Pronta per archivio" nella lista prenotazioni con stato SI/NO e motivazione.
