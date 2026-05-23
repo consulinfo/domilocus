@@ -933,11 +933,70 @@ class Domilocus_Booking_Form {
     }
 
     private static function is_smart_checkin_enabled() {
-        if ( class_exists( 'Domilocus_License' ) && method_exists( 'Domilocus_License', 'is_feature_enabled' ) ) {
-            return (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' );
+        // Always allow Smart Check-in in local/dev environments for testing.
+        if ( self::is_local_dev_environment() ) {
+            return true;
         }
 
-        return true;
+        if ( class_exists( 'Domilocus_License' ) && method_exists( 'Domilocus_License', 'is_feature_enabled' ) ) {
+            if ( (bool) Domilocus_License::is_feature_enabled( 'smart_checkin' ) ) {
+                return true;
+            }
+
+            // Fallback: if license is active and current plan is premium/enterprise,
+            // do not block Smart Check-in due to remote plan naming mismatch.
+            if ( method_exists( 'Domilocus_License', 'is_premium_active' ) && method_exists( 'Domilocus_License', 'get_current_plan' ) ) {
+                $current_plan = strtolower( (string) Domilocus_License::get_current_plan() );
+                if ( Domilocus_License::is_premium_active() && in_array( $current_plan, array( 'premium', 'enterprise' ), true ) ) {
+                    return true;
+                }
+            }
+        }
+
+        // Secondary license manager used by Premium/Starter bundles.
+        // On some installations the Premium entitlement is stored there, while the
+        // core license manager keeps the Smart Check-in gate. Accept the feature if
+        // either license source reports it as enabled.
+        if ( class_exists( 'Domilocus_Premium_License' ) && method_exists( 'Domilocus_Premium_License', 'has_feature' ) ) {
+            if ( (bool) Domilocus_Premium_License::has_feature( 'smart_checkin' ) ) {
+                return true;
+            }
+        }
+
+        if ( class_exists( 'Domilocus_Premium_Plan' ) && method_exists( 'Domilocus_Premium_Plan', 'has_premium_feature' ) ) {
+            if ( (bool) Domilocus_Premium_Plan::has_premium_feature() ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Detect local/development environments.
+     */
+    private static function is_local_dev_environment() {
+        // Preferred WordPress-native environment flag.
+        if ( function_exists( 'wp_get_environment_type' ) && wp_get_environment_type() === 'local' ) {
+            return true;
+        }
+
+        $host = isset( $_SERVER['HTTP_HOST'] )
+            ? strtolower( sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_HOST'] ) ) )
+            : '';
+        $host = strtok( $host, ':' ); // strip port if present
+
+        if (
+            $host === 'localhost' ||
+            $host === '::1' ||
+            str_starts_with( $host, '127.0.0.1' ) ||
+            str_ends_with( $host, '.local' ) ||
+            str_ends_with( $host, '.test' )
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
 

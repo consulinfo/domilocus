@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 1.3.0
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.5 =
+* Fixed: Smart Check-in premium gate now accepts entitlement from multiple license managers to avoid false negatives on valid premium sites.
+* Fixed: admin booking Smart Check-in check now has safer fallback behavior for local/dev environments.
 
 = 1.3.0 =
 * Added: filtri avanzati nella lista prenotazioni admin (sorgente, periodo check-in, importo min/max).
