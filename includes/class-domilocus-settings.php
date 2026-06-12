@@ -96,6 +96,12 @@ class Domilocus_Settings {
             'domilocus_manager_bank_bic' => '',
             'domilocus_manager_bank_transfer_reference' => '',
             'domilocus_manager_bank_transfer_instructions' => '',
+            'domilocus_manager_platform_last_payout_dates' => array(
+                'booking.com' => '',
+                'airbnb' => '',
+                'vrbo' => '',
+                'expedia' => '',
+            ),
             'domilocus_manager_admin_email' => get_option('admin_email'),
             'domilocus_manager_from_name' => get_bloginfo('name'),
             'domilocus_manager_from_email' => get_option('admin_email'),
@@ -370,6 +376,292 @@ class Domilocus_Settings {
             'IDR' => __('Indonesian Rupiah (Rp)', 'domilocus'),
             'PHP' => __('Philippine Peso (₱)', 'domilocus'),
             'KRW' => __('South Korean Won (₩)', 'domilocus')
+        );
+    }
+
+    /**
+     * Get default payment rules for supported booking platforms.
+     */
+    public static function get_platform_payment_rule_defaults() {
+        return array(
+            'booking.com' => array(
+                'managed_by_platform' => 1,
+                'admin_override_allowed' => 1,
+                'payout_frequency' => 'weekly',
+                'payout_weekday' => 'thursday',
+                'payout_basis' => 'check_out',
+                'notes' => '',
+            ),
+            'airbnb' => array(
+                'managed_by_platform' => 1,
+                'admin_override_allowed' => 1,
+                'payout_frequency' => 'manual',
+                'payout_weekday' => '',
+                'payout_basis' => 'check_in',
+                'notes' => '',
+            ),
+            'vrbo' => array(
+                'managed_by_platform' => 1,
+                'admin_override_allowed' => 1,
+                'payout_frequency' => 'manual',
+                'payout_weekday' => '',
+                'payout_basis' => 'check_in',
+                'notes' => '',
+            ),
+            'expedia' => array(
+                'managed_by_platform' => 1,
+                'admin_override_allowed' => 1,
+                'payout_frequency' => 'manual',
+                'payout_weekday' => '',
+                'payout_basis' => 'check_out',
+                'notes' => '',
+            ),
+        );
+    }
+
+    /**
+     * Get supported weekday labels.
+     */
+    public static function get_weekday_labels() {
+        return array(
+            'monday' => __('Lunedi', 'domilocus'),
+            'tuesday' => __('Martedi', 'domilocus'),
+            'wednesday' => __('Mercoledi', 'domilocus'),
+            'thursday' => __('Giovedi', 'domilocus'),
+            'friday' => __('Venerdi', 'domilocus'),
+            'saturday' => __('Sabato', 'domilocus'),
+            'sunday' => __('Domenica', 'domilocus'),
+        );
+    }
+
+    /**
+     * Normalize a platform key.
+     */
+    public static function normalize_platform_key($platform) {
+        $platform = strtolower(trim((string) $platform));
+
+        if ($platform === 'booking' || $platform === 'bookingcom') {
+            return 'booking.com';
+        }
+
+        return $platform;
+    }
+
+    /**
+     * Get saved platform payment rules merged with defaults.
+     */
+    public static function get_platform_payment_rules() {
+        $defaults = self::get_platform_payment_rule_defaults();
+        $saved = get_option('domilocus_manager_platform_payment_rules', array());
+        if (!is_array($saved)) {
+            $saved = array();
+        }
+
+        $rules = array();
+        foreach ($defaults as $platform => $platform_defaults) {
+            $saved_rule = isset($saved[$platform]) && is_array($saved[$platform]) ? $saved[$platform] : array();
+            $rules[$platform] = array_merge($platform_defaults, $saved_rule);
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get a single platform payment rule.
+     */
+    public static function get_platform_payment_rule($platform) {
+        $platform = self::normalize_platform_key($platform);
+        $rules = self::get_platform_payment_rules();
+
+        if (isset($rules[$platform])) {
+            return $rules[$platform];
+        }
+
+        return array(
+            'managed_by_platform' => 0,
+            'admin_override_allowed' => 1,
+            'payout_frequency' => 'manual',
+            'payout_weekday' => '',
+            'payout_basis' => 'check_out',
+            'notes' => '',
+        );
+    }
+
+    /**
+     * Build a short human readable summary for a platform payment rule.
+     */
+    public static function get_platform_payment_rule_summary($platform) {
+        $rule = self::get_platform_payment_rule($platform);
+        $platform_label = self::normalize_platform_key($platform);
+        $weekday_labels = self::get_weekday_labels();
+        $weekday = isset($weekday_labels[$rule['payout_weekday']]) ? $weekday_labels[$rule['payout_weekday']] : '';
+        $basis_map = array(
+            'check_in' => __('check-in', 'domilocus'),
+            'check_out' => __('check-out', 'domilocus'),
+            'booking_date' => __('data prenotazione', 'domilocus'),
+            'payment_date' => __('data pagamento', 'domilocus'),
+        );
+        $basis = isset($basis_map[$rule['payout_basis']]) ? $basis_map[$rule['payout_basis']] : __('check-out', 'domilocus');
+
+        if (empty($rule['managed_by_platform'])) {
+            return sprintf(
+                /* translators: %s: platform name */
+                __('%s e configurata per gestione pagamento manuale.', 'domilocus'),
+                $platform_label !== '' ? strtoupper($platform_label) : __('Questa piattaforma', 'domilocus')
+            );
+        }
+
+        if ($weekday !== '') {
+            return sprintf(
+                /* translators: 1: platform name, 2: weekday label, 3: settlement basis */
+                __('Il payout di %1$s e gestito dalla piattaforma ed e previsto ogni %2$s, calcolato su %3$s.', 'domilocus'),
+                $platform_label !== '' ? strtoupper($platform_label) : __('Questa piattaforma', 'domilocus'),
+                $weekday,
+                $basis
+            );
+        }
+
+        return sprintf(
+            /* translators: 1: platform name, 2: settlement basis */
+            __('Il payout di %1$s e gestito dalla piattaforma e calcolato su %2$s.', 'domilocus'),
+            $platform_label !== '' ? strtoupper($platform_label) : __('Questa piattaforma', 'domilocus'),
+            $basis
+        );
+    }
+
+    /**
+     * Estimate the next payout date for a platform rule.
+     */
+    public static function get_platform_next_payout_date($platform, $reference_date = '') {
+        $rule = self::get_platform_payment_rule($platform);
+        if (empty($rule['payout_weekday'])) {
+            return '';
+        }
+
+        $weekday_map = array(
+            'sunday' => 0,
+            'monday' => 1,
+            'tuesday' => 2,
+            'wednesday' => 3,
+            'thursday' => 4,
+            'friday' => 5,
+            'saturday' => 6,
+        );
+
+        if (!isset($weekday_map[$rule['payout_weekday']])) {
+            return '';
+        }
+
+        $timestamp = $reference_date ? strtotime((string) $reference_date) : current_time('timestamp');
+        if (!$timestamp) {
+            $timestamp = current_time('timestamp');
+        }
+
+        $current_weekday = (int) wp_date('w', $timestamp);
+        $target_weekday = (int) $weekday_map[$rule['payout_weekday']];
+        $days_ahead = ($target_weekday - $current_weekday + 7) % 7;
+
+        $next_timestamp = strtotime('+' . $days_ahead . ' days', $timestamp);
+        if (!$next_timestamp) {
+            return '';
+        }
+
+        return wp_date(get_option('date_format'), $next_timestamp);
+    }
+
+    /**
+     * Get sanitized last payout dates keyed by platform.
+     */
+    public static function get_platform_last_payout_dates() {
+        $defaults = self::get_platform_payment_rule_defaults();
+        $saved = get_option('domilocus_manager_platform_last_payout_dates', array());
+        if (!is_array($saved)) {
+            $saved = array();
+        }
+
+        $dates = array();
+        foreach ($defaults as $platform_key => $platform_defaults) {
+            $candidate = isset($saved[$platform_key]) ? sanitize_text_field((string) $saved[$platform_key]) : '';
+            $dates[$platform_key] = preg_match('/^\d{4}-\d{2}-\d{2}$/', $candidate) ? $candidate : '';
+        }
+
+        return $dates;
+    }
+
+    /**
+     * Resolve the latest scheduled weekday date up to today.
+     */
+    public static function get_last_scheduled_weekday_date($weekday_key, $reference_date = '') {
+        $weekday_map = array(
+            'sunday' => 0,
+            'monday' => 1,
+            'tuesday' => 2,
+            'wednesday' => 3,
+            'thursday' => 4,
+            'friday' => 5,
+            'saturday' => 6,
+        );
+
+        if (!isset($weekday_map[$weekday_key])) {
+            return '';
+        }
+
+        $timestamp = $reference_date ? strtotime((string) $reference_date) : current_time('timestamp');
+        if (!$timestamp) {
+            $timestamp = current_time('timestamp');
+        }
+
+        $current_weekday = (int) wp_date('w', $timestamp);
+        $target_weekday = (int) $weekday_map[$weekday_key];
+        $days_back = ($current_weekday - $target_weekday + 7) % 7;
+        $last_timestamp = strtotime('-' . $days_back . ' days', $timestamp);
+        if (!$last_timestamp) {
+            return '';
+        }
+
+        return wp_date('Y-m-d', $last_timestamp);
+    }
+
+    /**
+     * Build the payout window boundaries for a platform.
+     */
+    public static function get_platform_payout_window($platform) {
+        $platform_key = self::normalize_platform_key($platform);
+        $rule = self::get_platform_payment_rule($platform_key);
+        $last_dates = self::get_platform_last_payout_dates();
+        $last_payout_date = isset($last_dates[$platform_key]) ? $last_dates[$platform_key] : '';
+
+        $cutoff_date = '';
+        if (!empty($rule['payout_weekday'])) {
+            $cutoff_date = self::get_last_scheduled_weekday_date($rule['payout_weekday']);
+        }
+        if ($cutoff_date === '') {
+            $cutoff_date = wp_date('Y-m-d');
+        }
+
+        $start_date = '';
+        if ($last_payout_date !== '' && strtotime($last_payout_date) !== false) {
+            $start_timestamp = strtotime($last_payout_date . ' +1 day');
+            if ($start_timestamp) {
+                $start_date = wp_date('Y-m-d', $start_timestamp);
+            }
+        }
+
+        if ($start_date === '') {
+            $fallback_timestamp = strtotime($cutoff_date . ' -7 days');
+            $start_date = $fallback_timestamp ? wp_date('Y-m-d', $fallback_timestamp) : $cutoff_date;
+        }
+
+        if (strtotime($start_date) > strtotime($cutoff_date)) {
+            $start_date = $cutoff_date;
+        }
+
+        return array(
+            'platform' => $platform_key,
+            'cutoff_date' => $cutoff_date,
+            'start_date' => $start_date,
+            'last_payout_date' => $last_payout_date,
+            'rule' => $rule,
         );
     }
 }

@@ -366,6 +366,14 @@ class Domilocus_Admin_Menus {
         $current_language = Domilocus_Translations::sanitize_language($stored_language);
         $translations = Domilocus_Translations::get_translations($current_language);
         global $wpdb;
+
+        $weekday_labels = Domilocus_Settings::get_weekday_labels();
+        $platform_keys = array('booking.com', 'airbnb', 'vrbo');
+        $platform_dashboard = array();
+        foreach ($platform_keys as $platform_key) {
+            $window = Domilocus_Settings::get_platform_payout_window($platform_key);
+            $platform_dashboard[$platform_key] = self::get_platform_dashboard_settlement_data($platform_key, $window, $weekday_labels, $wpdb);
+        }
         
         // Get dashboard statistics
             $stats = array(
@@ -378,13 +386,19 @@ class Domilocus_Admin_Menus {
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                 'confirmed_bookings' => $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE status = 'confirmed'"),
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-                'total_revenue' => $wpdb->get_var("SELECT SUM(total_amount) FROM {$wpdb->prefix}domilocus_bookings WHERE payment_status = 'paid'"),
+                'total_revenue' => $wpdb->get_var("SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0) FROM {$wpdb->prefix}domilocus_bookings WHERE COALESCE(status, '') NOT IN ('cancelled', 'rejected') AND COALESCE(total_amount, 0) > 0"),
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                 'monthly_revenue' => $wpdb->get_var($wpdb->prepare(
-                    "SELECT SUM(total_amount) FROM {$wpdb->prefix}domilocus_bookings 
-                     WHERE payment_status = 'paid' AND created_at >= %s",
+                    "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0) FROM {$wpdb->prefix}domilocus_bookings 
+                     WHERE COALESCE(status, '') NOT IN ('cancelled', 'rejected') AND COALESCE(total_amount, 0) > 0 AND created_at >= %s",
                     wp_date('Y-m-01')
-                ))
+                )),
+                'bookingcom_payout_amount' => isset($platform_dashboard['booking.com']['amount']) ? $platform_dashboard['booking.com']['amount'] : 0,
+                'bookingcom_payout_count' => isset($platform_dashboard['booking.com']['count']) ? $platform_dashboard['booking.com']['count'] : 0,
+                'airbnb_payout_amount' => isset($platform_dashboard['airbnb']['amount']) ? $platform_dashboard['airbnb']['amount'] : 0,
+                'airbnb_payout_count' => isset($platform_dashboard['airbnb']['count']) ? $platform_dashboard['airbnb']['count'] : 0,
+                'vrbo_payout_amount' => isset($platform_dashboard['vrbo']['amount']) ? $platform_dashboard['vrbo']['amount'] : 0,
+                'vrbo_payout_count' => isset($platform_dashboard['vrbo']['count']) ? $platform_dashboard['vrbo']['count'] : 0,
             );
         
         // Get recent bookings
@@ -412,8 +426,40 @@ class Domilocus_Admin_Menus {
         
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html($translations['dashboard'] ?? __('Domilocus Dashboard', 'domilocus')); ?></h1>
+            <h1><?php echo esc_html($translations['dashboard'] ?? __('Dashboard Domilocus', 'domilocus')); ?></h1>
             <?php self::render_page_nav('domilocus'); ?>
+
+            <?php
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $dashboard_message = isset($_GET['message']) ? sanitize_text_field(wp_unslash($_GET['message'])) : '';
+            if ($dashboard_message === 'platform_payout_registered') :
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $platform_registered = isset($_GET['platform']) ? sanitize_text_field(wp_unslash($_GET['platform'])) : 'booking.com';
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $date_registered = isset($_GET['date']) ? sanitize_text_field(wp_unslash($_GET['date'])) : '';
+                ?>
+                <div class="notice notice-success is-dismissible">
+                    <p>
+                        <?php
+                        if ($date_registered !== '') {
+                            printf(
+                                // translators: 1: platform name, 2: payout registration date.
+                                esc_html__('Payout registrato per %1$s in data %2$s.', 'domilocus'),
+                                esc_html(strtoupper((string) Domilocus_Settings::normalize_platform_key($platform_registered))),
+                                esc_html(date_i18n(get_option('date_format'), strtotime((string) $date_registered)))
+                            );
+                        } else {
+                            printf(
+                                // translators: %s: platform name.
+                                esc_html__('Payout registrato per %s.', 'domilocus'),
+                                esc_html(strtoupper((string) Domilocus_Settings::normalize_platform_key($platform_registered)))
+                            );
+                        }
+                        ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
             <div class="domilocus-dashboard-widgets">
                 <!-- News Ticker -->
                 <?php 
@@ -432,7 +478,7 @@ class Domilocus_Admin_Menus {
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 24px; color: #0073aa;"><?php echo number_format($stats['total_apartments']); ?></h3>
-                                <p style="margin: 0; color: #666;"><?php esc_html_e('Total Apartments', 'domilocus'); ?></p>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Appartamenti totali', 'domilocus'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -444,7 +490,7 @@ class Domilocus_Admin_Menus {
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 24px; color: #00a32a;"><?php echo number_format($stats['total_bookings']); ?></h3>
-                                <p style="margin: 0; color: #666;"><?php esc_html_e('Total Bookings', 'domilocus'); ?></p>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Prenotazioni totali', 'domilocus'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -456,7 +502,7 @@ class Domilocus_Admin_Menus {
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 24px; color: #f0ad4e;"><?php echo number_format($stats['pending_bookings']); ?></h3>
-                                <p style="margin: 0; color: #666;"><?php esc_html_e('Pending Bookings', 'domilocus'); ?></p>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Prenotazioni in attesa', 'domilocus'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -468,19 +514,122 @@ class Domilocus_Admin_Menus {
                             </div>
                             <div>
                                 <h3 style="margin: 0; font-size: 24px; color: #dc3545;"><?php echo wp_kses_post(Domilocus_Settings::format_price($stats['total_revenue'] ?: 0)); ?></h3>
-                                <p style="margin: 0; color: #666;"><?php esc_html_e('Total Revenue', 'domilocus'); ?></p>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Ricavi totali', 'domilocus'); ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="domilocus-stat-card" style="background: #fff; border: 1px solid #ccd0d4; border-radius: 4px; padding: 20px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="background: #1e40af; color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span class="dashicons dashicons-update" style="font-size: 24px;"></span>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 24px; color: #1e40af;"><?php echo wp_kses_post(Domilocus_Settings::format_price($stats['bookingcom_payout_amount'] ?: 0)); ?></h3>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Finestra payout Booking.com', 'domilocus'); ?></p>
+                                <small style="color:#666;"><?php echo esc_html((string) $stats['bookingcom_payout_count']); ?> <?php echo esc_html(isset($platform_dashboard['booking.com']['basis_label']) ? $platform_dashboard['booking.com']['basis_label'] : __('check-out', 'domilocus')); ?></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="domilocus-stat-card" style="background: #fff; border: 1px solid #ccd0d4; border-radius: 4px; padding: 20px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="background: #0ea5a4; color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span class="dashicons dashicons-admin-home" style="font-size: 24px;"></span>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 24px; color: #0f766e;"><?php echo wp_kses_post(Domilocus_Settings::format_price($stats['airbnb_payout_amount'] ?: 0)); ?></h3>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Finestra payout Airbnb', 'domilocus'); ?></p>
+                                <small style="color:#666;"><?php echo esc_html((string) $stats['airbnb_payout_count']); ?> <?php echo esc_html(isset($platform_dashboard['airbnb']['basis_label']) ? $platform_dashboard['airbnb']['basis_label'] : __('check-in', 'domilocus')); ?></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="domilocus-stat-card" style="background: #fff; border: 1px solid #ccd0d4; border-radius: 4px; padding: 20px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="background: #9333ea; color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span class="dashicons dashicons-admin-site" style="font-size: 24px;"></span>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 24px; color: #7e22ce;"><?php echo wp_kses_post(Domilocus_Settings::format_price($stats['vrbo_payout_amount'] ?: 0)); ?></h3>
+                                <p style="margin: 0; color: #666;"><?php esc_html_e('Finestra payout VRBO', 'domilocus'); ?></p>
+                                <small style="color:#666;"><?php echo esc_html((string) $stats['vrbo_payout_count']); ?> <?php echo esc_html(isset($platform_dashboard['vrbo']['basis_label']) ? $platform_dashboard['vrbo']['basis_label'] : __('check-in', 'domilocus')); ?></small>
                             </div>
                         </div>
                     </div>
                     
                 </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:10px;">
+                    <?php foreach ($platform_keys as $platform_key) : ?>
+                        <?php $data = isset($platform_dashboard[$platform_key]) ? $platform_dashboard[$platform_key] : array(); ?>
+                        <?php $window = isset($data['window']) ? $data['window'] : array(); ?>
+                        <div class="postbox" style="margin:0;">
+                            <div class="postbox-header">
+                                <?php // translators: %s: platform name. ?>
+                                <h2><?php echo esc_html(sprintf(__('Anteprima regolamento %s', 'domilocus'), isset($data['label']) ? $data['label'] : strtoupper((string) $platform_key))); ?></h2>
+                            </div>
+                            <div class="inside">
+                                <p>
+                                    <?php
+                                    printf(
+                                        // translators: 1: start date, 2: end date, 3: payout basis label.
+                                        esc_html__('Finestra: da %1$s a %2$s (basata su %3$s).', 'domilocus'),
+                                        esc_html(date_i18n(get_option('date_format'), strtotime((string) $window['start_date']))),
+                                        esc_html(date_i18n(get_option('date_format'), strtotime((string) $window['cutoff_date']))),
+                                        esc_html(isset($data['basis_label']) ? $data['basis_label'] : __('check-out', 'domilocus'))
+                                    );
+                                    ?>
+                                </p>
+
+                                <?php if (!empty($window['last_payout_date'])) : ?>
+                                    <p class="description">
+                                        <?php
+                                        printf(
+                                            // translators: %s: last payout date.
+                                            esc_html__('Ultimo payout registrato: %s', 'domilocus'),
+                                            esc_html(date_i18n(get_option('date_format'), strtotime((string) $window['last_payout_date'])))
+                                        );
+                                        ?>
+                                    </p>
+                                <?php else : ?>
+                                    <p class="description" style="color:#b45309;">
+                                        <?php
+                                        printf(
+                                            // translators: %s: weekday label.
+                                            esc_html__('Data ultimo payout non configurata: uso ultimi 7 giorni fino all ultimo %s come fallback.', 'domilocus'),
+                                            esc_html(isset($data['weekday_label']) ? $data['weekday_label'] : __('today', 'domilocus'))
+                                        );
+                                        ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <p style="margin-top: 12px;">
+                                    <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings&tab=payments')); ?>" class="button button-secondary">
+                                        <?php esc_html_e('Configura regole payout e data ultimo pagamento', 'domilocus'); ?>
+                                    </a>
+                                </p>
+
+                                <form method="post" action="<?php echo esc_url(admin_url('admin.php?page=domilocus')); ?>" style="margin-top: 8px;">
+                                    <?php wp_nonce_field('domilocus_register_platform_payout'); ?>
+                                    <input type="hidden" name="domilocus_action" value="register_platform_payout" />
+                                    <input type="hidden" name="platform" value="<?php echo esc_attr($platform_key); ?>" />
+                                    <button type="submit" class="button button-primary">
+                                        <?php // translators: %s: platform name. ?>
+                                        <?php echo esc_html(sprintf(__('Registra payout %s (data cutoff)', 'domilocus'), isset($data['label']) ? $data['label'] : strtoupper((string) $platform_key))); ?>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
                     
-                    <!-- Recent Bookings -->
+                    <!-- Prenotazioni recenti -->
                     <div class="postbox">
                         <div class="postbox-header">
-                            <h2><?php esc_html_e('Recent Bookings', 'domilocus'); ?></h2>
+                            <h2><?php esc_html_e('Prenotazioni recenti', 'domilocus'); ?></h2>
                         </div>
                         <div class="inside">
                             <?php if ($recent_bookings): ?>
@@ -522,19 +671,19 @@ class Domilocus_Admin_Menus {
                                 </table>
                                 <p style="text-align: center; margin-top: 15px;">
                                     <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-bookings')); ?>" class="button">
-                                        <?php esc_html_e('View All Bookings', 'domilocus'); ?>
+                                        <?php esc_html_e('Vedi tutte le prenotazioni', 'domilocus'); ?>
                                     </a>
                                 </p>
                             <?php else: ?>
-                                <p><?php esc_html_e('No bookings yet.', 'domilocus'); ?></p>
+                                <p><?php esc_html_e('Nessuna prenotazione ancora presente.', 'domilocus'); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
                     
-                    <!-- Upcoming Check-ins -->
+                    <!-- Prossimi check-in -->
                     <div class="postbox">
                         <div class="postbox-header">
-                            <h2><?php esc_html_e('Upcoming Check-ins', 'domilocus'); ?></h2>
+                            <h2><?php esc_html_e('Prossimi check-in', 'domilocus'); ?></h2>
                         </div>
                         <div class="inside">
                             <?php if ($upcoming_checkins): ?>
@@ -557,7 +706,7 @@ class Domilocus_Admin_Menus {
                                                 <td>
                                                     <strong><?php echo esc_html($booking->customer_name); ?></strong>
                                                     <?php if ($is_today): ?>
-                                                        <br><small style="color: #856404; font-weight: bold;"><?php esc_html_e('Today!', 'domilocus'); ?></small>
+                                                        <br><small style="color: #856404; font-weight: bold;"><?php esc_html_e('Oggi!', 'domilocus'); ?></small>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?php echo esc_html($booking->apartment_title); ?></td>
@@ -568,28 +717,28 @@ class Domilocus_Admin_Menus {
                                     </tbody>
                                 </table>
                             <?php else: ?>
-                                <p><?php esc_html_e('No upcoming check-ins.', 'domilocus'); ?></p>
+                                <p><?php esc_html_e('Nessun check-in in arrivo.', 'domilocus'); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
                     
                 </div>
                 
-                <!-- Quick Actions -->
+                <!-- Azioni rapide -->
                 <div class="postbox" style="margin-top: 20px;">
                     <div class="postbox-header">
-                        <h2><?php esc_html_e('Quick Actions', 'domilocus'); ?></h2>
+                        <h2><?php esc_html_e('Azioni rapide', 'domilocus'); ?></h2>
                     </div>
                     <div class="inside">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                             <a href="<?php echo esc_url(admin_url('post-new.php?post_type=domilocus_apartment')); ?>" class="button button-primary">
                                 <span class="dashicons dashicons-plus" style="margin-right: 5px;"></span>
-                                <?php esc_html_e('Add New Apartment', 'domilocus'); ?>
+                                <?php esc_html_e('Aggiungi nuovo appartamento', 'domilocus'); ?>
                             </a>
                             
                             <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-calendar')); ?>" class="button">
                                 <span class="dashicons dashicons-calendar-alt" style="margin-right: 5px;"></span>
-                                <?php esc_html_e('View Calendar', 'domilocus'); ?>
+                                <?php esc_html_e('Vedi calendario', 'domilocus'); ?>
                             </a>
                             
                             <?php
@@ -602,7 +751,7 @@ class Domilocus_Admin_Menus {
                             
                             <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-settings')); ?>" class="button">
                                 <span class="dashicons dashicons-admin-settings" style="margin-right: 5px;"></span>
-                                <?php esc_html_e('Settings', 'domilocus'); ?>
+                                <?php esc_html_e('Impostazioni', 'domilocus'); ?>
                             </a>
                         </div>
                     </div>
@@ -682,6 +831,33 @@ class Domilocus_Admin_Menus {
                 <div class="notice notice-success is-dismissible">
                     <p><?php esc_html_e('Booking deleted successfully.', 'domilocus'); ?></p>
                 </div>
+            <?php
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            elseif (isset($_GET['message']) && $_GET['message'] === 'bulk_deleted'):
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $deleted_count = isset($_GET['deleted_count']) ? max(0, (int) $_GET['deleted_count']) : 0;
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $skipped_paid = isset($_GET['skipped_paid']) ? max(0, (int) $_GET['skipped_paid']) : 0;
+                ?>
+                <div class="notice notice-success is-dismissible">
+                    <p>
+                        <?php
+                        printf(
+                            /* translators: %d: number of deleted bookings */
+                            esc_html(_n('%d booking deleted.', '%d bookings deleted.', $deleted_count, 'domilocus')),
+                            absint($deleted_count)
+                        );
+                        if ($skipped_paid > 0) {
+                            echo ' ';
+                            printf(
+                                /* translators: %d: number of paid bookings skipped in bulk delete */
+                                esc_html(_n('%d paid booking was skipped.', '%d paid bookings were skipped.', $skipped_paid, 'domilocus')),
+                                absint($skipped_paid)
+                            );
+                        }
+                        ?>
+                    </p>
+                </div>
             <?php endif; ?>
             
             <form method="get">
@@ -697,22 +873,25 @@ class Domilocus_Admin_Menus {
     }
     
     /**
-     * Delete a booking
+     * Delete booking record and unblock dates.
+     *
+     * @param int $booking_id Booking ID.
+     * @return bool True on successful deletion.
      */
-    private static function delete_booking($booking_id) {
+    private static function delete_booking_record($booking_id) {
         global $wpdb;
-        
+
         // Get booking data to unblock dates
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
         $booking = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
             $booking_id
         ));
-        
+
         if (!$booking) {
-            return;
+            return false;
         }
-        
+
         // Unblock dates in calendar
         if (class_exists('Domilocus_Booking')) {
             Domilocus_Booking::unblock_dates(
@@ -722,14 +901,23 @@ class Domilocus_Admin_Menus {
                 $booking_id
             );
         }
-        
+
         // Delete from database
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-        $wpdb->delete(
+        $deleted = $wpdb->delete(
             $wpdb->prefix . 'domilocus_bookings',
             array('id' => $booking_id),
             array('%d')
         );
+
+        return $deleted !== false;
+    }
+
+    /**
+     * Delete a booking
+     */
+    private static function delete_booking($booking_id) {
+        self::delete_booking_record($booking_id);
         
         // Redirect to bookings list with success message
         wp_safe_redirect(admin_url('admin.php?page=domilocus-bookings&message=deleted'));
@@ -898,6 +1086,267 @@ class Domilocus_Admin_Menus {
         );
 
         return $labels[$key] ?? ucfirst($status);
+    }
+
+    /**
+     * Get settlement statistics for a platform payout window.
+     *
+     * @param string   $platform_key Platform key.
+     * @param array    $window       Payout window data.
+     * @param array    $weekday_labels Weekday labels.
+     * @param wpdb     $wpdb         WordPress DB object.
+     * @return array
+     */
+    private static function get_platform_dashboard_settlement_data($platform_key, $window, $weekday_labels, $wpdb) {
+        $platform_key = Domilocus_Settings::normalize_platform_key($platform_key);
+        $rule = isset($window['rule']) && is_array($window['rule']) ? $window['rule'] : array();
+        $basis_key = isset($rule['payout_basis']) ? (string) $rule['payout_basis'] : 'check_out';
+
+        $basis_labels = array(
+            'check_in' => __('check-in', 'domilocus'),
+            'check_out' => __('check-out', 'domilocus'),
+            'booking_date' => __('booking date', 'domilocus'),
+            'payment_date' => __('payment date', 'domilocus'),
+        );
+        $basis_label = isset($basis_labels[$basis_key]) ? $basis_labels[$basis_key] : __('check-out', 'domilocus');
+
+        $platform_labels = array(
+            'booking.com' => 'Booking.com',
+            'airbnb' => 'Airbnb',
+            'vrbo' => 'VRBO',
+        );
+        $platform_label = isset($platform_labels[$platform_key]) ? $platform_labels[$platform_key] : strtoupper($platform_key);
+
+        $weekday_key = isset($rule['payout_weekday']) ? (string) $rule['payout_weekday'] : '';
+        $weekday_label = isset($weekday_labels[$weekday_key]) ? $weekday_labels[$weekday_key] : __('today', 'domilocus');
+
+        $amount = 0.0;
+        $count = 0;
+        $start_date = isset($window['start_date']) ? (string) $window['start_date'] : '';
+        $cutoff_date = isset($window['cutoff_date']) ? (string) $window['cutoff_date'] : '';
+
+        if ($start_date !== '' && $cutoff_date !== '') {
+            if ($platform_key === 'airbnb') {
+                if ($basis_key === 'check_in') {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('airbnb')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%airbnb%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('airbnb')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%airbnb%'
+                    ));
+                } else {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('airbnb')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%airbnb%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('airbnb')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%airbnb%'
+                    ));
+                }
+            } elseif ($platform_key === 'vrbo') {
+                if ($basis_key === 'check_in') {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('vrbo', 'homeaway')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%vrbo%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('vrbo', 'homeaway')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%vrbo%'
+                    ));
+                } else {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('vrbo', 'homeaway')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%vrbo%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('vrbo', 'homeaway')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%vrbo%'
+                    ));
+                }
+            } else {
+                if ($basis_key === 'check_in') {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('booking', 'booking.com', 'bookingcom')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%booking%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_in >= %s
+                           AND check_in <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('booking', 'booking.com', 'bookingcom')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%booking%'
+                    ));
+                } else {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $amount = (float) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('booking', 'booking.com', 'bookingcom')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%booking%'
+                    ));
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $count = (int) $wpdb->get_var($wpdb->prepare(
+                        "SELECT COUNT(*)
+                         FROM {$wpdb->prefix}domilocus_bookings
+                         WHERE check_out >= %s
+                           AND check_out <= %s
+                           AND COALESCE(total_amount, 0) > 0
+                           AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                           AND (
+                                LOWER(COALESCE(external_platform, '')) LIKE %s
+                                OR LOWER(COALESCE(source, '')) IN ('booking', 'booking.com', 'bookingcom')
+                           )",
+                        $start_date,
+                        $cutoff_date,
+                        '%booking%'
+                    ));
+                }
+            }
+        }
+
+        return array(
+            'label' => $platform_label,
+            'window' => $window,
+            'basis_label' => $basis_label,
+            'weekday_label' => $weekday_label,
+            'amount' => $amount,
+            'count' => $count,
+        );
     }
 
     /**
@@ -1136,6 +1585,101 @@ class Domilocus_Admin_Menus {
      * Handle admin actions
      */
     public static function handle_admin_actions() {
+        // Handle dashboard payout registration actions.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_POST['domilocus_action']) && $_POST['domilocus_action'] === 'register_platform_payout') {
+            if (!current_user_can('manage_options')) {
+                wp_die(esc_html__('You do not have permission to perform this action.', 'domilocus'));
+            }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if (!isset($_POST['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'domilocus_register_platform_payout')) {
+                wp_die(esc_html__('Security check failed.', 'domilocus'));
+            }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $platform_input = isset($_POST['platform']) ? sanitize_text_field(wp_unslash($_POST['platform'])) : 'booking.com';
+            $platform = Domilocus_Settings::normalize_platform_key($platform_input);
+            $supported_platforms = array_keys(Domilocus_Settings::get_platform_payment_rule_defaults());
+            if (!in_array($platform, $supported_platforms, true)) {
+                $platform = 'booking.com';
+            }
+
+            $window = Domilocus_Settings::get_platform_payout_window($platform);
+            $cutoff_date = isset($window['cutoff_date']) ? sanitize_text_field((string) $window['cutoff_date']) : '';
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $cutoff_date)) {
+                $cutoff_date = wp_date('Y-m-d');
+            }
+
+            $last_dates = Domilocus_Settings::get_platform_last_payout_dates();
+            $last_dates[$platform] = $cutoff_date;
+            update_option('domilocus_manager_platform_last_payout_dates', $last_dates);
+
+            wp_safe_redirect(add_query_arg(array(
+                'page' => 'domilocus',
+                'message' => 'platform_payout_registered',
+                'platform' => $platform,
+                'date' => $cutoff_date,
+            ), admin_url('admin.php')));
+            exit;
+        }
+
+        // Handle bulk delete from bookings list table.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings') {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : '';
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $action2 = isset($_GET['action2']) ? sanitize_text_field(wp_unslash($_GET['action2'])) : '';
+            $bulk_action = ('-1' !== $action && '' !== $action) ? $action : $action2;
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if ('delete' === $bulk_action && isset($_GET['booking']) && is_array($_GET['booking'])) {
+                if (!current_user_can('manage_options')) {
+                    wp_die(esc_html__('You do not have permission to delete bookings.', 'domilocus'));
+                }
+
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $nonce = isset($_GET['_wpnonce']) ? sanitize_text_field(wp_unslash($_GET['_wpnonce'])) : '';
+                if (!wp_verify_nonce($nonce, 'bulk-bookings')) {
+                    wp_die(esc_html__('Security check failed for bulk delete.', 'domilocus'));
+                }
+
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $booking_ids = array_map('intval', wp_unslash($_GET['booking']));
+                $booking_ids = array_values(array_unique(array_filter($booking_ids)));
+
+                $deleted_count = 0;
+                $skipped_paid = 0;
+
+                foreach ($booking_ids as $booking_id) {
+                    global $wpdb;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                    $booking = $wpdb->get_row($wpdb->prepare(
+                        "SELECT payment_status FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                        $booking_id
+                    ));
+
+                    if ($booking && isset($booking->payment_status) && 'paid' === $booking->payment_status) {
+                        $skipped_paid++;
+                        continue;
+                    }
+
+                    if (self::delete_booking_record($booking_id)) {
+                        $deleted_count++;
+                    }
+                }
+
+                wp_safe_redirect(add_query_arg(array(
+                    'page' => 'domilocus-bookings',
+                    'message' => 'bulk_deleted',
+                    'deleted_count' => $deleted_count,
+                    'skipped_paid' => $skipped_paid,
+                ), admin_url('admin.php')));
+                exit;
+            }
+        }
+
         // Handle booking deletion
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (isset($_GET['page']) && $_GET['page'] === 'domilocus-bookings' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['booking_id'])) {
@@ -1188,8 +1732,21 @@ class Domilocus_Admin_Menus {
                         exit;
                     }
                     break;
+
+                case 'download_alloggiati_mock':
+                case 'refresh_alloggiati_locations':
+                case 'download_alloggiati_booking':
+                    // Alloggiati/check-in export moved to DomiCheck plugin.
+                    $target = admin_url('admin.php?page=domicheck-settings');
+                    if (function_exists('is_plugin_active') && is_plugin_active('domicheck/domicheck.php')) {
+                        wp_safe_redirect($target);
+                        exit;
+                    }
+
+                    wp_die(esc_html__('Le funzioni Alloggiati/Check-in sono gestite da DomiCheck. Installa/attiva il plugin DomiCheck.', 'domilocus'));
+                    break;
             }
         }
     }
-    
+
 }

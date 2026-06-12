@@ -70,6 +70,7 @@ class Domilocus_Booking_Form {
             'payment_id' => '',
             'booking_notes' => '',
             'source' => 'admin',
+            'external_platform' => '',
             'notes' => ''
         );
         
@@ -327,7 +328,18 @@ class Domilocus_Booking_Form {
                         
                         <!-- Sidebar -->
                         <div id="postbox-container-1" class="postbox-container">
-                            
+                            <?php
+                            $is_ota_booking = $is_edit && (
+                                !empty($booking->external_platform)
+                                || in_array(($booking->source ?? ''), array('ical_import', 'ical', 'booking.com', 'airbnb', 'vrbo', 'expedia', 'ota'), true)
+                            );
+                            $payment_platform_key = !empty($booking->external_platform)
+                                ? Domilocus_Settings::normalize_platform_key($booking->external_platform)
+                                : Domilocus_Settings::normalize_platform_key($booking->source ?? '');
+                            $payment_rule = Domilocus_Settings::get_platform_payment_rule($payment_platform_key);
+                            $payment_rule_summary = Domilocus_Settings::get_platform_payment_rule_summary($payment_platform_key);
+                            $payment_rule_next_payout = Domilocus_Settings::get_platform_next_payout_date($payment_platform_key, $booking->check_out ?? '');
+                            ?>
                             <!-- Status -->
                             <div class="postbox">
                                 <div class="postbox-header">
@@ -354,10 +366,92 @@ class Domilocus_Booking_Form {
                                             </option>
                                         </select>
                                     </div>
+
+                                    <?php
+                                    $source_value = strtolower(trim((string) ($defaults['source'] ?? 'admin')));
+                                    $platform_value = strtolower(trim((string) ($defaults['external_platform'] ?? '')));
+                                    if ($platform_value === '' && $source_value === 'booking') {
+                                        $platform_value = 'booking.com';
+                                    }
+                                    $can_override_payment_status = empty($payment_rule['managed_by_platform']) || !empty($payment_rule['admin_override_allowed']);
+                                    ?>
+
+                                    <div class="misc-pub-section" style="margin-top: 12px;">
+                                        <label for="booking_source"><?php esc_html_e('Sorgente prenotazione', 'domilocus'); ?></label>
+                                        <select id="booking_source" name="booking_source" class="widefat" style="margin-top: 5px;">
+                                            <option value="admin" <?php selected($source_value, 'admin'); ?>><?php esc_html_e('Admin manuale', 'domilocus'); ?></option>
+                                            <option value="website" <?php selected($source_value, 'website'); ?>><?php esc_html_e('Sito web', 'domilocus'); ?></option>
+                                            <option value="booking" <?php selected($source_value, 'booking'); ?>>Booking.com</option>
+                                            <option value="airbnb" <?php selected($source_value, 'airbnb'); ?>>Airbnb</option>
+                                            <option value="vrbo" <?php selected($source_value, 'vrbo'); ?>>VRBO</option>
+                                            <option value="expedia" <?php selected($source_value, 'expedia'); ?>>Expedia</option>
+                                            <option value="app_guest" <?php selected($source_value, 'app_guest'); ?>><?php esc_html_e('App Ospite', 'domilocus'); ?></option>
+                                            <option value="ota" <?php selected($source_value, 'ota'); ?>><?php esc_html_e('Altra piattaforma', 'domilocus'); ?></option>
+                                            <option value="ical_import" <?php selected($source_value, 'ical_import'); ?>><?php esc_html_e('Import iCal', 'domilocus'); ?></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="misc-pub-section" style="margin-top: 12px;">
+                                        <label for="booking_external_platform"><?php esc_html_e('Piattaforma esterna', 'domilocus'); ?></label>
+                                        <select id="booking_external_platform" name="booking_external_platform" class="widefat" style="margin-top: 5px;">
+                                            <option value="" <?php selected($platform_value, ''); ?>><?php esc_html_e('-- Nessuna --', 'domilocus'); ?></option>
+                                            <option value="booking.com" <?php selected($platform_value, 'booking.com'); ?>>Booking.com</option>
+                                            <option value="airbnb" <?php selected($platform_value, 'airbnb'); ?>>Airbnb</option>
+                                            <option value="vrbo" <?php selected($platform_value, 'vrbo'); ?>>VRBO</option>
+                                            <option value="expedia" <?php selected($platform_value, 'expedia'); ?>>Expedia</option>
+                                            <option value="other" <?php selected($platform_value, 'other'); ?>><?php esc_html_e('Altro', 'domilocus'); ?></option>
+                                        </select>
+                                    </div>
+
+                                    <script>
+                                    (function(){
+                                        var sourceEl = document.getElementById('booking_source');
+                                        var platformEl = document.getElementById('booking_external_platform');
+                                        if (!sourceEl || !platformEl) {
+                                            return;
+                                        }
+
+                                        var map = {
+                                            booking: 'booking.com',
+                                            airbnb: 'airbnb',
+                                            vrbo: 'vrbo',
+                                            expedia: 'expedia'
+                                        };
+
+                                        sourceEl.addEventListener('change', function(){
+                                            var value = sourceEl.value || '';
+                                            if (map[value]) {
+                                                platformEl.value = map[value];
+                                            } else if (value === 'admin' || value === 'app_guest') {
+                                                platformEl.value = '';
+                                            }
+                                        });
+                                    })();
+                                    </script>
                                     
+                                    <?php if ($is_ota_booking): ?>
+                                    <div class="misc-pub-section" style="margin-top:15px;padding:8px 10px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px;">
+                                        <span style="font-size:12px;color:#7a5c00;">
+                                            <?php
+                                            $ota_label = !empty($booking->external_platform) ? strtoupper((string) $booking->external_platform) : 'Piattaforma esterna';
+                                            // translators: %s: platform name (e.g. AIRBNB, BOOKING.COM)
+                                            printf(esc_html__('Pagamento gestito da %s.', 'domilocus'), esc_html($ota_label));
+                                            ?>
+                                            <?php if ($payment_rule_summary) : ?>
+                                                <br><small><?php echo esc_html($payment_rule_summary); ?></small>
+                                            <?php endif; ?>
+                                            <?php if ($payment_rule_next_payout) : ?>
+                                                <br><small><?php
+                                                // translators: %s is the next payout date.
+                                                printf(esc_html__('Next payout date: %s', 'domilocus'), esc_html($payment_rule_next_payout));
+                                                ?></small>
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
+
                                     <div class="misc-pub-section" style="margin-top: 15px;">
                                         <label for="payment_status"><?php esc_html_e('Payment Status', 'domilocus'); ?></label>
-                                        <select id="payment_status" name="payment_status" class="widefat" style="margin-top: 5px;">
+                                        <select id="payment_status" name="payment_status" class="widefat" style="margin-top: 5px;" <?php disabled(!$can_override_payment_status); ?>>
                                             <option value="unpaid" <?php selected($defaults['payment_status'], 'unpaid'); ?>>
                                                 <?php esc_html_e('Unpaid', 'domilocus'); ?>
                                             </option>
@@ -371,7 +465,32 @@ class Domilocus_Booking_Form {
                                                 <?php esc_html_e('Refunded', 'domilocus'); ?>
                                             </option>
                                         </select>
+                                        <?php if (!$can_override_payment_status) : ?>
+                                            <input type="hidden" name="payment_status" value="<?php echo esc_attr($defaults['payment_status']); ?>">
+                                            <p class="description"><?php esc_html_e('Stato pagamento bloccato dalla regola della piattaforma.', 'domilocus'); ?></p>
+                                        <?php else : ?>
+                                            <p class="description"><?php esc_html_e('Puoi aggiornare lo stato pagamento per questa prenotazione.', 'domilocus'); ?></p>
+                                        <?php endif; ?>
                                     </div>
+                                    <?php else: ?>
+                                    <div class="misc-pub-section" style="margin-top: 15px;">
+                                        <label for="payment_status"><?php esc_html_e('Payment Status', 'domilocus'); ?></label>
+                                        <select id="payment_status" name="payment_status" class="widefat" style="margin-top: 5px;">
+                                            <option value="unpaid" <?php selected($defaults['payment_status'], 'unpaid'); ?>>
+                                                <?php esc_html_e('Unpaid', 'domilocus'); ?>
+                                            </option>
+                                            <option value="paid" <?php selected($defaults['payment_status'], 'paid'); ?>>
+                                                <?php esc_html_e('Paid', 'domilocus'); ?>
+                                            </option>
+                                            <option value="partial" <?php selected($defaults['payment_status'], 'partial'); ?> >
+                                                <?php esc_html_e('Partial', 'domilocus'); ?>
+                                            </option>
+                                            <option value="refunded" <?php selected($defaults['payment_status'], 'refunded'); ?>>
+                                                <?php esc_html_e('Refunded', 'domilocus'); ?>
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
@@ -413,6 +532,9 @@ class Domilocus_Booking_Form {
                                                class="widefat" style="margin-top: 5px;">
                                         <p class="description"><?php esc_html_e('External payment reference', 'domilocus'); ?></p>
                                     </div>
+                                    <?php if ($is_ota_booking && !empty($payment_rule_summary)) : ?>
+                                        <p class="description" style="margin-top:12px;"><?php echo esc_html($payment_rule_summary); ?></p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
@@ -594,19 +716,19 @@ class Domilocus_Booking_Form {
                             ?>
 
                             <?php if ($is_edit): ?>
-                            <?php $portal_url = class_exists('Domilocus_Receipts') ? Domilocus_Receipts::get_direct_portal_url($booking_id) : ''; ?>
-                            <?php if ($portal_url !== ''): ?>
+                            <?php $guest_summary_url = class_exists('Domilocus_Booking') ? Domilocus_Booking::get_confirmation_url($booking_id) : ''; ?>
+                            <?php if ($guest_summary_url !== ''): ?>
                             <div class="postbox">
                                 <div class="postbox-header">
                                     <h2>🔗 Pagina ospite</h2>
                                 </div>
                                 <div class="inside" style="padding:10px 12px;">
-                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Link alla pagina personale di questa prenotazione. Copialo e invialo all'ospite.</p>
+                                    <p style="margin:0 0 8px;font-size:12px;color:#555;">Link al riepilogo prenotazione di questa prenotazione (Locale/OTA). Copialo e invialo all'ospite.</p>
                                     <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-                                        <input type="text" id="dml_portal_url_<?php echo absint($booking_id); ?>" readonly value="<?php echo esc_attr($portal_url); ?>" class="widefat" style="font-size:11px;font-family:monospace;background:#f0f4ff;flex:1;" />
-                                        <button type="button" class="button" style="white-space:nowrap;" onclick="(function(btn){var i=document.getElementById('dml_portal_url_<?php echo absint($booking_id); ?>');navigator.clipboard.writeText(i.value).then(function(){var t=btn.textContent;btn.textContent='✓ Copiato';setTimeout(function(){btn.textContent=t;},1800);});})(this)">📋 Copia</button>
+                                        <input type="text" id="dml_summary_url_<?php echo absint($booking_id); ?>" readonly value="<?php echo esc_attr($guest_summary_url); ?>" class="widefat" style="font-size:11px;font-family:monospace;background:#f0f4ff;flex:1;" />
+                                        <button type="button" class="button" style="white-space:nowrap;" onclick="(function(btn){var i=document.getElementById('dml_summary_url_<?php echo absint($booking_id); ?>');navigator.clipboard.writeText(i.value).then(function(){var t=btn.textContent;btn.textContent='✓ Copiato';setTimeout(function(){btn.textContent=t;},1800);});})(this)">📋 Copia</button>
                                     </div>
-                                    <a href="<?php echo esc_url($portal_url); ?>" target="_blank" rel="noopener" style="font-size:12px;">Apri pagina ospite →</a>
+                                    <a href="<?php echo esc_url($guest_summary_url); ?>" target="_blank" rel="noopener" style="font-size:12px;">Apri riepilogo prenotazione →</a>
                                 </div>
                             </div>
                             <?php else: ?>
@@ -615,10 +737,11 @@ class Domilocus_Booking_Form {
                                     <h2>🔗 Pagina ospite</h2>
                                 </div>
                                 <div class="inside" style="padding:10px 12px;">
-                                    <p style="margin:0;font-size:12px;color:#777;">Imposta la <strong>Pagina portale ricevute ospiti</strong> nelle Impostazioni Generali per generare il link diretto a questa prenotazione.</p>
+                                    <p style="margin:0;font-size:12px;color:#777;">Imposta le pagine <strong>Conferma Prenotazione Locale</strong> e <strong>Conferma Prenotazione OTA</strong> nelle Impostazioni Generali per generare il link diretto al riepilogo.</p>
                                 </div>
                             </div>
                             <?php endif; ?>
+
                             <?php endif; ?>
 
                             <!-- Publish -->
@@ -703,6 +826,53 @@ class Domilocus_Booking_Form {
             exit;
         }
         
+        $raw_status = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : 'pending';
+        $normalized_status = strtolower(trim((string) $raw_status));
+        $normalized_status = str_replace(' ', '_', $normalized_status);
+        if (in_array($normalized_status, array('noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true)) {
+            $normalized_status = 'no_show';
+        }
+
+        $raw_source = isset($_POST['booking_source'])
+            ? sanitize_text_field(wp_unslash($_POST['booking_source']))
+            : (isset($_POST['source']) ? sanitize_text_field(wp_unslash($_POST['source'])) : 'admin');
+        $normalized_source = strtolower(trim((string) $raw_source));
+        $allowed_sources = array('admin', 'direct', 'booking', 'airbnb', 'vrbo', 'expedia', 'app_guest', 'ota', 'ical_import', 'ical');
+        if (!in_array($normalized_source, $allowed_sources, true)) {
+            $normalized_source = 'admin';
+        }
+        if ('direct' === $normalized_source) {
+            $normalized_source = 'admin';
+        }
+
+        $raw_external_platform = isset($_POST['booking_external_platform'])
+            ? sanitize_text_field(wp_unslash($_POST['booking_external_platform']))
+            : (isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '');
+        $normalized_external_platform = strtolower(trim((string) $raw_external_platform));
+        $allowed_platforms = array('', 'booking.com', 'airbnb', 'vrbo', 'expedia', 'other');
+        if (!in_array($normalized_external_platform, $allowed_platforms, true)) {
+            $normalized_external_platform = '';
+        }
+
+        if ('' === $normalized_external_platform) {
+            if ('booking' === $normalized_source) {
+                $normalized_external_platform = 'booking.com';
+            } elseif (in_array($normalized_source, array('airbnb', 'vrbo', 'expedia'), true)) {
+                $normalized_external_platform = $normalized_source;
+            }
+        }
+
+        if (in_array($normalized_source, array('admin', 'app_guest'), true)) {
+            $normalized_external_platform = '';
+        }
+
+        $allowed_statuses = array('pending', 'confirmed', 'cancelled', 'completed', 'no_show');
+        if (!in_array($normalized_status, $allowed_statuses, true)) {
+            $normalized_status = $is_edit && $booking && isset($booking->status)
+                ? sanitize_text_field((string) $booking->status)
+                : 'pending';
+        }
+
         // Prepare booking data
         $booking_data = array(
             'apartment_id' => $apartment_id,
@@ -716,14 +886,14 @@ class Domilocus_Booking_Form {
             'check_out' => $check_out,
             'guests' => isset($_POST['guests']) ? intval(wp_unslash($_POST['guests'])) : 1,
             'total_amount' => isset($_POST['total_amount']) ? floatval(wp_unslash($_POST['total_amount'])) : 0,
-            'status' => isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : 'pending',
+            'status' => $normalized_status,
             'payment_status' => isset($_POST['payment_status']) ? sanitize_text_field(wp_unslash($_POST['payment_status'])) : 'unpaid',
             'payment_method' => isset($_POST['payment_method']) ? sanitize_text_field(wp_unslash($_POST['payment_method'])) : '',
             'payment_id' => isset($_POST['payment_id']) ? sanitize_text_field(wp_unslash($_POST['payment_id'])) : '',
             'booking_notes' => isset($_POST['booking_notes']) ? sanitize_textarea_field(wp_unslash($_POST['booking_notes'])) : '',
             'notes' => isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '',
-            'external_platform' => isset($_POST['external_platform']) ? sanitize_text_field(wp_unslash($_POST['external_platform'])) : '',
-            'source' => 'admin',
+            'external_platform' => $normalized_external_platform,
+            'source' => $normalized_source,
         );
 
         // When editing an existing booking, preserve source and ical_uid so that

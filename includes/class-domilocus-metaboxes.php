@@ -755,9 +755,36 @@ class Domilocus_Metaboxes {
         $payment_status = get_post_meta($post->ID, '_domilocus_payment_status', true);
         $payment_method = get_post_meta($post->ID, '_domilocus_payment_method', true);
         $payment_id = get_post_meta($post->ID, '_domilocus_payment_id', true);
+        $booking_id = (int) get_post_meta($post->ID, '_domilocus_booking_id', true);
+        $booking = $booking_id > 0 && class_exists('Domilocus_Booking') ? Domilocus_Booking::get_booking($booking_id) : null;
+        $platform_key = '';
+        if ($booking) {
+            $platform_key = !empty($booking->external_platform)
+                ? Domilocus_Settings::normalize_platform_key($booking->external_platform)
+                : Domilocus_Settings::normalize_platform_key($booking->source ?? '');
+        }
+        $platform_rule = Domilocus_Settings::get_platform_payment_rule($platform_key);
+        $platform_summary = Domilocus_Settings::get_platform_payment_rule_summary($platform_key);
+        $next_payout_date = Domilocus_Settings::get_platform_next_payout_date($platform_key, $booking->check_out ?? '');
         
         ?>
         <table class="form-table">
+            <?php if (!empty($platform_summary)) : ?>
+            <tr>
+                <th scope="row">
+                    <label><?php esc_html_e('Platform payment rule', 'domilocus'); ?></label>
+                </th>
+                <td>
+                    <p style="margin-top:0; margin-bottom:6px;"><?php echo esc_html($platform_summary); ?></p>
+                    <?php if ($next_payout_date) : ?>
+                        <p class="description" style="margin-top:0;"><?php
+                        // translators: %s is the next payout date.
+                        printf(esc_html__('Next payout date: %s', 'domilocus'), esc_html($next_payout_date));
+                        ?></p>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endif; ?>
             <tr>
                 <th scope="row">
                     <label for="domilocus_payment_status"><?php esc_html_e('Payment Status', 'domilocus'); ?></label>
@@ -769,6 +796,9 @@ class Domilocus_Metaboxes {
                         <option value="failed" <?php selected($payment_status, 'failed'); ?>><?php esc_html_e('Failed', 'domilocus'); ?></option>
                         <option value="refunded" <?php selected($payment_status, 'refunded'); ?>><?php esc_html_e('Refunded', 'domilocus'); ?></option>
                     </select>
+                    <?php if (!empty($platform_rule['managed_by_platform'])) : ?>
+                        <p class="description"><?php esc_html_e('This platform is configured as OTA-managed, but the status remains editable for manual reconciliation.', 'domilocus'); ?></p>
+                    <?php endif; ?>
                 </td>
             </tr>
             <tr>

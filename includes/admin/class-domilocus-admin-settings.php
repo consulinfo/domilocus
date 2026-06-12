@@ -22,6 +22,7 @@ class Domilocus_Admin_Settings {
         add_action('admin_post_domilocus_save_settings', array(__CLASS__, 'save_settings'));
         add_action('admin_post_domilocus_send_test_email', array(__CLASS__, 'send_test_email'));
         add_action('admin_post_domilocus_repair_db', array(__CLASS__, 'handle_repair_db'));
+        add_action('admin_post_domilocus_regenerate_confirmation_pages', array(__CLASS__, 'handle_regenerate_confirmation_pages'));
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueue_settings_assets'));
     }
 
@@ -53,6 +54,15 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_general', 'domilocus_manager_address', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_cin_cir', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_portal_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_receipt_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_checkin_page_id', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_local', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_ota', array('sanitize_callback' => 'absint'));
+        register_setting('domilocus_general', 'domilocus_manager_receipt_requirement', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_documents_requirement', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_receipt_optional_visibility', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_general', 'domilocus_manager_documents_optional_visibility', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_currency', array(
             'sanitize_callback' => 'sanitize_text_field'
         ));
@@ -117,6 +127,12 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_payments', 'domilocus_manager_bank_bic', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_payments', 'domilocus_manager_bank_transfer_reference', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_payments', 'domilocus_manager_bank_transfer_instructions', array('sanitize_callback' => 'sanitize_textarea_field'));
+        register_setting('domilocus_payments', 'domilocus_manager_platform_payment_rules', array(
+            'sanitize_callback' => array(__CLASS__, 'sanitize_platform_payment_rules')
+        ));
+        register_setting('domilocus_payments', 'domilocus_manager_platform_last_payout_dates', array(
+            'sanitize_callback' => array(__CLASS__, 'sanitize_platform_last_payout_dates')
+        ));
 
         // Email settings
         register_setting('domilocus_emails', 'domilocus_manager_from_name', array('sanitize_callback' => 'sanitize_text_field'));
@@ -153,10 +169,10 @@ class Domilocus_Admin_Settings {
         $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'general';
 
         $tabs = array(
-            'general'  => __('General', 'domilocus'),
-            'payments' => __('Payments', 'domilocus'),
-            'emails'   => __('Emails', 'domilocus'),
-            'advanced' => __('Advanced', 'domilocus'),
+            'general'  => __('Generali', 'domilocus'),
+            'payments' => __('Pagamenti', 'domilocus'),
+            'emails'   => __('Email', 'domilocus'),
+            'advanced' => __('Avanzate', 'domilocus'),
         );
 
         $tabs = apply_filters('domilocus_settings_tabs', $tabs);
@@ -166,7 +182,7 @@ class Domilocus_Admin_Settings {
         }
         ?>
         <div class="wrap domilocus-settings">
-            <h1><?php esc_html_e('Domilocus Settings', 'domilocus'); ?></h1>
+            <h1><?php esc_html_e('Impostazioni Domilocus', 'domilocus'); ?></h1>
             <?php if (class_exists('Domilocus_Admin_Menus')) { Domilocus_Admin_Menus::render_page_nav('domilocus-settings'); } ?>
 
             <?php self::render_feedback_notices(); ?>
@@ -206,7 +222,7 @@ class Domilocus_Admin_Settings {
                     }
                     ?>
 
-                    <?php submit_button(__('Save Settings', 'domilocus')); ?>
+                    <?php submit_button(__('Salva impostazioni', 'domilocus')); ?>
                 </form>
             <?php else : ?>
                 <?php do_action('domilocus_render_settings_tab_' . $current_tab); ?>
@@ -246,6 +262,23 @@ class Domilocus_Admin_Settings {
                 printf(
                     '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
                     esc_html__("Impossibile inviare l'email di prova. Controlla le impostazioni SMTP.", 'domilocus')
+                );
+            }
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (!empty($_GET['domilocus-confirmation-pages'])) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $status = sanitize_key($_GET['domilocus-confirmation-pages']);
+            if ($status === 'regenerated') {
+                printf(
+                    '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+                    esc_html__('Pagine portale e conferma rigenerate correttamente.', 'domilocus')
+                );
+            } elseif ($status === 'error') {
+                printf(
+                    '<div class="notice notice-error is-dismissible"><p>%s</p></div>',
+                    esc_html__('Errore durante la rigenerazione delle pagine portale/conferma.', 'domilocus')
                 );
             }
         }
@@ -295,16 +328,118 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_portal_page_id">Pagina portale ricevute ospiti</label></th>
+                    <th scope="row"><label for="domilocus_receipt_page_id">Pagina ricevuta ospiti</label></th>
                     <td>
                         <?php wp_dropdown_pages(array(
-                            'id'                => 'domilocus_portal_page_id',
-                            'name'              => 'domilocus_portal_page_id',
-                            'selected'          => (int) get_option('domilocus_portal_page_id', 0),
+                            'id'                => 'domilocus_receipt_page_id',
+                            'name'              => 'domilocus_receipt_page_id',
+                            'selected'          => (int) get_option('domilocus_receipt_page_id', 0),
                             'show_option_none'  => '— Nessuna —',
                             'option_none_value' => '0',
                         )); ?>
-                        <p class="description">Pagina che contiene lo shortcode <code>[domilocus_receipt_portal]</code>. Serve per generare i link diretti nella scheda prenotazione admin.</p>
+                        <p class="description">Pagina dedicata alla ricevuta con shortcode <code>[domilocus_receipt_portal]</code>.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_checkin_page_id">Pagina check-in online</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_checkin_page_id',
+                            'name'              => 'domilocus_checkin_page_id',
+                            'selected'          => (int) get_option('domilocus_checkin_page_id', 0),
+                            'show_option_none'  => '— Nessuna —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al modulo check-in con shortcode <code>[domilocus_checkin_documents]</code>.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_local">Pagina riepilogo prenotazione Locale</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_manager_page_booking_confirmation_local',
+                            'name'              => 'domilocus_manager_page_booking_confirmation_local',
+                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_local', 0),
+                            'show_option_none'  => '— Auto —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al riepilogo Locale con shortcode <code>[domilocus_booking_confirmation_local]</code>. Se vuota, viene creata automaticamente.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_ota">Pagina riepilogo prenotazione OTA</label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_manager_page_booking_confirmation_ota',
+                            'name'              => 'domilocus_manager_page_booking_confirmation_ota',
+                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_ota', 0),
+                            'show_option_none'  => '— Auto —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">Pagina dedicata al riepilogo OTA con shortcode <code>[domilocus_booking_confirmation_ota]</code>. Se vuota, viene creata automaticamente.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Rigenera pagine conferma/ospite</th>
+                    <td>
+                        <?php
+                        $regenerate_url = wp_nonce_url(
+                            add_query_arg(array('action' => 'domilocus_regenerate_confirmation_pages'), admin_url('admin-post.php')),
+                            'domilocus_regenerate_confirmation_pages'
+                        );
+                        ?>
+                        <a href="<?php echo esc_url($regenerate_url); ?>" class="button button-secondary">
+                            <?php esc_html_e('Rigenera pagine conferma, ricevuta e check-in', 'domilocus'); ?>
+                        </a>
+                        <p class="description">Crea automaticamente le 4 pagine necessarie: <strong>Riepilogo Locale</strong>, <strong>Riepilogo OTA</strong>, <strong>Ricevuta Ospite</strong> e <strong>Check-in Online</strong>. Se esistono già, aggiorna solo gli ID nelle impostazioni.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_receipt_requirement">Visualizzazione ricevuta ospite</label></th>
+                    <td>
+                        <select id="domilocus_manager_receipt_requirement" name="domilocus_manager_receipt_requirement">
+                            <option value="optional" <?php selected(get_option('domilocus_manager_receipt_requirement', 'optional'), 'optional'); ?>>Opzionale</option>
+                            <option value="required" <?php selected(get_option('domilocus_manager_receipt_requirement', 'optional'), 'required'); ?>>Obbligatoria (step richiesto)</option>
+                        </select>
+                        <p class="description">Se Obbligatoria, la ricevuta è uno step richiesto nel flusso conferma. Se Opzionale, decide il menu sotto se mostrare solo il pulsante o nascondere lo step. Per prenotazioni locali resta disponibile solo dal giorno di check-out.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_receipt_optional_visibility">Ricevuta quando opzionale</label></th>
+                    <td>
+                        <select id="domilocus_manager_receipt_optional_visibility" name="domilocus_manager_receipt_optional_visibility">
+                            <option value="button" <?php selected(get_option('domilocus_manager_receipt_optional_visibility', 'button'), 'button'); ?>>Opzionale: mostra pulsante</option>
+                            <option value="hidden" <?php selected(get_option('domilocus_manager_receipt_optional_visibility', 'button'), 'hidden'); ?>>Opzionale: nascondi step</option>
+                        </select>
+                        <p class="description">Valido solo quando la ricevuta è impostata su Opzionale.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_documents_requirement">Compilazione documenti check-in</label></th>
+                    <td>
+                        <select id="domilocus_manager_documents_requirement" name="domilocus_manager_documents_requirement">
+                            <option value="optional" <?php selected(get_option('domilocus_manager_documents_requirement', 'optional'), 'optional'); ?>>Opzionale</option>
+                            <option value="required" <?php selected(get_option('domilocus_manager_documents_requirement', 'optional'), 'required'); ?>>Obbligatoria (step richiesto)</option>
+                        </select>
+                        <p class="description">Se Obbligatoria, i documenti sono uno step richiesto. Se Opzionale, decide il menu sotto se mostrare solo il pulsante o nascondere lo step.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_manager_documents_optional_visibility">Documenti quando opzionale</label></th>
+                    <td>
+                        <select id="domilocus_manager_documents_optional_visibility" name="domilocus_manager_documents_optional_visibility">
+                            <option value="button" <?php selected(get_option('domilocus_manager_documents_optional_visibility', 'button'), 'button'); ?>>Opzionale: mostra pulsante</option>
+                            <option value="hidden" <?php selected(get_option('domilocus_manager_documents_optional_visibility', 'button'), 'hidden'); ?>>Opzionale: nascondi step</option>
+                        </select>
+                        <p class="description">Valido solo quando i documenti sono impostati su Opzionale. In modalità opzionale non viene mostrato l'inserimento inline nella pagina conferma.</p>
                     </td>
                 </tr>
 
@@ -406,17 +541,38 @@ class Domilocus_Admin_Settings {
     $paypal_on_request_enabled = (bool) get_option('domilocus_manager_paypal_enable_on_request', true);
     $paypal_fee_percent = (float) get_option('domilocus_manager_paypal_fee_percent', 0);
     $paypal_fee_fixed = (float) get_option('domilocus_manager_paypal_fee_fixed', 0);
+        $platform_rules = Domilocus_Settings::get_platform_payment_rules();
+        $platform_last_payout_dates = self::sanitize_platform_last_payout_dates(get_option('domilocus_manager_platform_last_payout_dates', array()));
+        $weekday_labels = Domilocus_Settings::get_weekday_labels();
+        $platform_labels = array(
+            'booking.com' => 'Booking.com',
+            'airbnb' => 'Airbnb',
+            'vrbo' => 'VRBO',
+            'expedia' => 'Expedia',
+        );
+
+        $frequency_labels = array(
+            'manual' => __('Manuale', 'domilocus'),
+            'weekly' => __('Settimanale', 'domilocus'),
+        );
+
+        $basis_labels = array(
+            'check_in' => __('Data check-in', 'domilocus'),
+            'check_out' => __('Data check-out', 'domilocus'),
+            'booking_date' => __('Data prenotazione', 'domilocus'),
+            'payment_date' => __('Data pagamento', 'domilocus'),
+        );
 
         $methods = array(
-            'stripe'        => __('Credit Card (Stripe)', 'domilocus'),
+            'stripe'        => __('Carta di credito (Stripe)', 'domilocus'),
             'paypal'        => __('PayPal', 'domilocus'),
-            'bank_transfer' => __('Bank Transfer', 'domilocus'),
+            'bank_transfer' => __('Bonifico bancario', 'domilocus'),
         );
         ?>
         <table class="form-table" role="presentation">
             <tbody>
                 <tr>
-                    <th scope="row"><?php esc_html_e('Active Payment Methods', 'domilocus'); ?></th>
+                    <th scope="row"><?php esc_html_e('Metodi di pagamento attivi', 'domilocus'); ?></th>
                     <td>
                         <?php foreach ($methods as $key => $label) : ?>
                             <label>
@@ -430,48 +586,48 @@ class Domilocus_Admin_Settings {
                 <tr><th scope="row"><h3><?php esc_html_e('Stripe', 'domilocus'); ?></h3></th><td></td></tr>
 
                 <tr>
-                    <th scope="row"><?php esc_html_e('Test Mode', 'domilocus'); ?></th>
+                    <th scope="row"><?php esc_html_e('Modalita test', 'domilocus'); ?></th>
                     <td>
                         <label>
                             <input type="checkbox" name="domilocus_manager_stripe_test_mode" value="1" <?php checked($stripe_test_mode); ?> />
-                            <?php esc_html_e('Use test keys (sandbox)', 'domilocus'); ?>
+                            <?php esc_html_e('Usa chiavi di test (sandbox)', 'domilocus'); ?>
                         </label>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_stripe_publishable_key"><?php esc_html_e('Publishable Key', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_stripe_publishable_key"><?php esc_html_e('Chiave pubblicabile', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_stripe_publishable_key" name="domilocus_manager_stripe_publishable_key" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_stripe_publishable_key', '')); ?>" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_stripe_secret_key"><?php esc_html_e('Secret Key', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_stripe_secret_key"><?php esc_html_e('Chiave segreta', 'domilocus'); ?></label></th>
                     <td><input type="password" id="domilocus_manager_stripe_secret_key" name="domilocus_manager_stripe_secret_key" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_stripe_secret_key', '')); ?>" autocomplete="new-password" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_stripe_test_publishable_key"><?php esc_html_e('Publishable Key (test)', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_stripe_test_publishable_key"><?php esc_html_e('Chiave pubblicabile (test)', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_stripe_test_publishable_key" name="domilocus_manager_stripe_test_publishable_key" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_stripe_test_publishable_key', '')); ?>" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_stripe_test_secret_key"><?php esc_html_e('Secret Key (test)', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_stripe_test_secret_key"><?php esc_html_e('Chiave segreta (test)', 'domilocus'); ?></label></th>
                     <td><input type="password" id="domilocus_manager_stripe_test_secret_key" name="domilocus_manager_stripe_test_secret_key" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_stripe_test_secret_key', '')); ?>" autocomplete="new-password" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_stripe_webhook_secret"><?php esc_html_e('Webhook Secret', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_stripe_webhook_secret"><?php esc_html_e('Segreto webhook', 'domilocus'); ?></label></th>
                     <td><input type="password" id="domilocus_manager_stripe_webhook_secret" name="domilocus_manager_stripe_webhook_secret" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_stripe_webhook_secret', '')); ?>" autocomplete="new-password" /></td>
                 </tr>
 
                 <tr><th scope="row"><h3><?php esc_html_e('PayPal', 'domilocus'); ?></h3></th><td></td></tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_paypal_mode"><?php esc_html_e('Mode', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_paypal_mode"><?php esc_html_e('Modalita', 'domilocus'); ?></label></th>
                     <td>
                         <select id="domilocus_manager_paypal_mode" name="domilocus_manager_paypal_mode">
                             <option value="sandbox" <?php selected($paypal_mode, 'sandbox'); ?>><?php esc_html_e('Sandbox (test)', 'domilocus'); ?></option>
-                            <option value="live" <?php selected($paypal_mode, 'live'); ?>><?php esc_html_e('Live (production)', 'domilocus'); ?></option>
+                            <option value="live" <?php selected($paypal_mode, 'live'); ?>><?php esc_html_e('Live (produzione)', 'domilocus'); ?></option>
                         </select>
                     </td>
                 </tr>
@@ -487,54 +643,54 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_paypal_last_minute_days"><?php esc_html_e('Last-Minute Bookings', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_paypal_last_minute_days"><?php esc_html_e('Prenotazioni last-minute', 'domilocus'); ?></label></th>
                     <td>
                         <input type="number" id="domilocus_manager_paypal_last_minute_days" name="domilocus_manager_paypal_last_minute_days" class="small-text" min="0" value="<?php echo esc_attr($paypal_last_minute_days); ?>" />
-                        <p class="description"><?php esc_html_e('Automatically show PayPal button for stays starting within this number of days. Set to 0 to disable last-minute logic.', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Mostra automaticamente il pulsante PayPal per soggiorni che iniziano entro questo numero di giorni. Imposta 0 per disattivare la logica last-minute.', 'domilocus'); ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php esc_html_e('Availability on Request', 'domilocus'); ?></th>
+                    <th scope="row"><?php esc_html_e('Disponibilita su richiesta', 'domilocus'); ?></th>
                     <td>
                         <label>
                             <input type="checkbox" name="domilocus_manager_paypal_enable_on_request" value="1" <?php checked($paypal_on_request_enabled); ?> />
-                            <?php esc_html_e('Allow PayPal payment when customer requests it (outside last-minute period).', 'domilocus'); ?>
+                            <?php esc_html_e('Consenti pagamento PayPal quando il cliente lo richiede (fuori dal periodo last-minute).', 'domilocus'); ?>
                         </label>
-                        <p class="description"><?php esc_html_e('PayPal button will only be shown after manual operator confirmation.', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Il pulsante PayPal verra mostrato solo dopo conferma manuale dell operatore.', 'domilocus'); ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_paypal_fee_percent"><?php esc_html_e('PayPal Percentage Fee', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_paypal_fee_percent"><?php esc_html_e('Commissione percentuale PayPal', 'domilocus'); ?></label></th>
                     <td>
                         <input type="number" step="0.01" min="0" id="domilocus_manager_paypal_fee_percent" name="domilocus_manager_paypal_fee_percent" class="small-text" value="<?php echo esc_attr($paypal_fee_percent); ?>" /> %
-                        <p class="description"><?php esc_html_e('Percentage applied to PayPal payments (e.g. 3.4).', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Percentuale applicata ai pagamenti PayPal (es. 3.4).', 'domilocus'); ?></p>
                     </td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_paypal_fee_fixed"><?php esc_html_e('PayPal Fixed Fee', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_paypal_fee_fixed"><?php esc_html_e('Commissione fissa PayPal', 'domilocus'); ?></label></th>
                     <td>
                         <input type="number" step="0.01" min="0" id="domilocus_manager_paypal_fee_fixed" name="domilocus_manager_paypal_fee_fixed" class="small-text" value="<?php echo esc_attr($paypal_fee_fixed); ?>" />
-                        <p class="description"><?php esc_html_e('Fixed amount added to PayPal payments (in set currency).', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Importo fisso aggiunto ai pagamenti PayPal (nella valuta impostata).', 'domilocus'); ?></p>
                     </td>
                 </tr>
 
-                <tr><th scope="row"><h3><?php esc_html_e('Bank Transfer', 'domilocus'); ?></h3></th><td></td></tr>
+                <tr><th scope="row"><h3><?php esc_html_e('Bonifico bancario', 'domilocus'); ?></h3></th><td></td></tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_bank_account_name"><?php esc_html_e('Account Holder', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_bank_account_name"><?php esc_html_e('Intestatario conto', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_bank_account_name" name="domilocus_manager_bank_account_name" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_bank_account_name', '')); ?>" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_bank_name"><?php esc_html_e('Bank Name', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_bank_name"><?php esc_html_e('Nome banca', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_bank_name" name="domilocus_manager_bank_name" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_bank_name', '')); ?>" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_bank_account_number"><?php esc_html_e('Account Number', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_bank_account_number"><?php esc_html_e('Numero conto', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_bank_account_number" name="domilocus_manager_bank_account_number" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_bank_account_number', '')); ?>" /></td>
                 </tr>
 
@@ -549,15 +705,120 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_bank_transfer_reference"><?php esc_html_e('Transfer Reference', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_bank_transfer_reference"><?php esc_html_e('Causale bonifico', 'domilocus'); ?></label></th>
                     <td><input type="text" id="domilocus_manager_bank_transfer_reference" name="domilocus_manager_bank_transfer_reference" class="regular-text" value="<?php echo esc_attr(get_option('domilocus_manager_bank_transfer_reference', '')); ?>" /></td>
                 </tr>
 
                 <tr>
-                    <th scope="row"><label for="domilocus_manager_bank_transfer_instructions"><?php esc_html_e('Bank Transfer Instructions', 'domilocus'); ?></label></th>
+                    <th scope="row"><label for="domilocus_manager_bank_transfer_instructions"><?php esc_html_e('Istruzioni bonifico bancario', 'domilocus'); ?></label></th>
                     <td>
                         <textarea id="domilocus_manager_bank_transfer_instructions" name="domilocus_manager_bank_transfer_instructions" class="large-text" rows="4"><?php echo esc_textarea(get_option('domilocus_manager_bank_transfer_instructions', '')); ?></textarea>
-                        <p class="description"><?php esc_html_e('Text shown to customer after booking.', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Testo mostrato al cliente dopo la prenotazione.', 'domilocus'); ?></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php esc_html_e('Regole pagamento piattaforme', 'domilocus'); ?></th>
+                    <td>
+                        <p class="description"><?php esc_html_e('Configura come gestire i payout OTA per ogni piattaforma. Booking.com usa per default il regolamento settimanale del giovedi basato sulle date di check-out.', 'domilocus'); ?></p>
+                        <table class="widefat striped" style="max-width: 1100px; margin-top: 10px;">
+                            <thead>
+                                <tr>
+                                    <th><?php esc_html_e('Piattaforma', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Gestito da piattaforma', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Override admin', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Frequenza payout', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Giorno settimana', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Basato su', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Note', 'domilocus'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($platform_labels as $platform_key => $platform_label) :
+                                    $rule = isset($platform_rules[$platform_key]) && is_array($platform_rules[$platform_key]) ? $platform_rules[$platform_key] : array();
+                                    $managed_by_platform = !empty($rule['managed_by_platform']);
+                                    $admin_override_allowed = !empty($rule['admin_override_allowed']) || !isset($rule['admin_override_allowed']);
+                                    $payout_frequency = isset($rule['payout_frequency']) ? $rule['payout_frequency'] : 'manual';
+                                    $payout_weekday = isset($rule['payout_weekday']) ? $rule['payout_weekday'] : '';
+                                    $payout_basis = isset($rule['payout_basis']) ? $rule['payout_basis'] : 'check_out';
+                                    $notes = isset($rule['notes']) ? $rule['notes'] : '';
+                                    ?>
+                                    <tr>
+                                        <td><strong><?php echo esc_html($platform_label); ?></strong></td>
+                                        <td>
+                                            <label>
+                                                <input type="checkbox" name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][managed_by_platform]" value="1" <?php checked($managed_by_platform); ?> />
+                                                <?php esc_html_e('Si', 'domilocus'); ?>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <label>
+                                                <input type="checkbox" name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][admin_override_allowed]" value="1" <?php checked($admin_override_allowed); ?> />
+                                                <?php esc_html_e('Si', 'domilocus'); ?>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <select name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][payout_frequency]">
+                                                <?php foreach ($frequency_labels as $freq_value => $freq_label) : ?>
+                                                    <option value="<?php echo esc_attr($freq_value); ?>" <?php selected($payout_frequency, $freq_value); ?>><?php echo esc_html($freq_label); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][payout_weekday]">
+                                                <option value=""><?php esc_html_e('--', 'domilocus'); ?></option>
+                                                <?php foreach ($weekday_labels as $weekday_key => $weekday_label) : ?>
+                                                    <option value="<?php echo esc_attr($weekday_key); ?>" <?php selected($payout_weekday, $weekday_key); ?>><?php echo esc_html($weekday_label); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][payout_basis]">
+                                                <?php foreach ($basis_labels as $basis_value => $basis_label) : ?>
+                                                    <option value="<?php echo esc_attr($basis_value); ?>" <?php selected($payout_basis, $basis_value); ?>><?php echo esc_html($basis_label); ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="regular-text" name="domilocus_manager_platform_payment_rules[<?php echo esc_attr($platform_key); ?>][notes]" value="<?php echo esc_attr($notes); ?>" />
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php esc_html_e('Ultimo payout piattaforma registrato', 'domilocus'); ?></th>
+                    <td>
+                        <table class="widefat striped" style="max-width: 700px; margin-top: 4px;">
+                            <thead>
+                                <tr>
+                                    <th><?php esc_html_e('Piattaforma', 'domilocus'); ?></th>
+                                    <th><?php esc_html_e('Data ultimo payout', 'domilocus'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($platform_labels as $platform_key => $platform_label) :
+                                    $last_date = isset($platform_last_payout_dates[$platform_key]) ? (string) $platform_last_payout_dates[$platform_key] : '';
+                                    ?>
+                                    <tr>
+                                        <td><strong><?php echo esc_html($platform_label); ?></strong></td>
+                                        <td>
+                                            <input
+                                                type="date"
+                                                name="domilocus_manager_platform_last_payout_dates[<?php echo esc_attr($platform_key); ?>]"
+                                                value="<?php echo esc_attr($last_date); ?>"
+                                            />
+                                            <p class="description" style="margin: 6px 0 0;">
+                                                <?php esc_html_e('Usata per calcolare la finestra payout dall ultimo pagamento fino all ultimo giorno schedulato.', 'domilocus'); ?>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
             </tbody>
@@ -835,6 +1096,102 @@ class Domilocus_Admin_Settings {
     }
 
     /**
+     * Create/recover a confirmation page by option and shortcode.
+     *
+     * @param string $option_name Option key storing page id.
+     * @param string $title       Fallback page title.
+     * @param string $shortcode   Required shortcode.
+     * @return int                Page ID or 0 on failure.
+     */
+    private static function ensure_confirmation_page($option_name, $title, $shortcode) {
+        $page_id = (int) get_option($option_name, 0);
+
+        if ($page_id > 0) {
+            $page = get_post($page_id);
+            if ($page && $page->post_status === 'publish') {
+                return $page_id;
+            }
+        }
+
+        $existing = get_posts(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            's' => $shortcode,
+            'fields' => 'ids',
+        ));
+
+        if (!empty($existing[0])) {
+            $page_id = (int) $existing[0];
+            update_option($option_name, $page_id);
+            return $page_id;
+        }
+
+        $created = wp_insert_post(array(
+            'post_type' => 'page',
+            'post_status' => 'publish',
+            'post_title' => $title,
+            'post_content' => $shortcode,
+            'comment_status' => 'closed',
+            'ping_status' => 'closed',
+        ), true);
+
+        if (is_wp_error($created) || (int) $created <= 0) {
+            return 0;
+        }
+
+        $page_id = (int) $created;
+        update_option($option_name, $page_id);
+        return $page_id;
+    }
+
+    /**
+     * Handle manual regeneration of booking confirmation pages.
+     */
+    public static function handle_regenerate_confirmation_pages() {
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['_wpnonce'])), 'domilocus_regenerate_confirmation_pages')) {
+            wp_die(esc_html__('Security check failed.', 'domilocus'));
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'domilocus'));
+        }
+
+        $receipt_id = self::ensure_confirmation_page(
+            'domilocus_receipt_page_id',
+            __('Ricevuta Ospite', 'domilocus'),
+            '[domilocus_receipt_portal]'
+        );
+
+        $checkin_id = self::ensure_confirmation_page(
+            'domilocus_checkin_page_id',
+            __('Check-in Online Ospite', 'domilocus'),
+            '[domilocus_checkin_documents]'
+        );
+
+        $local_id = self::ensure_confirmation_page(
+            'domilocus_manager_page_booking_confirmation_local',
+            __('Riepilogo Prenotazione Locale', 'domilocus'),
+            '[domilocus_booking_confirmation_local]'
+        );
+
+        $ota_id = self::ensure_confirmation_page(
+            'domilocus_manager_page_booking_confirmation_ota',
+            __('Riepilogo Prenotazione OTA', 'domilocus'),
+            '[domilocus_booking_confirmation_ota]'
+        );
+
+        $status = ($receipt_id > 0 && $checkin_id > 0 && $local_id > 0 && $ota_id > 0) ? 'regenerated' : 'error';
+
+        wp_safe_redirect(add_query_arg(array(
+            'page' => 'domilocus-settings',
+            'tab' => 'general',
+            'domilocus-confirmation-pages' => $status,
+        ), admin_url('admin.php')));
+        exit;
+    }
+
+    /**
      * Handle test email submission.
      */
     public static function send_test_email() {
@@ -871,6 +1228,15 @@ class Domilocus_Admin_Settings {
             'domilocus_manager_address' => 'sanitize_text_field',
             'domilocus_manager_cin_cir' => 'sanitize_text_field',
             'domilocus_portal_page_id' => 'absint',
+            'domilocus_receipt_page_id' => 'absint',
+            'domilocus_checkin_page_id' => 'absint',
+            'domilocus_manager_page_booking_confirmation' => 'absint',
+            'domilocus_manager_page_booking_confirmation_local' => 'absint',
+            'domilocus_manager_page_booking_confirmation_ota' => 'absint',
+            'domilocus_manager_receipt_requirement' => 'sanitize_text_field',
+            'domilocus_manager_documents_requirement' => 'sanitize_text_field',
+            'domilocus_manager_receipt_optional_visibility' => 'sanitize_text_field',
+            'domilocus_manager_documents_optional_visibility' => 'sanitize_text_field',
             'domilocus_manager_currency' => 'sanitize_text_field',
             'domilocus_manager_currency_position' => 'sanitize_text_field',
             'domilocus_manager_date_format' => 'sanitize_text_field',
@@ -942,6 +1308,20 @@ class Domilocus_Admin_Settings {
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $platform_rules = isset($_POST['domilocus_manager_platform_payment_rules']) && is_array($_POST['domilocus_manager_platform_payment_rules'])
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            ? wp_unslash($_POST['domilocus_manager_platform_payment_rules'])
+            : array();
+        update_option('domilocus_manager_platform_payment_rules', self::sanitize_platform_payment_rules($platform_rules));
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $platform_last_payout_dates = isset($_POST['domilocus_manager_platform_last_payout_dates']) && is_array($_POST['domilocus_manager_platform_last_payout_dates'])
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            ? wp_unslash($_POST['domilocus_manager_platform_last_payout_dates'])
+            : array();
+        update_option('domilocus_manager_platform_last_payout_dates', self::sanitize_platform_last_payout_dates($platform_last_payout_dates));
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $paypal_fee_percent = isset($_POST['domilocus_manager_paypal_fee_percent'])
             // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             ? max(0, (float) wp_unslash($_POST['domilocus_manager_paypal_fee_percent']))
@@ -970,6 +1350,65 @@ class Domilocus_Admin_Settings {
 
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         update_option('domilocus_manager_paypal_enable_on_request', isset($_POST['domilocus_manager_paypal_enable_on_request']) ? 1 : 0);
+    }
+
+    /**
+     * Sanitize platform payment rules.
+     *
+     * @param mixed $value Submitted value.
+     * @return array
+     */
+    public static function sanitize_platform_payment_rules($value) {
+        $defaults = Domilocus_Settings::get_platform_payment_rule_defaults();
+        $weekday_keys = array_keys(Domilocus_Settings::get_weekday_labels());
+        $frequency_keys = array('manual', 'weekly');
+        $basis_keys = array('check_in', 'check_out', 'booking_date', 'payment_date');
+        $submitted = is_array($value) ? $value : array();
+        $rules = array();
+
+        foreach ($defaults as $platform_key => $platform_defaults) {
+            $raw_rule = isset($submitted[$platform_key]) && is_array($submitted[$platform_key]) ? $submitted[$platform_key] : array();
+
+            $rules[$platform_key] = array(
+                'managed_by_platform' => !empty($raw_rule['managed_by_platform']) ? 1 : 0,
+                'admin_override_allowed' => !isset($raw_rule['admin_override_allowed']) || !empty($raw_rule['admin_override_allowed']) ? 1 : 0,
+                'payout_frequency' => isset($raw_rule['payout_frequency']) && in_array($raw_rule['payout_frequency'], $frequency_keys, true)
+                    ? $raw_rule['payout_frequency']
+                    : $platform_defaults['payout_frequency'],
+                'payout_weekday' => isset($raw_rule['payout_weekday']) && in_array($raw_rule['payout_weekday'], $weekday_keys, true)
+                    ? $raw_rule['payout_weekday']
+                    : $platform_defaults['payout_weekday'],
+                'payout_basis' => isset($raw_rule['payout_basis']) && in_array($raw_rule['payout_basis'], $basis_keys, true)
+                    ? $raw_rule['payout_basis']
+                    : $platform_defaults['payout_basis'],
+                'notes' => isset($raw_rule['notes']) ? sanitize_text_field($raw_rule['notes']) : '',
+            );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Sanitize last payout dates per platform.
+     *
+     * @param mixed $value Submitted value.
+     * @return array
+     */
+    public static function sanitize_platform_last_payout_dates($value) {
+        $defaults = Domilocus_Settings::get_platform_payment_rule_defaults();
+        $submitted = is_array($value) ? $value : array();
+        $dates = array();
+
+        foreach ($defaults as $platform_key => $platform_defaults) {
+            $raw_date = isset($submitted[$platform_key]) ? sanitize_text_field((string) $submitted[$platform_key]) : '';
+            if ($raw_date !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $raw_date)) {
+                $dates[$platform_key] = $raw_date;
+            } else {
+                $dates[$platform_key] = '';
+            }
+        }
+
+        return $dates;
     }
 
     /**

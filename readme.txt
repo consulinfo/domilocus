@@ -2,9 +2,9 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 6.9.2
 Requires PHP: 8.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,9 +180,46 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 
 == Changelog ==
 
+= 1.4.6 =
+* Added: tracciamento payout piattaforme OTA (Booking.com, Airbnb, VRBO, Expedia) con frequenza, giorno settimana e base di calcolo configurabili.
+* Added: statistiche payout piattaforme nella dashboard admin.
+* Added: impostazioni pagine per ricevuta, check-in e conferma prenotazione separati per diretta/OTA.
+* Added: opzioni visibilita e requisiti per ricevute e documenti ospite.
+* Fixed: calcolo ricavi in dashboard ora include tutte le prenotazioni non cancellate/rifiutate (non solo quelle pagate).
+* Fixed: fallback licenza Smart Check-in per utenti senza piano attivo.
+* Improved: etichette interfaccia admin tradotte in italiano.
+
 = 1.4.5 =
-* Fixed: Smart Check-in premium gate now accepts entitlement from multiple license managers to avoid false negatives on valid premium sites.
-* Fixed: admin booking Smart Check-in check now has safer fallback behavior for local/dev environments.
+* Added: feature gating — documentazione check-in online riservata al piano Professional.
+* Added: feature gating — Smart Check-in riservato al piano Premium.
+
+= 1.4.4 =
+* Added: selezione esplicita della fonte prenotazione nel form admin (diretta, Booking.com, Airbnb, VRBO, Expedia, App Ospite, altra piattaforma).
+* Added: selezione piattaforma esterna disponibile anche per inserimenti manuali.
+* Fixed: salvataggio coerente dei campi source/external_platform nelle prenotazioni create manualmente.
+
+= 1.4.3 =
+* Fixed: normalizzazione stato no-show (no_show / no-show / noshow) durante il salvataggio prenotazione.
+* Fixed: sincronizzazione archivio checkout ora gestisce correttamente anche prenotazioni no-show.
+* Improved: visualizzazione stato no-show nella lista prenotazioni admin.
+
+= 1.4.2 =
+* Fixed: azione di gruppo "Elimina" nella lista prenotazioni ora eseguita correttamente.
+* Added: feedback in admin con conteggio prenotazioni eliminate e prenotazioni pagate saltate.
+
+= 1.4.1 =
+* Added: colonna "Pronta per archivio" nella lista prenotazioni con stato SI/NO e motivazione.
+* Added: supporto operativo per evidenziare subito i dati mancanti prima dell'archiviazione.
+* Fixed: allineamento della logica di idoneita archivio tra sincronizzazione automatica e interfaccia admin.
+
+= 1.4.0 =
+* Changed: le funzionalita check-in e Alloggiati Web non sono piu gestite da Domilocus e vengono demandate al plugin DomiCheck.
+* Fixed: pulizia compatibilita PHPCS/WPCS per mantenere il target WordPress 6.0+ senza placeholder %i.
+* Improved: menu admin e azioni legacy allineati al nuovo confine tra Domilocus e DomiCheck.
+
+= 1.3.1 =
+* Fixed: rilascio incrementale per aggiornamento WordPress.org con rilevamento update corretto.
+* Improved: allineamento versione plugin header e stable tag.
 
 = 1.3.0 =
 * Added: filtri avanzati nella lista prenotazioni admin (sorgente, periodo check-in, importo min/max).
