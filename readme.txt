@@ -2,7 +2,7 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 6.9.2
+Tested up to: 7.0
 Requires PHP: 8.0
 Stable tag: 1.4.6
 License: GPLv2 or later
