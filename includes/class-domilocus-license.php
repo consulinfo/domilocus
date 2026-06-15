@@ -180,6 +180,12 @@ class Domilocus_License {
                 'plan_required' => 'professional',
                 'group' => 'integrations'
             ),
+            'platform_payout_tracking' => array(
+                'label' => __('Tracciamento Payout OTA', 'domilocus'),
+                'description' => __('Monitoraggio pagamenti da Booking.com, Airbnb, VRBO con finestre e regole configurabili', 'domilocus'),
+                'plan_required' => 'professional',
+                'group' => 'integrations'
+            ),
 
             // PREMIUM FEATURES (top tier)
             'advanced_analytics' => array(

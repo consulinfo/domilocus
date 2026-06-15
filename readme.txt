@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.7 =
+* Improved: tracciamento payout OTA spostato al piano Professional con feature gating completo.
+* Fixed: payout cutoff esclusivo per Booking.com (check-out nel giorno payout escluso dal calcolo).
+* Improved: prompt di aggiornamento piano visibile agli utenti senza accesso alla funzione.
 
 = 1.4.6 =
 * Added: tracciamento payout piattaforme OTA (Booking.com, Airbnb, VRBO, Expedia) con frequenza, giorno settimana e base di calcolo configurabili.
