@@ -18,6 +18,7 @@ class Domilocus_Admin {
         add_action('admin_notices', array(__CLASS__, 'admin_notices'));
         add_filter('admin_footer_text', array(__CLASS__, 'admin_footer_text'));
         add_action('admin_init', array(__CLASS__, 'check_requirements'));
+        add_action('admin_init', array(__CLASS__, 'maybe_clear_stale_update_transient'));
     add_action('admin_post_domilocus_resend_booking_confirmation', array(__CLASS__, 'handle_resend_booking_confirmation'));
         add_filter('gettext_domilocus', array(__CLASS__, 'localize_booking_labels'), 10, 2);
         
@@ -271,6 +272,27 @@ class Domilocus_Admin {
         return $text;
     }
     
+    /**
+     * Periodically clears the update_plugins site transient so that persistent
+     * object caches (Redis, Memcached, file-based) don't suppress update notifications.
+     * Runs at most once every 12 hours on admin pages.
+     */
+    public static function maybe_clear_stale_update_transient() {
+        // Throttle: run at most once every 12 hours.
+        if ( get_site_transient( 'domilocus_update_flush_time' ) ) {
+            return;
+        }
+
+        // Delete from object cache (Redis/Memcached may hold a stale copy).
+        wp_cache_delete( 'update_plugins', 'site-transient' );
+        wp_cache_delete( 'update_plugins', 'transient' );
+        // Delete from DB so WordPress makes a fresh API call on next check.
+        delete_site_transient( 'update_plugins' );
+
+        // Don't run again for 12 hours.
+        set_site_transient( 'domilocus_update_flush_time', time(), 12 * HOUR_IN_SECONDS );
+    }
+
     /**
      * Check requirements
      */

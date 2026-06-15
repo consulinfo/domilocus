@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.4.8 =
+* Fixed: aggiornamenti automatici non rilevati con persistent object cache (Redis/Memcached) — il transient update_plugins viene ora svuotato ogni 12 ore lato admin.
 
 = 1.4.7 =
 * Improved: tracciamento payout OTA spostato al piano Professional con feature gating completo.
