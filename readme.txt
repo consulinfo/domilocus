@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,12 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.1 =
+* Fixed: data prossimo payout Booking.com mostrava il giovedì passato invece del prossimo.
+* Fixed: finestra payout dashboard mostrava prenotazioni già pagate invece delle prossime.
+* Added: marcatura automatica pagamenti piattaforme come "pagati" via WP-Cron giornaliero.
+* Added: feature gate `platform_payout_tracking` nella definizione licenze piano Professional.
 
 = 1.5.0 =
 * Fixed: piano rilevato come "free" quando il plugin addon (Premium/Professional/Starter) è attivo ma la licenza non è ancora validata — ora il piano viene letto direttamente dal plugin addon installato.
