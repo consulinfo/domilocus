@@ -632,9 +632,9 @@ class Domilocus_Admin_Menus {
                 </div>
                 <?php else : ?>
                 <div style="margin-top:16px; background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:20px;">
-                    <h3 style="margin:0 0 8px; color:#856404;"><?php esc_html_e('Funzione riservata al piano Professional', 'domilocus'); ?></h3>
-                    <p style="margin:0 0 12px; color:#856404;"><?php esc_html_e('Il tracciamento payout OTA (Booking.com, Airbnb, VRBO, Expedia) è disponibile nel piano Professional. Aggiorna il tuo piano per accedere a questa funzione.', 'domilocus'); ?></p>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Aggiorna piano', 'domilocus'); ?></a>
+                    <h3 style="margin:0 0 8px; color:#856404;"><?php esc_html_e('Tracciamento Payout OTA — Piano Professional richiesto', 'domilocus'); ?></h3>
+                    <p style="margin:0 0 12px; color:#856404;"><?php esc_html_e('Le statistiche payout di Booking.com, Airbnb, VRBO ed Expedia sono disponibili dal piano Professional in su. Attiva o aggiorna il tuo piano per visualizzare questa sezione.', 'domilocus'); ?></p>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Gestisci piano', 'domilocus'); ?></a>
                 </div>
                 <?php endif; ?>
                 

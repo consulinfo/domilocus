@@ -825,12 +825,12 @@ class Domilocus_Admin_Settings {
                 </tr>
                 <?php else : ?>
                 <tr>
-                    <th scope="row"><?php esc_html_e('Tracciamento Payout OTA', 'domilocus'); ?></th>
+                    <th scope="row"><?php esc_html_e('Regole Payout OTA', 'domilocus'); ?></th>
                     <td>
                         <div style="background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:12px;">
-                            <strong><?php esc_html_e('Piano Professional richiesto', 'domilocus'); ?></strong>
-                            <p style="margin:6px 0 10px;"><?php esc_html_e('Le regole payout OTA (Booking.com, Airbnb, VRBO, Expedia) sono disponibili nel piano Professional.', 'domilocus'); ?></p>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Aggiorna piano', 'domilocus'); ?></a>
+                            <strong><?php esc_html_e('Regole Payout OTA — Piano Professional richiesto', 'domilocus'); ?></strong>
+                            <p style="margin:6px 0 10px;"><?php esc_html_e('La configurazione delle finestre di pagamento per Booking.com, Airbnb, VRBO ed Expedia è disponibile dal piano Professional in su.', 'domilocus'); ?></p>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Gestisci piano', 'domilocus'); ?></a>
                         </div>
                     </td>
                 </tr>

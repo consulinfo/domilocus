@@ -252,18 +252,31 @@ class Domilocus_License {
      */
     public static function get_current_plan() {
         $data = self::get_license_data();
-        $plan = !empty($data['plan']) ? $data['plan'] : 'free';
-        
+        $plan = !empty($data['plan']) ? $data['plan'] : '';
+
+        // Fallback: se l'option non ha piano, rilevalo dai plugin addon attivi.
+        if ( empty( $plan ) ) {
+            if ( class_exists( 'Domilocus_Premium' ) || class_exists( 'Domilocus_Premium_Plugin' ) ) {
+                $plan = 'premium';
+            } elseif ( class_exists( 'Domilocus_Professional' ) || class_exists( 'Domilocus_Pro_Loader' ) ) {
+                $plan = 'professional';
+            } elseif ( class_exists( 'Domilocus_Starter' ) ) {
+                $plan = 'starter';
+            } else {
+                $plan = 'free';
+            }
+        }
+
         // Map plan variations to standard names
         $plan_mapping = array(
-            'basic' => 'starter',
-            'standard' => 'professional',
-            'pro' => 'professional',
-            'premium' => 'premium',
-            'enterprise' => 'enterprise'
+            'basic'        => 'starter',
+            'standard'     => 'professional',
+            'pro'          => 'professional',
+            'premium'      => 'premium',
+            'enterprise'   => 'enterprise',
         );
 
-        return isset($plan_mapping[$plan]) ? $plan_mapping[$plan] : $plan;
+        return isset( $plan_mapping[ $plan ] ) ? $plan_mapping[ $plan ] : $plan;
     }
 
     /**
