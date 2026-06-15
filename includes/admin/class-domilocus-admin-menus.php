@@ -1120,6 +1120,11 @@ class Domilocus_Admin_Menus {
         $weekday_key = isset($rule['payout_weekday']) ? (string) $rule['payout_weekday'] : '';
         $weekday_label = isset($weekday_labels[$weekday_key]) ? $weekday_labels[$weekday_key] : __('today', 'domilocus');
 
+        // Se payout_cutoff_exclusive = 1, le prenotazioni con checkout esattamente
+        // nel giorno di pagamento vengono escluse (spostate al ciclo successivo).
+        $cutoff_exclusive = ! empty( $rule['payout_cutoff_exclusive'] );
+        $cutoff_op = $cutoff_exclusive ? '<' : '<=';
+
         $amount = 0.0;
         $count = 0;
         $start_date = isset($window['start_date']) ? (string) $window['start_date'] : '';
@@ -1133,7 +1138,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1150,7 +1155,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1167,7 +1172,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1184,7 +1189,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1203,7 +1208,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1220,7 +1225,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1237,7 +1242,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1254,7 +1259,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1273,7 +1278,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1290,7 +1295,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_in >= %s
-                           AND check_in <= %s
+                           AND check_in {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1307,7 +1312,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COALESCE(SUM(COALESCE(total_amount, 0)), 0)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
@@ -1324,7 +1329,7 @@ class Domilocus_Admin_Menus {
                         "SELECT COUNT(*)
                          FROM {$wpdb->prefix}domilocus_bookings
                          WHERE check_out >= %s
-                           AND check_out <= %s
+                           AND check_out {$cutoff_op} %s
                            AND COALESCE(total_amount, 0) > 0
                            AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
                            AND (
