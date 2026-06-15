@@ -9,7 +9,9 @@ if (!defined('ABSPATH')) {
 }
 
 class Domilocus_Admin {
-    
+
+    private static $wporg_version_fetched = false;
+
     /**
      * Initialize
      */
@@ -19,6 +21,7 @@ class Domilocus_Admin {
         add_filter('admin_footer_text', array(__CLASS__, 'admin_footer_text'));
         add_action('admin_init', array(__CLASS__, 'check_requirements'));
         add_action('admin_init', array(__CLASS__, 'maybe_clear_stale_update_transient'));
+        add_filter('site_transient_update_plugins', array(__CLASS__, 'ensure_update_info'));
     add_action('admin_post_domilocus_resend_booking_confirmation', array(__CLASS__, 'handle_resend_booking_confirmation'));
         add_filter('gettext_domilocus', array(__CLASS__, 'localize_booking_labels'), 10, 2);
         
@@ -291,6 +294,83 @@ class Domilocus_Admin {
 
         // Don't run again for 12 hours.
         set_site_transient( 'domilocus_update_flush_time', time(), 12 * HOUR_IN_SECONDS );
+    }
+
+    /**
+     * Ensures Domilocus always appears in the update_plugins transient so that
+     * the plugin details popup shows the correct "ATTIVO" or "AGGIORNA" button
+     * even when the transient is served from a persistent object cache (Redis).
+     *
+     * @param object|mixed $transient Current value of the site transient.
+     * @return object|mixed Modified transient.
+     */
+    public static function ensure_update_info( $transient ) {
+        if ( ! is_object( $transient ) ) {
+            return $transient;
+        }
+
+        $plugin_file = plugin_basename( DOMILOCUS_PLUGIN_FILE );
+
+        // Already present in the transient — nothing to do.
+        if ( isset( $transient->response[ $plugin_file ] ) || isset( $transient->no_update[ $plugin_file ] ) ) {
+            return $transient;
+        }
+
+        // Avoid multiple HTTP calls in the same request.
+        if ( self::$wporg_version_fetched ) {
+            return $transient;
+        }
+        self::$wporg_version_fetched = true;
+
+        $remote = self::get_wporg_version();
+        if ( ! $remote ) {
+            return $transient;
+        }
+
+        $entry = (object) array(
+            'slug'        => 'domilocus',
+            'plugin'      => $plugin_file,
+            'new_version' => $remote,
+            'url'         => 'https://wordpress.org/plugins/domilocus/',
+            'package'     => 'https://downloads.wordpress.org/plugin/domilocus.' . $remote . '.zip',
+        );
+
+        if ( version_compare( $remote, DOMILOCUS_VERSION, '>' ) ) {
+            $transient->response[ $plugin_file ] = $entry;
+        } else {
+            $entry->package              = '';
+            $transient->no_update[ $plugin_file ] = $entry;
+        }
+
+        return $transient;
+    }
+
+    /**
+     * Fetches the latest Domilocus version from WordPress.org, cached 12 hours.
+     *
+     * @return string|null Version string, or null on failure.
+     */
+    private static function get_wporg_version() {
+        $cached = get_transient( 'domilocus_wporg_latest' );
+        if ( $cached !== false ) {
+            return $cached ?: null;
+        }
+
+        $response = wp_remote_get(
+            'https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&slug=domilocus&fields=version',
+            array( 'timeout' => 5 )
+        );
+
+        if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+            set_transient( 'domilocus_wporg_latest', '', HOUR_IN_SECONDS );
+            return null;
+        }
+
+        $data    = json_decode( wp_remote_retrieve_body( $response ) );
+        $version = ! empty( $data->version ) ? sanitize_text_field( $data->version ) : '';
+
+        set_transient( 'domilocus_wporg_latest', $version, 12 * HOUR_IN_SECONDS );
+        return $version ?: null;
     }
 
     /**
