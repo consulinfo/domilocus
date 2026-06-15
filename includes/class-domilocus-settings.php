@@ -567,6 +567,12 @@ class Domilocus_Settings {
         $target_weekday = (int) $weekday_map[$rule['payout_weekday']];
         $days_ahead = ($target_weekday - $current_weekday + 7) % 7;
 
+        // When checkout falls on the payout day itself and the rule excludes that day,
+        // the booking belongs to the NEXT week's payout cycle.
+        if ($days_ahead === 0 && !empty($rule['payout_cutoff_exclusive'])) {
+            $days_ahead = 7;
+        }
+
         $next_timestamp = strtotime('+' . $days_ahead . ' days', $timestamp);
         if (!$next_timestamp) {
             return '';
@@ -629,6 +635,41 @@ class Domilocus_Settings {
     }
 
     /**
+     * Resolve the next (or current) scheduled weekday date from today.
+     * Returns today if today IS the target weekday, otherwise the upcoming date.
+     */
+    public static function get_next_scheduled_weekday_date($weekday_key, $reference_date = '') {
+        $weekday_map = array(
+            'sunday' => 0,
+            'monday' => 1,
+            'tuesday' => 2,
+            'wednesday' => 3,
+            'thursday' => 4,
+            'friday' => 5,
+            'saturday' => 6,
+        );
+
+        if (!isset($weekday_map[$weekday_key])) {
+            return '';
+        }
+
+        $timestamp = $reference_date ? strtotime((string) $reference_date) : current_time('timestamp');
+        if (!$timestamp) {
+            $timestamp = current_time('timestamp');
+        }
+
+        $current_weekday = (int) wp_date('w', $timestamp);
+        $target_weekday = (int) $weekday_map[$weekday_key];
+        $days_ahead = ($target_weekday - $current_weekday + 7) % 7;
+        $next_timestamp = strtotime('+' . $days_ahead . ' days', $timestamp);
+        if (!$next_timestamp) {
+            return '';
+        }
+
+        return wp_date('Y-m-d', $next_timestamp);
+    }
+
+    /**
      * Build the payout window boundaries for a platform.
      */
     public static function get_platform_payout_window($platform) {
@@ -639,7 +680,8 @@ class Domilocus_Settings {
 
         $cutoff_date = '';
         if (!empty($rule['payout_weekday'])) {
-            $cutoff_date = self::get_last_scheduled_weekday_date($rule['payout_weekday']);
+            // Use the NEXT scheduled payout date so the dashboard shows the upcoming window.
+            $cutoff_date = self::get_next_scheduled_weekday_date($rule['payout_weekday']);
         }
         if ($cutoff_date === '') {
             $cutoff_date = wp_date('Y-m-d');
@@ -669,6 +711,121 @@ class Domilocus_Settings {
             'last_payout_date' => $last_payout_date,
             'rule' => $rule,
         );
+    }
+
+    /**
+     * WP-Cron callback: auto-marks platform bookings as paid when their payout date has passed.
+     * Runs daily. Compares the most-recent past payout Thursday against the stored
+     * last_payout_date, and updates any unresolved bookings in between.
+     */
+    public static function auto_mark_platform_payouts() {
+        if (!class_exists('Domilocus_License') || !Domilocus_License::is_feature_enabled('platform_payout_tracking')) {
+            return;
+        }
+
+        global $wpdb;
+        $defaults = self::get_platform_payment_rule_defaults();
+        $last_dates = self::get_platform_last_payout_dates();
+        $changed = false;
+
+        foreach (array_keys($defaults) as $platform_key) {
+            $rule = self::get_platform_payment_rule($platform_key);
+            if (empty($rule['payout_weekday'])) {
+                continue;
+            }
+
+            // The most recently elapsed payout date (last Thursday, etc.).
+            $elapsed_payout = self::get_last_scheduled_weekday_date($rule['payout_weekday']);
+            if (empty($elapsed_payout)) {
+                continue;
+            }
+
+            $registered = isset($last_dates[$platform_key]) ? $last_dates[$platform_key] : '';
+
+            // Already processed up to (or past) the most recent payout.
+            if ($registered !== '' && strtotime($registered) >= strtotime($elapsed_payout)) {
+                continue;
+            }
+
+            // Build the window: [last_registered+1 → elapsed_payout].
+            $start_date = '';
+            if ($registered !== '') {
+                $ts = strtotime($registered . ' +1 day');
+                $start_date = $ts ? wp_date('Y-m-d', $ts) : '';
+            }
+            if ($start_date === '') {
+                $ts = strtotime($elapsed_payout . ' -7 days');
+                $start_date = $ts ? wp_date('Y-m-d', $ts) : $elapsed_payout;
+            }
+
+            $cutoff_exclusive = !empty($rule['payout_cutoff_exclusive']);
+            $cutoff_op = $cutoff_exclusive ? '<' : '<=';
+            $basis_key = !empty($rule['payout_basis']) ? (string) $rule['payout_basis'] : 'check_out';
+            $date_col = ($basis_key === 'check_in') ? 'check_in' : 'check_out';
+
+            if ($platform_key === 'airbnb') {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->query($wpdb->prepare(
+                    "UPDATE {$wpdb->prefix}domilocus_bookings
+                     SET payment_status = 'paid'
+                     WHERE {$date_col} >= %s
+                       AND {$date_col} {$cutoff_op} %s
+                       AND COALESCE(total_amount, 0) > 0
+                       AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                       AND COALESCE(payment_status, 'unpaid') NOT IN ('paid', 'refunded')
+                       AND (
+                            LOWER(COALESCE(external_platform, '')) LIKE %s
+                            OR LOWER(COALESCE(source, '')) IN ('airbnb')
+                       )",
+                    $start_date,
+                    $elapsed_payout,
+                    '%airbnb%'
+                ));
+            } elseif ($platform_key === 'vrbo') {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->query($wpdb->prepare(
+                    "UPDATE {$wpdb->prefix}domilocus_bookings
+                     SET payment_status = 'paid'
+                     WHERE {$date_col} >= %s
+                       AND {$date_col} {$cutoff_op} %s
+                       AND COALESCE(total_amount, 0) > 0
+                       AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                       AND COALESCE(payment_status, 'unpaid') NOT IN ('paid', 'refunded')
+                       AND (
+                            LOWER(COALESCE(external_platform, '')) LIKE %s
+                            OR LOWER(COALESCE(source, '')) IN ('vrbo', 'homeaway')
+                       )",
+                    $start_date,
+                    $elapsed_payout,
+                    '%vrbo%'
+                ));
+            } else {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->query($wpdb->prepare(
+                    "UPDATE {$wpdb->prefix}domilocus_bookings
+                     SET payment_status = 'paid'
+                     WHERE {$date_col} >= %s
+                       AND {$date_col} {$cutoff_op} %s
+                       AND COALESCE(total_amount, 0) > 0
+                       AND COALESCE(status, '') NOT IN ('cancelled', 'rejected')
+                       AND COALESCE(payment_status, 'unpaid') NOT IN ('paid', 'refunded')
+                       AND (
+                            LOWER(COALESCE(external_platform, '')) LIKE %s
+                            OR LOWER(COALESCE(source, '')) IN ('booking', 'booking.com', 'bookingcom')
+                       )",
+                    $start_date,
+                    $elapsed_payout,
+                    '%booking%'
+                ));
+            }
+
+            $last_dates[$platform_key] = $elapsed_payout;
+            $changed = true;
+        }
+
+        if ($changed) {
+            update_option('domilocus_manager_platform_last_payout_dates', $last_dates);
+        }
     }
 }
 

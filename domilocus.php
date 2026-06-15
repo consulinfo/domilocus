@@ -68,10 +68,13 @@ final class Domilocus {
         register_activation_hook(__FILE__, array($this, 'activate'));
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
         register_uninstall_hook(__FILE__, array('Domilocus', 'uninstall'));
-        
+
         // Load textdomain early
         add_action('plugins_loaded', array($this, 'load_textdomain'), 1);
         add_action('init', array($this, 'init'), 0);
+
+        // Auto-mark platform payout bookings as paid (daily cron).
+        add_action('domilocus_daily_payout_check', array('Domilocus_Settings', 'auto_mark_platform_payouts'));
     }
     
     /**
@@ -123,7 +126,12 @@ final class Domilocus {
      * Init plugin when WordPress initializes
      */
     public function init() {
-    // Initialize post types
+        // Ensure daily payout cron is registered (handles already-active installs).
+        if (!wp_next_scheduled('domilocus_daily_payout_check')) {
+            wp_schedule_event(time(), 'daily', 'domilocus_daily_payout_check');
+        }
+
+        // Initialize post types
         Domilocus_Post_Types::init();
         
         // Initialize metaboxes
@@ -217,13 +225,17 @@ final class Domilocus {
      */
     public function activate() {
         Domilocus_Install::activate();
+        if (!wp_next_scheduled('domilocus_daily_payout_check')) {
+            wp_schedule_event(time(), 'daily', 'domilocus_daily_payout_check');
+        }
     }
-    
+
     /**
      * Plugin deactivation
      */
     public function deactivate() {
         Domilocus_Install::deactivate();
+        wp_clear_scheduled_hook('domilocus_daily_payout_check');
     }
     
     /**
