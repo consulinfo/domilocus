@@ -486,7 +486,7 @@ class Domilocus_Install {
         if (get_transient($lock_key)) {
             // Transient presente: verifica comunque le colonne critiche (ALTER è no-op se esistono già).
             global $wpdb;
-            $bookings_table = $wpdb->prefix . 'domilocus_bookings';
+            $bookings_table = esc_sql($wpdb->prefix . 'domilocus_bookings');
             // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
             $columns = $wpdb->get_col("DESCRIBE $bookings_table");
             if (!in_array('customer_residence_address', $columns, true) || !in_array('customer_country', $columns, true)) {

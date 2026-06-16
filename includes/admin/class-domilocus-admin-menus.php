@@ -367,16 +367,12 @@ class Domilocus_Admin_Menus {
         $translations = Domilocus_Translations::get_translations($current_language);
         global $wpdb;
 
-        $payout_tracking_enabled = class_exists('Domilocus_License') && Domilocus_License::is_feature_enabled('platform_payout_tracking');
-
         $weekday_labels = Domilocus_Settings::get_weekday_labels();
         $platform_keys = array('booking.com', 'airbnb', 'vrbo');
         $platform_dashboard = array();
-        if ($payout_tracking_enabled) {
-            foreach ($platform_keys as $platform_key) {
-                $window = Domilocus_Settings::get_platform_payout_window($platform_key);
-                $platform_dashboard[$platform_key] = self::get_platform_dashboard_settlement_data($platform_key, $window, $weekday_labels, $wpdb);
-            }
+        foreach ($platform_keys as $platform_key) {
+            $window = Domilocus_Settings::get_platform_payout_window($platform_key);
+            $platform_dashboard[$platform_key] = self::get_platform_dashboard_settlement_data($platform_key, $window, $weekday_labels, $wpdb);
         }
         
         // Get dashboard statistics
@@ -523,7 +519,6 @@ class Domilocus_Admin_Menus {
                         </div>
                     </div>
 
-                    <?php if ($payout_tracking_enabled) : ?>
                     <div class="domilocus-stat-card" style="background: #fff; border: 1px solid #ccd0d4; border-radius: 4px; padding: 20px;">
                         <div style="display: flex; align-items: center;">
                             <div style="background: #1e40af; color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
@@ -562,11 +557,9 @@ class Domilocus_Admin_Menus {
                             </div>
                         </div>
                     </div>
-                    <?php endif; ?>
                     
                 </div>
 
-                <?php if ($payout_tracking_enabled) : ?>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:10px;">
                     <?php foreach ($platform_keys as $platform_key) : ?>
                         <?php $data = isset($platform_dashboard[$platform_key]) ? $platform_dashboard[$platform_key] : array(); ?>
@@ -630,13 +623,6 @@ class Domilocus_Admin_Menus {
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <?php else : ?>
-                <div style="margin-top:16px; background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:20px;">
-                    <h3 style="margin:0 0 8px; color:#856404;"><?php esc_html_e('Tracciamento Payout OTA — Piano Professional richiesto', 'domilocus'); ?></h3>
-                    <p style="margin:0 0 12px; color:#856404;"><?php esc_html_e('Le statistiche payout di Booking.com, Airbnb, VRBO ed Expedia sono disponibili dal piano Professional in su. Attiva o aggiorna il tuo piano per visualizzare questa sezione.', 'domilocus'); ?></p>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Gestisci piano', 'domilocus'); ?></a>
-                </div>
-                <?php endif; ?>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
                     
@@ -1137,13 +1123,14 @@ class Domilocus_Admin_Menus {
         // Se payout_cutoff_exclusive = 1, le prenotazioni con checkout esattamente
         // nel giorno di pagamento vengono escluse (spostate al ciclo successivo).
         $cutoff_exclusive = ! empty( $rule['payout_cutoff_exclusive'] );
-        $cutoff_op = $cutoff_exclusive ? '<' : '<=';
+        $cutoff_op = esc_sql($cutoff_exclusive ? '<' : '<=');
 
         $amount = 0.0;
         $count = 0;
         $start_date = isset($window['start_date']) ? (string) $window['start_date'] : '';
         $cutoff_date = isset($window['cutoff_date']) ? (string) $window['cutoff_date'] : '';
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $cutoff_op is esc_sql()-validated internal operator (<, <=); cannot use placeholder for SQL operators
         if ($start_date !== '' && $cutoff_date !== '') {
             if ($platform_key === 'airbnb') {
                 if ($basis_key === 'check_in') {
@@ -1357,6 +1344,7 @@ class Domilocus_Admin_Menus {
                 }
             }
         }
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         return array(
             'label' => $platform_label,
@@ -1609,10 +1597,6 @@ class Domilocus_Admin_Menus {
         if (isset($_POST['domilocus_action']) && $_POST['domilocus_action'] === 'register_platform_payout') {
             if (!current_user_can('manage_options')) {
                 wp_die(esc_html__('You do not have permission to perform this action.', 'domilocus'));
-            }
-
-            if (!class_exists('Domilocus_License') || !Domilocus_License::is_feature_enabled('platform_payout_tracking')) {
-                wp_die(esc_html__('Funzione riservata al piano Professional.', 'domilocus'));
             }
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended

@@ -759,12 +759,13 @@ class Domilocus_Settings {
             }
 
             $cutoff_exclusive = !empty($rule['payout_cutoff_exclusive']);
-            $cutoff_op = $cutoff_exclusive ? '<' : '<=';
+            $cutoff_op = esc_sql($cutoff_exclusive ? '<' : '<=');
             $basis_key = !empty($rule['payout_basis']) ? (string) $rule['payout_basis'] : 'check_out';
-            $date_col = ($basis_key === 'check_in') ? 'check_in' : 'check_out';
+            $date_col = esc_sql(($basis_key === 'check_in') ? 'check_in' : 'check_out');
 
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $date_col and $cutoff_op are esc_sql()-validated internal values; SQL column names and operators cannot use $wpdb->prepare() placeholders
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             if ($platform_key === 'airbnb') {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->query($wpdb->prepare(
                     "UPDATE {$wpdb->prefix}domilocus_bookings
                      SET payment_status = 'paid'
@@ -782,7 +783,6 @@ class Domilocus_Settings {
                     '%airbnb%'
                 ));
             } elseif ($platform_key === 'vrbo') {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->query($wpdb->prepare(
                     "UPDATE {$wpdb->prefix}domilocus_bookings
                      SET payment_status = 'paid'
@@ -800,7 +800,6 @@ class Domilocus_Settings {
                     '%vrbo%'
                 ));
             } else {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $wpdb->query($wpdb->prepare(
                     "UPDATE {$wpdb->prefix}domilocus_bookings
                      SET payment_status = 'paid'
@@ -818,6 +817,8 @@ class Domilocus_Settings {
                     '%booking%'
                 ));
             }
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
+            // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
             $last_dates[$platform_key] = $elapsed_payout;
             $changed = true;

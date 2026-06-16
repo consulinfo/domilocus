@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.2 =
+* Fixed: warning PHPCS WordPress.DB.PreparedSQL.InterpolatedNotPrepared su query con operatori e nomi colonna dinamici.
+* Security: aggiunto esc_sql() su variabili interne usate in query SQL ($cutoff_op, $date_col, $bookings_table).
+* Security: aggiunto sanitize_text_field() su parametri GET amount nei filtri lista prenotazioni.
 
 = 1.5.1 =
 * Fixed: data prossimo payout Booking.com mostrava il giovedì passato invece del prossimo.
