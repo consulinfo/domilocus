@@ -126,7 +126,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'cancelled' => '#d9534f',
             'completed' => '#5bc0de'
         );
-        
+
         $labels = array(
             'pending' => __('Pending', 'domilocus'),
             'confirmed' => __('Confirmed', 'domilocus'),
@@ -134,14 +134,29 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'cancelled' => __('Cancelled', 'domilocus'),
             'completed' => __('Completed', 'domilocus')
         );
-        
+
         $color = $colors[$item->status] ?? '#999';
         $label = $labels[$item->status] ?? ucfirst($item->status);
-        
+
+        $is_past    = strtotime($item->check_out) < current_time('timestamp');
+        $is_settled = in_array($item->status, array('confirmed', 'completed'), true)
+                      && $item->payment_status === 'paid';
+        $is_closed  = in_array($item->status, array('cancelled', 'rejected', 'expired'), true);
+
+        $badge = '';
+        if ($is_past && !$is_closed) {
+            if ($is_settled) {
+                $badge = ' <span title="' . esc_attr__('Pronta per archivio', 'domilocus') . '" style="font-size:13px;">✅</span>';
+            } else {
+                $badge = ' <span title="' . esc_attr__('Da completare', 'domilocus') . '" style="font-size:13px;">⚠️</span>';
+            }
+        }
+
         return sprintf(
-            '<span style="color: %s; font-weight: bold;">%s</span>',
+            '<span style="color: %s; font-weight: bold;">%s</span>%s',
             $color,
-            $label
+            $label,
+            $badge
         );
     }
     
@@ -225,11 +240,16 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         // Filtri
         $where = array('1=1');
 
-        // Vista: attive (default) = check_out >= oggi | archivio = check_out < oggi | tutte
+        // Vista: attive (default) | archivio | da_completare | tutte
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $view = !empty($_GET['view']) ? sanitize_text_field(wp_unslash($_GET['view'])) : 'active';
         if ( 'archive' === $view ) {
             $where[] = 'check_out < CURDATE()';
+        } elseif ( 'da_completare' === $view ) {
+            // Prenotazioni passate non chiuse e non ancora risolte (non pagate o non confermate)
+            $where[] = 'check_out < CURDATE()';
+            $where[] = "status NOT IN ('cancelled', 'rejected', 'expired')";
+            $where[] = "NOT (status IN ('confirmed', 'completed') AND payment_status = 'paid')";
         } elseif ( 'all' !== $view ) { // default: active
             $where[] = 'check_out >= CURDATE()';
         }
@@ -398,6 +418,22 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'archive' === $current_view ? 'current' : '',
             __('Archivio', 'domilocus'),
             $count_archive
+        );
+
+        // Da completare (passate, non chiuse, non pagate/confermate)
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $count_incomplete = (int) $wpdb->get_var(
+            "SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings
+             WHERE check_out < CURDATE()
+               AND status NOT IN ('cancelled','rejected','expired')
+               AND NOT (status IN ('confirmed','completed') AND payment_status = 'paid')"
+        );
+        $links['da_completare'] = sprintf(
+            '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
+            admin_url('admin.php?page=domilocus-bookings&view=da_completare'),
+            'da_completare' === $current_view ? 'current' : '',
+            __('⚠️ Da completare', 'domilocus'),
+            $count_incomplete
         );
 
         // Tutte

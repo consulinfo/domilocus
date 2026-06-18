@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.4 =
+* Feature: lista prenotazioni — nuova vista "Da completare" per prenotazioni passate non ancora risolte (non pagate o non confermate).
+* Feature: lista prenotazioni — badge visivo ✅/⚠️ nella colonna stato per identificare rapidamente le prenotazioni pronte per archivio vs da gestire.
+* Fix: endpoint DOMILOCUS_LICENSE_ENDPOINT aggiornato alla nuova API Laravel.
 
 = 1.5.3 =
 * Changed: validazione licenza ora usa API Laravel dedicata (https://domilocus.consulinfo.it/api/license/validate) con risposta { valid, plan, expires_at, features }.
