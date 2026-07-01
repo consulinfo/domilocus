@@ -90,7 +90,18 @@
                                 <label for="modal-notes">` + i18n.notes + `</label>
                                 <textarea id="modal-notes" name="notes" rows="3" placeholder="` + i18n.notes_placeholder + `"></textarea>
                             </div>
-                            
+
+                            <div class="form-field form-field-checkboxes">
+                                <label>
+                                    <input type="checkbox" id="modal-block-checkin" name="block_checkin" value="1">
+                                    ` + i18n.block_checkin_label + `
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="modal-block-checkout" name="block_checkout" value="1">
+                                    ` + i18n.block_checkout_label + `
+                                </label>
+                            </div>
+
                             <div class="button-group">
                                 <button type="button" class="button day-details-cancel">` + i18n.cancel + `</button>
                                 <button type="button" class="button button-primary day-details-save">` + i18n.save + `</button>
@@ -170,6 +181,8 @@
             $('#modal-price').val(dayData.price || '');
             $('#modal-min-stay').val(dayData.min_stay || 1);
             $('#modal-notes').val(dayData.notes || '');
+            $('#modal-block-checkin').prop('checked', !!dayData.block_checkin);
+            $('#modal-block-checkout').prop('checked', !!dayData.block_checkout);
 
             // Prevent manual "booked" status edits (booked comes from bookings)
             if ((dayData.status || '') === 'booked') {
@@ -197,6 +210,8 @@
                 price: $('#modal-price').val(),
                 min_stay: $('#modal-min-stay').val(),
                 notes: $('#modal-notes').val(),
+                block_checkin: $('#modal-block-checkin').is(':checked') ? 1 : 0,
+                block_checkout: $('#modal-block-checkout').is(':checked') ? 1 : 0,
                 nonce: domilocus_admin_vars.nonce
             };
             

@@ -101,6 +101,8 @@ class Domilocus_Admin {
                     'booked' => __('Booked', 'domilocus'),
                     'blocked' => __('Blocked', 'domilocus'),
                     'maintenance' => __('Maintenance', 'domilocus'),
+                    'block_checkin_label' => __('Block check-in on this day', 'domilocus'),
+                    'block_checkout_label' => __('Block check-out on this day', 'domilocus'),
                     'price_per_night' => __('Price per night (€):', 'domilocus'),
                     'minimum_stay' => __('Minimum stay (nights):', 'domilocus'),
                     'notes' => __('Notes:', 'domilocus'),
@@ -878,7 +880,11 @@ class Domilocus_Admin {
         $price = isset($_POST['price']) ? floatval(wp_unslash($_POST['price'])) : 0;
         $min_stay = isset($_POST['min_stay']) ? intval(wp_unslash($_POST['min_stay'])) : 0;
         $notes = isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : '';
-        
+        // Checkboxes: absence in POST means unchecked, so always write these explicitly
+        // (unlike $status, a dropdown where an empty string means "leave unchanged").
+        $block_checkin = isset($_POST['block_checkin']) ? (bool) intval(wp_unslash($_POST['block_checkin'])) : false;
+        $block_checkout = isset($_POST['block_checkout']) ? (bool) intval(wp_unslash($_POST['block_checkout'])) : false;
+
         if (!$apartment_id || !$date) {
             wp_send_json_error('Invalid parameters');
         }
@@ -907,6 +913,8 @@ class Domilocus_Admin {
             'price' => $price_value,
             'min_stay' => $min_stay_value,
             'notes' => !empty($notes) ? $notes : null,
+            'block_checkin' => $block_checkin ? 1 : 0,
+            'block_checkout' => $block_checkout ? 1 : 0,
             'updated_at' => current_time('mysql')
         );
 

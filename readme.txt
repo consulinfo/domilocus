@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.5 =
+* Added: possibilità di bloccare separatamente il check-in o il check-out in una data specifica dal calendario admin, senza bloccare l'intero soggiorno che attraversa quel giorno (badge dedicato nella vista mese/settimana/giorno).
+* Added: hook `block_checkin`/`block_checkout` sulla tabella disponibilità, letti dagli addon a pagamento per l'enforcement lato prenotazione frontend.
 
 = 1.5.4 =
 * Feature: lista prenotazioni — nuova vista "Da completare" per prenotazioni passate non ancora risolte (non pagate o non confermate).

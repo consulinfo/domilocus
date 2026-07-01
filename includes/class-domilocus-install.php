@@ -256,6 +256,16 @@ class Domilocus_Install {
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("ALTER TABLE $availability_table ADD COLUMN notes text AFTER ical_feed_id");
             }
+
+            if (!in_array('block_checkin', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $availability_table ADD COLUMN block_checkin tinyint(1) NOT NULL DEFAULT 0 AFTER status");
+            }
+
+            if (!in_array('block_checkout', $columns)) {
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                $wpdb->query("ALTER TABLE $availability_table ADD COLUMN block_checkout tinyint(1) NOT NULL DEFAULT 0 AFTER block_checkin");
+            }
         }
     }
     
@@ -316,6 +326,8 @@ class Domilocus_Install {
             apartment_id bigint(20) NOT NULL,
             date date NOT NULL,
             status varchar(20) NOT NULL DEFAULT 'available',
+            block_checkin tinyint(1) NOT NULL DEFAULT 0,
+            block_checkout tinyint(1) NOT NULL DEFAULT 0,
             price decimal(10,2) DEFAULT NULL,
             min_stay int(11) DEFAULT NULL,
             booking_id bigint(20) DEFAULT NULL,

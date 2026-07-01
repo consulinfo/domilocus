@@ -494,10 +494,10 @@ class Domilocus_Calendar {
         
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $availability_data = $wpdb->get_results($wpdb->prepare(
-            "SELECT date, status, booking_id, notes, price, min_stay
+            "SELECT date, status, booking_id, notes, price, min_stay, block_checkin, block_checkout
             FROM {$table_name}
-            WHERE apartment_id = %d 
-            AND date >= %s 
+            WHERE apartment_id = %d
+            AND date >= %s
             AND date <= %s
         ", $apartment_id, $start_date, $end_date), OBJECT_K);
         // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -536,7 +536,9 @@ class Domilocus_Calendar {
                 'booking_id' => !empty($data->booking_id) ? (int) $data->booking_id : null,
                 'price' => $custom_price !== null ? $custom_price : $dynamic_price,
                 'min_stay' => $custom_min_stay ?: $min_stay,
-                'notes' => $data->notes
+                'notes' => $data->notes,
+                'block_checkin' => !empty($data->block_checkin),
+                'block_checkout' => !empty($data->block_checkout)
             );
         }
         
@@ -626,18 +628,25 @@ class Domilocus_Calendar {
             
             $status = $day_data['status'] ?? 'available';
             $classes[] = $status;
-            
+
+            if (!empty($day_data['block_checkin'])) {
+                $classes[] = 'no-checkin';
+            }
+            if (!empty($day_data['block_checkout'])) {
+                $classes[] = 'no-checkout';
+            }
+
             if (!in_array('past', $classes)) {
                 $classes[] = 'clickable';
             }
-            
+
             $html .= '<div class="' . implode(' ', $classes) . '" data-date="' . $date . '">';
             $html .= '<span class="day-number">' . esc_html($day) . '</span>';
-            
+
             if (!empty($day_data['price'])) {
                 $html .= '<span class="day-price">€ ' . number_format($day_data['price'], 2) . '</span>';
             }
-            
+
             if ($status !== 'available') {
                 $status_labels = array(
                     'booked' => __('Booked', 'domilocus'),
@@ -646,7 +655,14 @@ class Domilocus_Calendar {
                 );
                 $html .= '<span class="day-status">' . esc_html($status_labels[$status] ?? $status) . '</span>';
             }
-            
+
+            if (!empty($day_data['block_checkin'])) {
+                $html .= '<span class="day-restriction no-checkin" title="' . esc_attr__('Check-in not allowed', 'domilocus') . '">&#8618;</span>';
+            }
+            if (!empty($day_data['block_checkout'])) {
+                $html .= '<span class="day-restriction no-checkout" title="' . esc_attr__('Check-out not allowed', 'domilocus') . '">&#8617;</span>';
+            }
+
             $html .= '</div>';
         }
         
@@ -675,6 +691,14 @@ class Domilocus_Calendar {
         $html .= '<div class="legend-item">';
         $html .= '<span class="legend-color today"></span>';
         $html .= '<span class="legend-text">' . __('Today', 'domilocus') . '</span>';
+        $html .= '</div>';
+        $html .= '<div class="legend-item">';
+        $html .= '<span class="day-restriction no-checkin">&#8618;</span>';
+        $html .= '<span class="legend-text">' . __('Check-in not allowed', 'domilocus') . '</span>';
+        $html .= '</div>';
+        $html .= '<div class="legend-item">';
+        $html .= '<span class="day-restriction no-checkout">&#8617;</span>';
+        $html .= '<span class="legend-text">' . __('Check-out not allowed', 'domilocus') . '</span>';
         $html .= '</div>';
         $html .= '</div>';
         
@@ -708,6 +732,8 @@ class Domilocus_Calendar {
                 'price' => null,
                 'min_stay' => null,
                 'notes' => null,
+                'block_checkin' => false,
+                'block_checkout' => false,
             );
             $cursor->modify('+1 day');
         }
@@ -715,7 +741,7 @@ class Domilocus_Calendar {
         // Pull stored per-day availability rows
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $availability_rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT date, status, booking_id, notes, price, min_stay
+            "SELECT date, status, booking_id, notes, price, min_stay, block_checkin, block_checkout
              FROM {$wpdb->prefix}domilocus_availability
              WHERE apartment_id = %d AND date BETWEEN %s AND %s",
             $apartment_id,
@@ -740,6 +766,8 @@ class Domilocus_Calendar {
             $data[$row->date]['notes'] = isset($row->notes) ? $row->notes : null;
             $data[$row->date]['price'] = isset($row->price) && $row->price !== null ? (float) $row->price : null;
             $data[$row->date]['min_stay'] = isset($row->min_stay) && $row->min_stay !== null ? (int) $row->min_stay : null;
+            $data[$row->date]['block_checkin'] = !empty($row->block_checkin);
+            $data[$row->date]['block_checkout'] = !empty($row->block_checkout);
         }
 
         // Overlay bookings to guarantee booked status even if availability rows are missing
@@ -805,13 +833,25 @@ class Domilocus_Calendar {
                 $classes[] = 'today';
             }
             $classes[] = $day_data['status'];
-            
+            if (!empty($day_data['block_checkin'])) {
+                $classes[] = 'no-checkin';
+            }
+            if (!empty($day_data['block_checkout'])) {
+                $classes[] = 'no-checkout';
+            }
+
             $html .= '<div class="' . implode(' ', $classes) . '" data-date="' . $date_str . '">';
             $html .= '<div class="day-header">';
             $html .= '<span class="day-name">' . $date->format('l') . '</span>';
             $html .= '<span class="day-number">' . $date->format('j M Y') . '</span>';
+            if (!empty($day_data['block_checkin'])) {
+                $html .= '<span class="day-restriction no-checkin" title="' . esc_attr__('Check-in not allowed', 'domilocus') . '">&#8618;</span>';
+            }
+            if (!empty($day_data['block_checkout'])) {
+                $html .= '<span class="day-restriction no-checkout" title="' . esc_attr__('Check-out not allowed', 'domilocus') . '">&#8617;</span>';
+            }
             $html .= '</div>';
-            
+
             if ($day_data['booking_id']) {
                 $booking = $this->get_booking_details($day_data['booking_id']);
                 if ($booking) {
@@ -852,7 +892,7 @@ class Domilocus_Calendar {
         // Pull stored day row (if any)
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $availability = $wpdb->get_row($wpdb->prepare(
-            "SELECT date, status, booking_id, notes, price, min_stay
+            "SELECT date, status, booking_id, notes, price, min_stay, block_checkin, block_checkout
              FROM {$wpdb->prefix}domilocus_availability
              WHERE apartment_id = %d AND date = %s",
             $apartment_id,
@@ -872,6 +912,8 @@ class Domilocus_Calendar {
                 'notes' => ($availability && isset($availability->notes)) ? $availability->notes : null,
                 'price' => ($availability && isset($availability->price) && $availability->price !== null) ? (float) $availability->price : null,
                 'min_stay' => ($availability && isset($availability->min_stay) && $availability->min_stay !== null) ? (int) $availability->min_stay : null,
+                'block_checkin' => $availability ? !empty($availability->block_checkin) : false,
+                'block_checkout' => $availability ? !empty($availability->block_checkout) : false,
             )
         );
 
@@ -953,6 +995,12 @@ class Domilocus_Calendar {
             );
             $message = $labels[$data['status']] ?? __('Status not available.', 'domilocus');
             $html .= '<p>' . esc_html($message) . '</p>';
+            if (!empty($data['block_checkin'])) {
+                $html .= '<p class="day-restriction-note no-checkin">' . esc_html__('Check-in is not allowed on this date.', 'domilocus') . '</p>';
+            }
+            if (!empty($data['block_checkout'])) {
+                $html .= '<p class="day-restriction-note no-checkout">' . esc_html__('Check-out is not allowed on this date.', 'domilocus') . '</p>';
+            }
             $html .= '<p><a href="' . admin_url('admin.php?page=domilocus-bookings&action=new') . '" class="button button-primary">' . __('Add New Booking', 'domilocus') . '</a></p>';
             $html .= '</div>';
         }
