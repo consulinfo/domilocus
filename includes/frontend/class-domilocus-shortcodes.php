@@ -1113,6 +1113,19 @@ class Domilocus_Shortcodes {
                     <?php esc_html_e('Print Confirmation', 'domilocus'); ?>
                 </button>
             </div>
+
+            <?php
+            /**
+             * Fires at the end of the guest-facing booking confirmation page,
+             * after all built-in booking details. Used by premium add-ons
+             * (e.g. domilocus-premium) to inject extra guest-facing sections
+             * tied to this booking, such as the smart check-in lockbox code.
+             *
+             * @param object $booking         The booking row (see Domilocus_Booking::get_booking()).
+             * @param int    $booking_post_id  Linked WP post ID, or 0 if none.
+             */
+            do_action( 'domilocus_booking_confirmation_extra', $booking, $booking_post_id );
+            ?>
         </div>
         <?php
         return ob_get_clean();
