@@ -159,10 +159,13 @@ class Domilocus_Receipts {
                 </div>
             </div>
 
-            <!-- Data form -->
+            <?php if ($online_checkin_enabled): ?>
+            <!-- Data form — solo se la funzione è effettivamente disponibile: un
+                 messaggio "disponibile dal piano Professional" non ha senso
+                 mostrato all'ospite, è un promemoria per l'host, non per chi
+                 sta prenotando la sua casa. -->
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:10px;">
                 <h3 style="margin:0 0 4px;font-size:15px;">✏️ Dati ospite per la ricevuta</h3>
-                <?php if ($online_checkin_enabled): ?>
                 <p style="margin:0 0 16px;color:#4b5563;font-size:13px;">Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.</p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('domilocus_receipt_portal_save', 'domilocus_receipt_portal_save_nonce'); ?>
@@ -196,10 +199,8 @@ class Domilocus_Receipts {
                         <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">💾 Salva dati</button>
                     </p>
                 </form>
-                <?php else: ?>
-                <p style="margin:0;color:#6b7280;font-size:13px;">La raccolta online dei dati documento e disponibile dal piano Professional.</p>
-                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
         <?php
         return (string) ob_get_clean();
