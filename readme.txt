@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.8 =
+* Changed: il campo "Numero di prenotazione piattaforma" nella scheda prenotazione admin è ora modificabile a mano (prima veniva compilato solo dall'importazione iCal) — utile per le prenotazioni arrivate da un canale OTA senza quel dato.
+* Changed: il "Codice Accesso APP" è ora modificabile a mano oltre che generabile automaticamente, con controllo che impedisce di assegnare per errore un codice già usato da un'altra prenotazione.
+* Changed: le etichette del numero di prenotazione piattaforma (admin e lato ospite) sono state uniformate in "Numero di prenotazione %s".
 
 = 1.5.7 =
 * Fixed: il messaggio "disponibile dal piano Professional" per la raccolta dati ospite (ricevuta) non compare più lato ospite sulla pagina di conferma prenotazione — era un promemoria per l'host, non per chi prenota; resta comunque visibile nella pagina admin delle funzionalità per piano.

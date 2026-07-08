@@ -554,29 +554,33 @@ class Domilocus_Booking_Form {
                                     $platform_code = $booking->platform_booking_code ?? '';
                                     $ical_uid_val  = $booking->ical_uid ?? '';
                                     ?>
-                                    <?php if (!empty($platform_code)) : ?>
+                                    <?php
+                                    $platform_labels = array(
+                                        'airbnb'      => 'Airbnb',
+                                        'vrbo'        => 'VRBO',
+                                        'booking.com' => 'Booking.com',
+                                        'expedia'     => 'Expedia',
+                                    );
+                                    $platform_label = isset($platform_labels[$ext_platform]) ? $platform_labels[$ext_platform] : esc_html($ext_platform);
+                                    if ( $platform_label ) {
+                                        // translators: %s: platform name (e.g. Airbnb, VRBO)
+                                        $booking_code_label = sprintf( __( 'Numero di prenotazione %s', 'domilocus' ), $platform_label );
+                                    } else {
+                                        $booking_code_label = __( 'Numero di prenotazione piattaforma', 'domilocus' );
+                                    }
+                                    ?>
                                     <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px">
-                                        <span style="font-size:11px;color:#555;display:block;margin-bottom:4px">
-                                            <?php
-                                            $platform_labels = array(
-                                                'airbnb'      => 'Airbnb',
-                                                'vrbo'        => 'VRBO',
-                                                'booking.com' => 'Booking.com',
-                                                'expedia'     => 'Expedia',
-                                            );
-                                            $platform_label = isset($platform_labels[$ext_platform]) ? $platform_labels[$ext_platform] : esc_html($ext_platform);
-                                            if ( $platform_label ) {
-                                                // translators: %s: platform name (e.g. Airbnb, VRBO)
-                                                $booking_code_label = sprintf( __( 'Codice prenotazione %s', 'domilocus' ), $platform_label );
-                                            } else {
-                                                $booking_code_label = __( 'Codice prenotazione piattaforma', 'domilocus' );
-                                            }
-                                            echo esc_html( $booking_code_label );
-                                            ?>
-                                        </span>
-                                        <strong style="font-family:monospace;font-size:15px;letter-spacing:1px"><?php echo esc_html($platform_code); ?></strong>
+                                        <label for="platform_booking_code" style="font-size:11px;color:#555;display:block;margin-bottom:4px">
+                                            <?php echo esc_html( $booking_code_label ); ?>
+                                        </label>
+                                        <input type="text" id="platform_booking_code" name="platform_booking_code"
+                                               value="<?php echo esc_attr($platform_code); ?>"
+                                               class="widefat" style="font-family:monospace;font-size:15px;letter-spacing:1px"
+                                               placeholder="<?php esc_attr_e('Es. HMXY123456', 'domilocus'); ?>">
+                                        <p class="description" style="margin:4px 0 0;font-size:11px;">
+                                            <?php esc_html_e('Compilato automaticamente dall\'importazione iCal; puoi inserirlo o correggerlo a mano.', 'domilocus'); ?>
+                                        </p>
                                     </div>
-                                    <?php endif; ?>
                                     <?php if (!empty($ical_uid_val)) : ?>
                                     <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#f0f4ff;border-left:4px solid #7b9cda;border-radius:3px">
                                         <span style="font-size:11px;color:#555;display:block;margin-bottom:4px"><?php esc_html_e('iCal UID (identificativo univoco feed)', 'domilocus'); ?></span>
@@ -622,13 +626,16 @@ class Domilocus_Booking_Form {
                                         <?php endif; ?>
                                     </div>
                                     <div class="misc-pub-section" style="margin-top:12px">
-                                        <label><?php esc_html_e('Codice generato', 'domilocus'); ?></label>
+                                        <label for="access_code_display"><?php esc_html_e('Codice generato', 'domilocus'); ?></label>
                                         <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
-                                            <input type="text" id="access_code_display" readonly
+                                            <input type="text" id="access_code_display" name="access_code"
                                                    value="<?php echo esc_attr($current_code); ?>"
                                                    class="widefat"
                                                    style="font-family:monospace;font-weight:700;font-size:16px;background:#f0f4ff;letter-spacing:2px" />
                                         </div>
+                                        <p class="description" style="margin:4px 0 0;font-size:11px;">
+                                            <?php esc_html_e('Puoi generarlo automaticamente qui sotto oppure scriverlo tu (utile per le prenotazioni da piattaforma, dove non arriva da nessuna fonte esterna): il valore scritto a mano si salva con "Update Booking" in fondo alla pagina.', 'domilocus'); ?>
+                                        </p>
                                     </div>
                                     <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
                                         <button type="button" id="btn_generate_code"
@@ -903,7 +910,7 @@ class Domilocus_Booking_Form {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $orig = $wpdb->get_row(
                 $wpdb->prepare(
-                    "SELECT source, ical_uid, external_platform, platform_booking_code FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    "SELECT source, ical_uid, external_platform, platform_booking_code, access_code FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
                     $booking_id
                 )
             );
@@ -921,9 +928,44 @@ class Domilocus_Booking_Form {
                 if (empty($booking_data['external_platform']) && !empty($orig->external_platform)) {
                     $booking_data['external_platform'] = $orig->external_platform;
                 }
-                // Always preserve platform_booking_code — admin cannot change it from the form.
-                if (!empty($orig->platform_booking_code)) {
+                // platform_booking_code è ora modificabile dall'host: se il campo
+                // è presente nel POST (sempre, essendo un input nel form) vince il
+                // valore inviato, così l'host può inserirlo/correggerlo o svuotarlo
+                // intenzionalmente; solo se il campo fosse del tutto assente dal
+                // POST (form diverso da questo) si preserva il valore esistente.
+                if (isset($_POST['platform_booking_code'])) {
+                    $booking_data['platform_booking_code'] = sanitize_text_field(wp_unslash($_POST['platform_booking_code']));
+                } elseif (!empty($orig->platform_booking_code)) {
                     $booking_data['platform_booking_code'] = $orig->platform_booking_code;
+                }
+
+                // access_code: come platform_booking_code, ora modificabile a
+                // mano (utile per le prenotazioni da piattaforma, dove non
+                // arriva da nessuna fonte esterna) oltre che generabile
+                // automaticamente. L'app di check-in cerca le prenotazioni
+                // per questo codice, quindi due prenotazioni non possono
+                // condividerlo: se il valore digitato appartiene già a
+                // un'altra prenotazione, si preserva quello esistente invece
+                // di creare un duplicato silenzioso.
+                if (isset($_POST['access_code'])) {
+                    $submitted_access_code = sanitize_text_field(wp_unslash($_POST['access_code']));
+                    if ($submitted_access_code === '') {
+                        $booking_data['access_code'] = '';
+                    } else {
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                        $access_code_owner = $wpdb->get_var($wpdb->prepare(
+                            "SELECT id FROM {$wpdb->prefix}domilocus_bookings WHERE access_code = %s AND id != %d",
+                            $submitted_access_code,
+                            $booking_id
+                        ));
+                        if ($access_code_owner) {
+                            $booking_data['access_code'] = $orig->access_code ?? '';
+                        } else {
+                            $booking_data['access_code'] = $submitted_access_code;
+                        }
+                    }
+                } elseif (!empty($orig->access_code)) {
+                    $booking_data['access_code'] = $orig->access_code;
                 }
             }
         }
