@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.8
+Stable tag: 1.5.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,13 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.10 =
+* Changed: "Ripara Database" (Impostazioni → Avanzate) ora svuota anche la cache oggetti persistente, se attiva (es. plugin domilocus-cache) — utile dopo modifiche dirette al database, che una cache persistente non può altrimenti rilevare.
+
+= 1.5.9 =
+* Added: nuova scheda impostazioni "Condizioni di soggiorno" — testo del regolamento con editor, numero di versione a scelta dell'host e data di pubblicazione automatica. Nuovo shortcode `[domilocus_condizioni_soggiorno]` per pubblicarlo su una pagina.
+* Added: helper `domilocus_get_terms_conditions()` riusabile dagli addon per congelare la versione corrente delle condizioni al momento della prenotazione/firma, così un aggiornamento successivo del regolamento non modifica retroattivamente ciò che un ospite ha già accettato.
 
 = 1.5.8 =
 * Changed: il campo "Numero di prenotazione piattaforma" nella scheda prenotazione admin è ora modificabile a mano (prima veniva compilato solo dall'importazione iCal) — utile per le prenotazioni arrivate da un canale OTA senza quel dato.

@@ -149,6 +149,11 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_emails', 'domilocus_manager_smtp_password', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_emails', 'domilocus_manager_smtp_timeout', array('sanitize_callback' => 'absint'));
 
+        // Condizioni di soggiorno (versionate)
+        register_setting('domilocus_terms', 'domilocus_terms_content', array('sanitize_callback' => 'wp_kses_post'));
+        register_setting('domilocus_terms', 'domilocus_terms_version', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_terms', 'domilocus_terms_published_at', array('sanitize_callback' => 'sanitize_text_field'));
+
         // Advanced settings
         register_setting('domilocus_advanced', 'domilocus_manager_google_maps_api_key', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_advanced', 'domilocus_manager_enable_reviews', array('sanitize_callback' => 'sanitize_text_field'));
@@ -172,6 +177,7 @@ class Domilocus_Admin_Settings {
             'general'  => __('Generali', 'domilocus'),
             'payments' => __('Pagamenti', 'domilocus'),
             'emails'   => __('Email', 'domilocus'),
+            'terms'    => __('Condizioni di soggiorno', 'domilocus'),
             'advanced' => __('Avanzate', 'domilocus'),
         );
 
@@ -197,7 +203,7 @@ class Domilocus_Admin_Settings {
             </h2>
 
             <?php
-            $core_tabs = array('general', 'payments', 'emails', 'advanced');
+            $core_tabs = array('general', 'payments', 'emails', 'terms', 'advanced');
             if (in_array($current_tab, $core_tabs, true)) :
             ?>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -215,6 +221,9 @@ class Domilocus_Admin_Settings {
                             break;
                         case 'emails':
                             self::render_email_settings();
+                            break;
+                        case 'terms':
+                            self::render_terms_settings();
                             break;
                         case 'advanced':
                             self::render_advanced_settings();
@@ -717,8 +726,6 @@ class Domilocus_Admin_Settings {
                     </td>
                 </tr>
 
-                <?php $payout_tracking_enabled = class_exists('Domilocus_License') && Domilocus_License::is_feature_enabled('platform_payout_tracking'); ?>
-                <?php if ($payout_tracking_enabled) : ?>
                 <tr>
                     <th scope="row"><?php esc_html_e('Regole pagamento piattaforme', 'domilocus'); ?></th>
                     <td>
@@ -823,18 +830,6 @@ class Domilocus_Admin_Settings {
                         </table>
                     </td>
                 </tr>
-                <?php else : ?>
-                <tr>
-                    <th scope="row"><?php esc_html_e('Regole Payout OTA', 'domilocus'); ?></th>
-                    <td>
-                        <div style="background:#fff3cd; border:1px solid #ffc107; border-radius:4px; padding:12px;">
-                            <strong><?php esc_html_e('Regole Payout OTA — Piano Professional richiesto', 'domilocus'); ?></strong>
-                            <p style="margin:6px 0 10px;"><?php esc_html_e('La configurazione delle finestre di pagamento per Booking.com, Airbnb, VRBO ed Expedia è disponibile dal piano Professional in su.', 'domilocus'); ?></p>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=domilocus-license')); ?>" class="button button-primary"><?php esc_html_e('Gestisci piano', 'domilocus'); ?></a>
-                        </div>
-                    </td>
-                </tr>
-                <?php endif; ?>
             </tbody>
         </table>
         <?php
@@ -988,6 +983,61 @@ class Domilocus_Admin_Settings {
     /**
      * Render advanced settings tab.
      */
+    /**
+     * Render condizioni di soggiorno tab (regolamento versionato).
+     */
+    private static function render_terms_settings() {
+        $content      = get_option('domilocus_terms_content', '');
+        $version      = get_option('domilocus_terms_version', '');
+        $published_at = get_option('domilocus_terms_published_at', '');
+        ?>
+        <table class="form-table" role="presentation">
+            <tbody>
+                <tr>
+                    <th scope="row"><label for="domilocus_terms_version"><?php esc_html_e('Versione', 'domilocus'); ?></label></th>
+                    <td>
+                        <input type="text" id="domilocus_terms_version" name="domilocus_terms_version" class="regular-text" value="<?php echo esc_attr($version); ?>" placeholder="es. 2.4" />
+                        <p class="description"><?php esc_html_e('Cambia questo valore solo quando pubblichi una modifica sostanziale del regolamento: la data di pubblicazione si aggiorna automaticamente insieme alla versione. Una correzione di battitura non richiede un nuovo numero di versione.', 'domilocus'); ?></p>
+                        <?php if ($published_at !== '') : ?>
+                            <p class="description">
+                                <?php
+                                printf(
+                                    /* translators: %s: publish date */
+                                    esc_html__('Ultima pubblicazione: %s', 'domilocus'),
+                                    esc_html(date_i18n(get_option('domilocus_manager_date_format', 'd/m/Y') . ' H:i', strtotime($published_at)))
+                                );
+                                ?>
+                            </p>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="domilocus_terms_content"><?php esc_html_e('Regolamento della struttura', 'domilocus'); ?></label></th>
+                    <td>
+                        <?php
+                        wp_editor($content, 'domilocus_terms_content', array(
+                            'textarea_name' => 'domilocus_terms_content',
+                            'media_buttons' => false,
+                            'textarea_rows' => 14,
+                        ));
+                        ?>
+                        <p class="description">
+                            <?php
+                            printf(
+                                /* translators: %s: shortcode */
+                                esc_html__('Pubblica questo contenuto su una Pagina qualunque con lo shortcode %s.', 'domilocus'),
+                                '<code>[domilocus_condizioni_soggiorno]</code>'
+                            );
+                            ?>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
+    }
+
     private static function render_advanced_settings() {
         ?>
         <table class="form-table" role="presentation">
@@ -1041,7 +1091,7 @@ class Domilocus_Admin_Settings {
                         <a href="<?php echo esc_url($repair_url); ?>" class="button button-secondary">
                             <?php esc_html_e('Esegui migrazione DB', 'domilocus'); ?>
                         </a>
-                        <p class="description"><?php esc_html_e('Aggiunge le colonne mancanti alla tabella prenotazioni (customer_fiscal_code, customer_residence_address, customer_country).', 'domilocus'); ?></p>
+                        <p class="description"><?php esc_html_e('Aggiunge le colonne mancanti alla tabella prenotazioni (customer_fiscal_code, customer_residence_address, customer_country) e svuota la cache oggetti persistente, se attiva — utile dopo modifiche dirette al database.', 'domilocus'); ?></p>
                     </td>
                 </tr>
             </tbody>
@@ -1077,6 +1127,9 @@ class Domilocus_Admin_Settings {
             case 'emails':
                 self::save_email_settings();
                 break;
+            case 'terms':
+                self::save_terms_settings();
+                break;
             case 'advanced':
                 self::save_advanced_settings();
                 break;
@@ -1101,6 +1154,12 @@ class Domilocus_Admin_Settings {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'domilocus'));
         }
         Domilocus_Install::force_migrate_database();
+
+        // Svuota anche la object cache persistente (se attiva, es. domilocus-cache):
+        // dopo una riparazione/migrazione diretta del DB, i valori cache potrebbero
+        // non corrispondere più alle righe reali finché non si forza un flush.
+        wp_cache_flush();
+
         wp_safe_redirect(add_query_arg(array(
             'page'             => 'domilocus-settings',
             'tab'              => 'advanced',
@@ -1462,6 +1521,29 @@ class Domilocus_Admin_Settings {
     /**
      * Save advanced settings fields.
      */
+    /**
+     * Persist condizioni di soggiorno (regolamento versionato).
+     *
+     * La data di pubblicazione si aggiorna solo se la versione è realmente
+     * cambiata rispetto a quella salvata — così una modifica minore al testo
+     * senza cambio di versione non sposta la data mostrata pubblicamente.
+     */
+    private static function save_terms_settings() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $new_content = isset($_POST['domilocus_terms_content']) ? wp_kses_post(wp_unslash($_POST['domilocus_terms_content'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $new_version = isset($_POST['domilocus_terms_version']) ? sanitize_text_field(wp_unslash($_POST['domilocus_terms_version'])) : '';
+
+        $old_version = get_option('domilocus_terms_version', '');
+
+        update_option('domilocus_terms_content', $new_content);
+        update_option('domilocus_terms_version', $new_version);
+
+        if ($new_version !== $old_version) {
+            update_option('domilocus_terms_published_at', current_time('mysql'));
+        }
+    }
+
     private static function save_advanced_settings() {
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (isset($_POST['domilocus_manager_google_maps_api_key'])) {
