@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.10
+Stable tag: 1.5.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,13 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.12 =
+* Added: nuovo campo "Pagina condizioni di soggiorno" nella scheda impostazioni "Condizioni di soggiorno" — usato per collegare un link cliccabile alle condizioni dalla checkbox del modulo di prenotazione.
+* Removed: le impostazioni "Pagina riepilogo prenotazione Locale/OTA" e la relativa rigenerazione automatica — erano collegate a due shortcode mai realmente registrati nel codice (scaffold incompleto, nessuna funzione perduta: la pagina di riepilogo unica esistente resta invariata e continua a funzionare per entrambi i casi).
+
+= 1.5.11 =
+* Added: nuovo campo "Codice cassetta chiavi di default" nelle impostazioni di ogni appartamento (visibile solo con Domilocus Premium attivo) — permette al Check-in Autonomo di attivarsi automaticamente per le prenotazioni dirette dal sito, senza intervento manuale dell'host per ogni singola prenotazione.
 
 = 1.5.10 =
 * Changed: "Ripara Database" (Impostazioni → Avanzate) ora svuota anche la cache oggetti persistente, se attiva (es. plugin domilocus-cache) — utile dopo modifiche dirette al database, che una cache persistente non può altrimenti rilevare.

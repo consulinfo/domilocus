@@ -57,8 +57,6 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_general', 'domilocus_receipt_page_id', array('sanitize_callback' => 'absint'));
         register_setting('domilocus_general', 'domilocus_checkin_page_id', array('sanitize_callback' => 'absint'));
         register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation', array('sanitize_callback' => 'absint'));
-        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_local', array('sanitize_callback' => 'absint'));
-        register_setting('domilocus_general', 'domilocus_manager_page_booking_confirmation_ota', array('sanitize_callback' => 'absint'));
         register_setting('domilocus_general', 'domilocus_manager_receipt_requirement', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_documents_requirement', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_general', 'domilocus_manager_receipt_optional_visibility', array('sanitize_callback' => 'sanitize_text_field'));
@@ -153,6 +151,7 @@ class Domilocus_Admin_Settings {
         register_setting('domilocus_terms', 'domilocus_terms_content', array('sanitize_callback' => 'wp_kses_post'));
         register_setting('domilocus_terms', 'domilocus_terms_version', array('sanitize_callback' => 'sanitize_text_field'));
         register_setting('domilocus_terms', 'domilocus_terms_published_at', array('sanitize_callback' => 'sanitize_text_field'));
+        register_setting('domilocus_terms', 'domilocus_terms_page_id', array('sanitize_callback' => 'absint'));
 
         // Advanced settings
         register_setting('domilocus_advanced', 'domilocus_manager_google_maps_api_key', array('sanitize_callback' => 'sanitize_text_field'));
@@ -361,34 +360,6 @@ class Domilocus_Admin_Settings {
                             'option_none_value' => '0',
                         )); ?>
                         <p class="description">Pagina dedicata al modulo check-in con shortcode <code>[domilocus_checkin_documents]</code>.</p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_local">Pagina riepilogo prenotazione Locale</label></th>
-                    <td>
-                        <?php wp_dropdown_pages(array(
-                            'id'                => 'domilocus_manager_page_booking_confirmation_local',
-                            'name'              => 'domilocus_manager_page_booking_confirmation_local',
-                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_local', 0),
-                            'show_option_none'  => '— Auto —',
-                            'option_none_value' => '0',
-                        )); ?>
-                        <p class="description">Pagina dedicata al riepilogo Locale con shortcode <code>[domilocus_booking_confirmation_local]</code>. Se vuota, viene creata automaticamente.</p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><label for="domilocus_manager_page_booking_confirmation_ota">Pagina riepilogo prenotazione OTA</label></th>
-                    <td>
-                        <?php wp_dropdown_pages(array(
-                            'id'                => 'domilocus_manager_page_booking_confirmation_ota',
-                            'name'              => 'domilocus_manager_page_booking_confirmation_ota',
-                            'selected'          => (int) get_option('domilocus_manager_page_booking_confirmation_ota', 0),
-                            'show_option_none'  => '— Auto —',
-                            'option_none_value' => '0',
-                        )); ?>
-                        <p class="description">Pagina dedicata al riepilogo OTA con shortcode <code>[domilocus_booking_confirmation_ota]</code>. Se vuota, viene creata automaticamente.</p>
                     </td>
                 </tr>
 
@@ -1013,6 +984,28 @@ class Domilocus_Admin_Settings {
                 </tr>
 
                 <tr>
+                    <th scope="row"><label for="domilocus_terms_page_id"><?php esc_html_e('Pagina condizioni di soggiorno', 'domilocus'); ?></label></th>
+                    <td>
+                        <?php wp_dropdown_pages(array(
+                            'id'                => 'domilocus_terms_page_id',
+                            'name'              => 'domilocus_terms_page_id',
+                            'selected'          => (int) get_option('domilocus_terms_page_id', 0),
+                            'show_option_none'  => '— Nessuna —',
+                            'option_none_value' => '0',
+                        )); ?>
+                        <p class="description">
+                            <?php
+                            printf(
+                                /* translators: %s: shortcode */
+                                esc_html__('Pagina che contiene lo shortcode %s: il modulo di prenotazione la userà per il link "Ho letto e accetto le condizioni".', 'domilocus'),
+                                '<code>[domilocus_condizioni_soggiorno]</code>'
+                            );
+                            ?>
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
                     <th scope="row"><label for="domilocus_terms_content"><?php esc_html_e('Regolamento della struttura', 'domilocus'); ?></label></th>
                     <td>
                         <?php
@@ -1242,19 +1235,7 @@ class Domilocus_Admin_Settings {
             '[domilocus_checkin_documents]'
         );
 
-        $local_id = self::ensure_confirmation_page(
-            'domilocus_manager_page_booking_confirmation_local',
-            __('Riepilogo Prenotazione Locale', 'domilocus'),
-            '[domilocus_booking_confirmation_local]'
-        );
-
-        $ota_id = self::ensure_confirmation_page(
-            'domilocus_manager_page_booking_confirmation_ota',
-            __('Riepilogo Prenotazione OTA', 'domilocus'),
-            '[domilocus_booking_confirmation_ota]'
-        );
-
-        $status = ($receipt_id > 0 && $checkin_id > 0 && $local_id > 0 && $ota_id > 0) ? 'regenerated' : 'error';
+        $status = ($receipt_id > 0 && $checkin_id > 0) ? 'regenerated' : 'error';
 
         wp_safe_redirect(add_query_arg(array(
             'page' => 'domilocus-settings',
@@ -1304,8 +1285,6 @@ class Domilocus_Admin_Settings {
             'domilocus_receipt_page_id' => 'absint',
             'domilocus_checkin_page_id' => 'absint',
             'domilocus_manager_page_booking_confirmation' => 'absint',
-            'domilocus_manager_page_booking_confirmation_local' => 'absint',
-            'domilocus_manager_page_booking_confirmation_ota' => 'absint',
             'domilocus_manager_receipt_requirement' => 'sanitize_text_field',
             'domilocus_manager_documents_requirement' => 'sanitize_text_field',
             'domilocus_manager_receipt_optional_visibility' => 'sanitize_text_field',
@@ -1541,6 +1520,10 @@ class Domilocus_Admin_Settings {
 
         if ($new_version !== $old_version) {
             update_option('domilocus_terms_published_at', current_time('mysql'));
+        }
+
+        if (isset($_POST['domilocus_terms_page_id'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            update_option('domilocus_terms_page_id', absint(wp_unslash($_POST['domilocus_terms_page_id']))); // phpcs:ignore WordPress.Security.NonceVerification.Missing
         }
     }
 

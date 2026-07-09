@@ -441,7 +441,8 @@ class Domilocus_Metaboxes {
     public static function apartment_rules_metabox($post) {
         $house_rules = get_post_meta($post->ID, '_domilocus_house_rules', true);
         $cancellation_policy = get_post_meta($post->ID, '_domilocus_cancellation_policy', true);
-        
+        $default_lockbox_code = get_post_meta($post->ID, '_domilocus_default_lockbox_code', true);
+
         ?>
         <table class="form-table">
             <tr>
@@ -466,6 +467,17 @@ class Domilocus_Metaboxes {
                     </select>
                 </td>
             </tr>
+            <?php if (class_exists('Domilocus_Plan_Premium_Lockbox')) : ?>
+            <tr>
+                <th scope="row">
+                    <label for="domilocus_default_lockbox_code"><?php esc_html_e('Codice cassetta chiavi di default', 'domilocus'); ?></label>
+                </th>
+                <td>
+                    <input type="text" id="domilocus_default_lockbox_code" name="domilocus_default_lockbox_code" class="small-text" maxlength="4" value="<?php echo esc_attr($default_lockbox_code); ?>" placeholder="1234">
+                    <p class="description"><?php esc_html_e('Se impostato (4 cifre), le nuove prenotazioni dirette dal sito attivano automaticamente il check-in autonomo con questo codice, senza bisogno di attivarlo a mano per ogni prenotazione. Le prenotazioni dalle piattaforme OTA restano ad attivazione manuale.', 'domilocus'); ?></p>
+                </td>
+            </tr>
+            <?php endif; ?>
         </table>
         <?php
     }
@@ -947,7 +959,8 @@ class Domilocus_Metaboxes {
             'domilocus_latitude',
             'domilocus_longitude',
             'domilocus_house_rules',
-            'domilocus_cancellation_policy'
+            'domilocus_cancellation_policy',
+            'domilocus_default_lockbox_code'
         );
         
         foreach ($fields as $field) {
