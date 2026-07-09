@@ -80,6 +80,16 @@ class Domilocus_Booking_Form {
                 $defaults[$key] = $booking->$key ?? $value;
             }
         }
+
+        // Orario speciale di check-in/check-out per questa singola
+        // prenotazione (richieste particolari) — vive in booking meta, non
+        // tra le colonne di wp_domilocus_bookings, quindi va letto a parte.
+        $special_checkin_time = '';
+        $special_checkout_time = '';
+        if ($is_edit && function_exists('domilocus_get_booking_meta')) {
+            $special_checkin_time  = (string) domilocus_get_booking_meta($booking_id, '_domilocus_special_checkin_time', true);
+            $special_checkout_time = (string) domilocus_get_booking_meta($booking_id, '_domilocus_special_checkout_time', true);
+        }
         
         // Enqueue styles
         wp_enqueue_style(
@@ -293,6 +303,35 @@ class Domilocus_Booking_Form {
                                 </div>
                             </div>
                             
+                            <!-- Orari speciali -->
+                            <div class="postbox">
+                                <div class="postbox-header">
+                                    <h2><?php esc_html_e('Orario speciale check-in/check-out', 'domilocus'); ?></h2>
+                                </div>
+                                <div class="inside">
+                                    <table class="form-table">
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="special_checkin_time"><?php esc_html_e('Check-in ore', 'domilocus'); ?></label>
+                                            </th>
+                                            <td>
+                                                <input type="time" id="special_checkin_time" name="special_checkin_time" value="<?php echo esc_attr($special_checkin_time); ?>" />
+                                                <p class="description"><?php esc_html_e('Lascia vuoto per usare l\'orario standard (appartamento o generale). Compila solo per richieste particolari su questa prenotazione.', 'domilocus'); ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="special_checkout_time"><?php esc_html_e('Check-out ore', 'domilocus'); ?></label>
+                                            </th>
+                                            <td>
+                                                <input type="time" id="special_checkout_time" name="special_checkout_time" value="<?php echo esc_attr($special_checkout_time); ?>" />
+                                                <p class="description"><?php esc_html_e('Lascia vuoto per usare l\'orario standard.', 'domilocus'); ?></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
                             <!-- Notes -->
                             <div class="postbox">
                                 <div class="postbox-header">
@@ -1003,7 +1042,9 @@ class Domilocus_Booking_Form {
                 if (class_exists('Domilocus_Booking')) {
                     Domilocus_Booking::block_dates($apartment_id, $check_in, $check_out, $booking_id);
                 }
-                
+
+                self::save_special_times($booking_id);
+
                 wp_safe_redirect(add_query_arg('message', 'updated', admin_url('admin.php?page=domilocus-bookings')));
             } else {
                 wp_safe_redirect(add_query_arg('error', 'save_failed', $redirect_url));
@@ -1036,12 +1077,14 @@ class Domilocus_Booking_Form {
             
             if ($inserted) {
                 $new_booking_id = $wpdb->insert_id;
-                
+
                 // Block dates in calendar
                 if (class_exists('Domilocus_Booking')) {
                     Domilocus_Booking::block_dates($apartment_id, $check_in, $check_out, $new_booking_id);
                 }
-                
+
+                self::save_special_times($new_booking_id);
+
                 wp_safe_redirect(add_query_arg('message', 'saved', admin_url('admin.php?page=domilocus-bookings')));
             } else {
                 wp_safe_redirect(add_query_arg('error', 'save_failed', $redirect_url));
@@ -1049,6 +1092,24 @@ class Domilocus_Booking_Form {
         }
         
         exit;
+    }
+
+    /**
+     * Salva (o svuota) l'orario speciale di check-in/check-out per questa
+     * prenotazione — campi opzionali del form, vuoti di default: se non
+     * compilati la prenotazione segue l'orario standard (appartamento o
+     * generale), letto altrove tramite Domilocus_Booking::get_effective_time().
+     *
+     * @param int $booking_id
+     */
+    private static function save_special_times($booking_id) {
+        if (!function_exists('domilocus_update_booking_meta')) {
+            return;
+        }
+        $checkin_time  = isset($_POST['special_checkin_time']) ? sanitize_text_field(wp_unslash($_POST['special_checkin_time'])) : '';
+        $checkout_time = isset($_POST['special_checkout_time']) ? sanitize_text_field(wp_unslash($_POST['special_checkout_time'])) : '';
+        domilocus_update_booking_meta($booking_id, '_domilocus_special_checkin_time', $checkin_time);
+        domilocus_update_booking_meta($booking_id, '_domilocus_special_checkout_time', $checkout_time);
     }
 
     /**

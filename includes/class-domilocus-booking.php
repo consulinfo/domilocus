@@ -1338,6 +1338,51 @@ class Domilocus_Booking {
     }
 
     /**
+     * Orario effettivo di check-in o check-out per una prenotazione, con
+     * gerarchia a 3 livelli: eccezione per questa specifica prenotazione
+     * (richieste particolari) → override a livello di appartamento →
+     * opzione globale del gestore. Riusato sia dal modulo di prenotazione
+     * sia dal riepilogo guest-facing, cosi restano sempre coerenti.
+     *
+     * @param int|object $booking Booking ID o oggetto prenotazione.
+     * @param string     $type    'checkin' o 'checkout'.
+     * @return string Orario in formato HH:MM.
+     */
+    public static function get_effective_time($booking, $type) {
+        if (is_numeric($booking)) {
+            $booking = self::get_booking((int) $booking);
+        }
+
+        $default = $type === 'checkout' ? '11:00' : '15:00';
+        $global_option = $type === 'checkout' ? 'domilocus_manager_checkout_time' : 'domilocus_manager_checkin_time';
+        $apartment_meta = $type === 'checkout' ? '_domilocus_checkout_time' : '_domilocus_checkin_time';
+        $booking_meta = $type === 'checkout' ? '_domilocus_special_checkout_time' : '_domilocus_special_checkin_time';
+
+        $time = class_exists('Domilocus_Settings') ? Domilocus_Settings::get($global_option, $default) : $default;
+        if (empty($time)) {
+            $time = $default;
+        }
+
+        $apartment_id = ($booking && isset($booking->apartment_id)) ? (int) $booking->apartment_id : 0;
+        if ($apartment_id > 0) {
+            $apartment_time = get_post_meta($apartment_id, $apartment_meta, true);
+            if (!empty($apartment_time)) {
+                $time = $apartment_time;
+            }
+        }
+
+        $booking_id = ($booking && isset($booking->id)) ? (int) $booking->id : 0;
+        if ($booking_id > 0 && function_exists('domilocus_get_booking_meta')) {
+            $special_time = domilocus_get_booking_meta($booking_id, $booking_meta, true);
+            if (!empty($special_time)) {
+                $time = $special_time;
+            }
+        }
+
+        return (string) $time;
+    }
+
+    /**
      * Determine payment deadline details for a booking based on the applied tariff and check-in time.
      *
      * @param int|object $booking Booking ID or booking object.
