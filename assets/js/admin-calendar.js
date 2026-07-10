@@ -63,6 +63,7 @@
                     <div class="day-details-content">
                         <button class="day-details-close">&times;</button>
                         <h3 id="modal-title">` + i18n.manage_day + `</h3>
+                        <div id="modal-booking-info" class="modal-booking-info" style="display:none;"></div>
                         <form class="day-details-form" id="day-details-form">
                             <input type="hidden" id="modal-date" name="date" value="">
                             
@@ -190,7 +191,27 @@
             } else {
                 $('#modal-status').prop('disabled', false);
             }
-            
+
+            // Giorno prenotato: mostra da dove viene la prenotazione (OTA o
+            // diretta dal sito) e un link per aprirla — l'ospite lo ha chiesto
+            // esplicitamente ("possibilità cliccandoci di visualizzare la
+            // prenotazione"), non c'era prima nella vista mensile.
+            var $bookingInfo = $('#modal-booking-info');
+            if (dayData.status === 'booked' && dayData.booking_id) {
+                var sourceLabel = dayData.booking_platform_label || '';
+                var guestName = dayData.booking_customer_name || '';
+                var sourceIcon = dayData.booking_source === 'ota' ? '✈' : '⌂';
+                var infoHtml = '<span class="day-source ' + (dayData.booking_source || 'direct') + '">' + sourceIcon + '</span> ';
+                infoHtml += '<strong>' + this.escapeHtml(sourceLabel) + '</strong>';
+                if (guestName) {
+                    infoHtml += ' — ' + this.escapeHtml(guestName);
+                }
+                infoHtml += '<br><a href="' + domilocus_admin_vars.booking_edit_url + encodeURIComponent(dayData.booking_id) + '" target="_blank" rel="noopener">' + i18n.view_booking + '</a>';
+                $bookingInfo.html(infoHtml).show();
+            } else {
+                $bookingInfo.hide().empty();
+            }
+
             $('#day-details-modal').fadeIn(200);
         },
         
@@ -239,6 +260,10 @@
             });
         },
         
+        escapeHtml: function(str) {
+            return $('<div>').text(str || '').html();
+        },
+
         formatDate: function(dateString) {
             var date = new Date(dateString);
             var options = { 

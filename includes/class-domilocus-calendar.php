@@ -505,9 +505,9 @@ class Domilocus_Calendar {
         // Get bookings for the month
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $bookings = $wpdb->get_results($wpdb->prepare(
-            "SELECT id, check_in, check_out, status
+            "SELECT id, check_in, check_out, status, source, external_platform, platform_booking_code, customer_name
             FROM {$booking_table}
-            WHERE apartment_id = %d 
+            WHERE apartment_id = %d
             AND status IN ('confirmed', 'pending')
             AND (
                 (check_in >= %s AND check_in <= %s) OR
@@ -542,8 +542,18 @@ class Domilocus_Calendar {
             );
         }
         
+        // Le stesse piattaforme OTA riconosciute altrove nel plugin (fonte
+        // singola di verità duplicata qui: query diretta, niente join extra).
+        $ota_sources = array('ical_import', 'airbnb', 'booking', 'booking.com', 'vrbo', 'homeaway');
+
         // Add booking data
         foreach ($bookings as $booking) {
+            $is_ota = !empty($booking->external_platform)
+                || in_array(strtolower((string) ($booking->source ?? '')), $ota_sources, true);
+            $platform_label = !empty($booking->external_platform)
+                ? ucfirst($booking->external_platform)
+                : __('Piattaforma', 'domilocus');
+
             $current_date = $booking->check_in;
             while ($current_date < $booking->check_out) {
                 if ($current_date >= $start_date && $current_date <= $end_date) {
@@ -553,6 +563,10 @@ class Domilocus_Calendar {
                     $calendar_data[$current_date]['status'] = 'booked';
                     $calendar_data[$current_date]['booking_status'] = $booking->status;
                     $calendar_data[$current_date]['booking_id'] = (int) $booking->id;
+                    $calendar_data[$current_date]['booking_source'] = $is_ota ? 'ota' : 'direct';
+                    $calendar_data[$current_date]['booking_platform_label'] = $is_ota ? $platform_label : __('Prenotazione diretta', 'domilocus');
+                    $calendar_data[$current_date]['booking_platform_code'] = $booking->platform_booking_code ?? '';
+                    $calendar_data[$current_date]['booking_customer_name'] = $booking->customer_name ?? '';
                 }
                 $current_date = wp_date('Y-m-d', strtotime($current_date . ' +1 day'));
             }
@@ -656,6 +670,15 @@ class Domilocus_Calendar {
                 $html .= '<span class="day-status">' . esc_html($status_labels[$status] ?? $status) . '</span>';
             }
 
+            if ($status === 'booked' && !empty($day_data['booking_source'])) {
+                $source_icon = $day_data['booking_source'] === 'ota' ? '✈' : '⌂'; // aereo (OTA) / casa (diretta)
+                $source_title = $day_data['booking_platform_label'] ?? '';
+                if (!empty($day_data['booking_customer_name'])) {
+                    $source_title .= ' — ' . $day_data['booking_customer_name'];
+                }
+                $html .= '<span class="day-source ' . esc_attr($day_data['booking_source']) . '" title="' . esc_attr($source_title) . '">' . $source_icon . '</span>';
+            }
+
             if (!empty($day_data['block_checkin'])) {
                 $html .= '<span class="day-restriction no-checkin" title="' . esc_attr__('Check-in not allowed', 'domilocus') . '">&#8618;</span>';
             }
@@ -700,8 +723,16 @@ class Domilocus_Calendar {
         $html .= '<span class="day-restriction no-checkout">&#8617;</span>';
         $html .= '<span class="legend-text">' . __('Check-out not allowed', 'domilocus') . '</span>';
         $html .= '</div>';
+        $html .= '<div class="legend-item">';
+        $html .= '<span class="day-source ota">✈</span>';
+        $html .= '<span class="legend-text">' . __('Prenotazione da piattaforma (OTA)', 'domilocus') . '</span>';
         $html .= '</div>';
-        
+        $html .= '<div class="legend-item">';
+        $html .= '<span class="day-source direct">⌂</span>';
+        $html .= '<span class="legend-text">' . __('Prenotazione diretta dal sito', 'domilocus') . '</span>';
+        $html .= '</div>';
+        $html .= '</div>';
+
         $html .= '</div>'; // domilocus-admin-calendar
         
         return $html;

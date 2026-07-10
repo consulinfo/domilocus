@@ -92,10 +92,12 @@ class Domilocus_Admin {
             wp_localize_script('domilocus-admin-calendar', 'domilocus_admin_vars', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('domilocus_admin_calendar_nonce'),
+                'booking_edit_url' => admin_url('admin.php?page=domilocus-bookings&action=edit&booking_id='),
                 'i18n' => array(
                     // Modal
                     'manage_day' => __('Manage Day', 'domilocus'),
                     'manage' => __('Manage', 'domilocus'),
+                    'view_booking' => __('Visualizza prenotazione →', 'domilocus'),
                     'status' => __('Status:', 'domilocus'),
                     'available' => __('Available', 'domilocus'),
                     'booked' => __('Booked', 'domilocus'),
