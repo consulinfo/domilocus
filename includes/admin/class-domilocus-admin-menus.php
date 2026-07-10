@@ -1036,7 +1036,7 @@ class Domilocus_Admin_Menus {
                         <select name="calendar_view" id="calendar_view">
                             <option value="month" <?php selected($calendar_view, 'month'); ?>><?php esc_html_e('Month', 'domilocus'); ?></option>
                             <option value="week" <?php selected($calendar_view, 'week'); ?>><?php esc_html_e('Week', 'domilocus'); ?></option>
-                            <option value="day" <?php selected($calendar_view, 'day'); ?>><?php esc_html_e('Day', 'domilocus'); ?></option>
+                            <option value="year" <?php selected($calendar_view, 'year'); ?>><?php esc_html_e('Year', 'domilocus'); ?></option>
                         </select>
                     </div>
                 </form>

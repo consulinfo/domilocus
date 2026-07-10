@@ -9,7 +9,7 @@
         apartmentId: 0,
         currentDate: new Date(),
         calendarData: {},
-        viewMode: 'month', // month, week, day
+        viewMode: 'month', // month, week, year
         
         init: function() {
             this.apartmentId = $('#domilocus-calendar-container').data('apartment-id');
@@ -36,6 +36,18 @@
                 var date = $(this).data('date');
                 if (date) {
                     self.openDayModal(date);
+                }
+            });
+
+            // Year view: click a month tile to jump to its Month view
+            $(document).on('click', '.year-month-tile', function() {
+                var month = parseInt($(this).data('month'), 10);
+                if (month) {
+                    self.currentDate.setMonth(month - 1);
+                    self.currentDate.setDate(1);
+                    self.viewMode = 'month';
+                    $('#calendar_view').val('month');
+                    self.loadCalendar();
                 }
             });
             
@@ -162,11 +174,11 @@
                 } else if (direction === 'next') {
                     this.currentDate.setDate(this.currentDate.getDate() + 7);
                 }
-            } else if (this.viewMode === 'day') {
+            } else if (this.viewMode === 'year') {
                 if (direction === 'prev') {
-                    this.currentDate.setDate(this.currentDate.getDate() - 1);
+                    this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
                 } else if (direction === 'next') {
-                    this.currentDate.setDate(this.currentDate.getDate() + 1);
+                    this.currentDate.setFullYear(this.currentDate.getFullYear() + 1);
                 }
             }
             this.loadCalendar();

@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.12
+Stable tag: 1.5.15
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,20 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.15 =
+* Changed: restyling del calendario admin — celle più compatte (non più quadrate a piena larghezza), contenitore centrato con larghezza massima, per essere leggibile anche su schermi desktop larghi.
+* Added: vista "Anno" al posto della vista "Giorno" (poco utile) — griglia compatta dei 12 mesi con conteggio giorni prenotati/liberi per mese; cliccando su un mese si passa alla vista Mese di quel mese.
+* Changed: nella vista Mese, l'etichetta della piattaforma di provenienza (es. "Airbnb", "Prenotazione diretta") è ora visibile direttamente nella cella del giorno, non solo al passaggio del mouse.
+* Fixed: il prezzo mostrato nel calendario admin era il prezzo base piatto dell'appartamento, senza le regole stagionali applicate invece sul modulo di prenotazione pubblico — ora, se Domilocus Starter è attivo, il calendario admin mostra la stessa tariffa realmente pubblicata.
+
+= 1.5.14 =
+* Added: il calendario admin mensile mostra ora, per ogni giorno prenotato, un'icona che distingue le prenotazioni da piattaforma (OTA) da quelle dirette dal sito, con nome ospite/piattaforma al passaggio del mouse.
+* Added: cliccando su un giorno prenotato, il pannello di gestione mostra queste informazioni e un link diretto per aprire la scheda della prenotazione.
+
+= 1.5.13 =
+* Added: nuovo metodo `Domilocus_Booking::get_effective_time()` — orario check-in/check-out effettivo combinando opzione globale, override per appartamento ed eventuale eccezione per singola prenotazione (richieste particolari), impostabile dal nuovo campo opzionale nell'editor prenotazione admin.
+* Fixed: il modulo di prenotazione leggeva solo l'orario globale, ignorando l'override per appartamento già esistente.
 
 = 1.5.12 =
 * Added: nuovo campo "Pagina condizioni di soggiorno" nella scheda impostazioni "Condizioni di soggiorno" — usato per collegare un link cliccabile alle condizioni dalla checkbox del modulo di prenotazione.

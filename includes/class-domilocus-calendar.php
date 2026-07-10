@@ -525,9 +525,22 @@ class Domilocus_Calendar {
         // Get apartment min stay setting
         $min_stay = get_post_meta($apartment_id, '_domilocus_min_stay', true) ?: get_option('domilocus_manager_min_stay', 1);
         
+        // Se il piano Starter è attivo, la tariffa reale pubblicata (con
+        // regole stagionali applicate) viene da lì — senza, si ricade sul
+        // prezzo base piatto già gestito da Domilocus_Pricing_Manager.
+        // Accoppiamento opzionale, stesso schema usato altrove nel plugin:
+        // il calendario base continua a funzionare da solo senza Starter.
+        $starter_pricing_active = class_exists('Domilocus_Premium_Pricing') && method_exists('Domilocus_Premium_Pricing', 'get_rate_for_date');
+
         // Process availability data
         foreach ($availability_data as $date => $data) {
-            $dynamic_price = $pricing_manager->get_dynamic_price($apartment_id, $date);
+            $dynamic_price = null;
+            if ($starter_pricing_active) {
+                $dynamic_price = Domilocus_Premium_Pricing::get_rate_for_date($apartment_id, $date);
+            }
+            if ($dynamic_price === null) {
+                $dynamic_price = $pricing_manager->get_dynamic_price($apartment_id, $date);
+            }
             $custom_price = isset($data->price) && $data->price !== null ? (float) $data->price : null;
             $custom_min_stay = isset($data->min_stay) && $data->min_stay > 0 ? (int) $data->min_stay : null;
 
@@ -661,22 +674,25 @@ class Domilocus_Calendar {
                 $html .= '<span class="day-price">€ ' . number_format($day_data['price'], 2) . '</span>';
             }
 
-            if ($status !== 'available') {
+            if ($status === 'booked' && !empty($day_data['booking_source'])) {
+                // Per un giorno prenotato l'etichetta piattaforma/diretta è
+                // più utile del generico "Prenotato" (che non dice nulla) —
+                // sostituisce il badge di stato invece di aggiungersi, per
+                // restare leggibile in una cella compatta.
+                $source_icon = $day_data['booking_source'] === 'ota' ? '✈' : '⌂'; // aereo (OTA) / casa (diretta)
+                $source_label = $day_data['booking_platform_label'] ?? '';
+                $source_title = $source_label;
+                if (!empty($day_data['booking_customer_name'])) {
+                    $source_title .= ' — ' . $day_data['booking_customer_name'];
+                }
+                $source_short = mb_strimwidth($source_label, 0, 11, '…');
+                $html .= '<span class="day-source ' . esc_attr($day_data['booking_source']) . '" title="' . esc_attr($source_title) . '">' . $source_icon . ' ' . esc_html($source_short) . '</span>';
+            } elseif ($status !== 'available') {
                 $status_labels = array(
-                    'booked' => __('Booked', 'domilocus'),
                     'blocked' => __('Blocked', 'domilocus'),
                     'maintenance' => __('Maintenance', 'domilocus')
                 );
                 $html .= '<span class="day-status">' . esc_html($status_labels[$status] ?? $status) . '</span>';
-            }
-
-            if ($status === 'booked' && !empty($day_data['booking_source'])) {
-                $source_icon = $day_data['booking_source'] === 'ota' ? '✈' : '⌂'; // aereo (OTA) / casa (diretta)
-                $source_title = $day_data['booking_platform_label'] ?? '';
-                if (!empty($day_data['booking_customer_name'])) {
-                    $source_title .= ' — ' . $day_data['booking_customer_name'];
-                }
-                $html .= '<span class="day-source ' . esc_attr($day_data['booking_source']) . '" title="' . esc_attr($source_title) . '">' . $source_icon . '</span>';
             }
 
             if (!empty($day_data['block_checkin'])) {
@@ -738,6 +754,92 @@ class Domilocus_Calendar {
         return $html;
     }
     
+    /**
+     * Get year data for admin calendar: per-month day-status counts.
+     * Riusa get_admin_calendar_data() mese per mese, così la vista Anno
+     * resta sempre coerente con la vista Mese (stessa fonte, stesso prezzo
+     * reale) invece di duplicare la logica di aggregazione.
+     */
+    public function get_admin_year_data($apartment_id, $year) {
+        $months = array();
+
+        for ($month = 1; $month <= 12; $month++) {
+            $month_data = $this->get_admin_calendar_data($apartment_id, $year, $month);
+            $days_in_month = (int) wp_date('t', mktime(0, 0, 0, $month, 1, $year));
+
+            $counts = array('available' => 0, 'booked' => 0, 'blocked' => 0, 'maintenance' => 0);
+            foreach ($month_data as $day_data) {
+                $status = $day_data['status'] ?? 'available';
+                if (!isset($counts[$status])) {
+                    $status = 'available';
+                }
+                $counts[$status]++;
+            }
+            // Le date del mese senza riga esplicita sono disponibili di default.
+            $accounted_for = $counts['available'] + $counts['booked'] + $counts['blocked'] + $counts['maintenance'];
+            $counts['available'] += max(0, $days_in_month - $accounted_for);
+
+            $months[$month] = array(
+                'days_in_month' => $days_in_month,
+                'counts' => $counts,
+            );
+        }
+
+        return $months;
+    }
+
+    /**
+     * Generate year HTML for admin calendar: griglia compatta 12 mesi con
+     * conteggio giorni prenotati/liberi — clic su un mese passa alla vista
+     * Mese di quel mese (gestito lato JS tramite .year-month-tile).
+     */
+    public function generate_admin_year_html($apartment_id, $year, $year_data = null) {
+        if ($year_data === null) {
+            $year_data = $this->get_admin_year_data($apartment_id, $year);
+        }
+
+        $month_names = array(
+            1 => __('January', 'domilocus'), 2 => __('February', 'domilocus'), 3 => __('March', 'domilocus'),
+            4 => __('April', 'domilocus'), 5 => __('May', 'domilocus'), 6 => __('June', 'domilocus'),
+            7 => __('July', 'domilocus'), 8 => __('August', 'domilocus'), 9 => __('September', 'domilocus'),
+            10 => __('October', 'domilocus'), 11 => __('November', 'domilocus'), 12 => __('December', 'domilocus')
+        );
+
+        $current_month = (int) wp_date('n');
+        $current_year = (int) wp_date('Y');
+
+        $html = '<div class="domilocus-admin-calendar year-view">';
+        $html .= '<div class="calendar-header">';
+        $html .= '<button class="button calendar-nav" data-direction="prev">&laquo; ' . __('Previous Year', 'domilocus') . '</button>';
+        $html .= '<h3 class="calendar-title">' . esc_html($year) . '</h3>';
+        $html .= '<button class="button calendar-nav" data-direction="next">' . __('Next Year', 'domilocus') . ' &raquo;</button>';
+        $html .= '</div>';
+
+        $html .= '<div class="calendar-year-grid">';
+        foreach ($month_names as $month => $month_name) {
+            $counts = $year_data[$month]['counts'] ?? array('available' => 0, 'booked' => 0, 'blocked' => 0, 'maintenance' => 0);
+            $days_in_month = $year_data[$month]['days_in_month'] ?? 0;
+
+            $classes = array('year-month-tile');
+            if ($year === $current_year && $month === $current_month) {
+                $classes[] = 'current-month';
+            }
+
+            $html .= '<div class="' . implode(' ', $classes) . '" data-month="' . esc_attr($month) . '">';
+            $html .= '<span class="year-month-name">' . esc_html($month_name) . '</span>';
+            $html .= '<span class="year-month-stat booked">' . esc_html($counts['booked']) . '/' . esc_html($days_in_month) . ' ' . esc_html__('prenotati', 'domilocus') . '</span>';
+            if ($counts['blocked'] > 0 || $counts['maintenance'] > 0) {
+                $html .= '<span class="year-month-stat blocked">' . esc_html($counts['blocked'] + $counts['maintenance']) . ' ' . esc_html__('bloccati', 'domilocus') . '</span>';
+            }
+            $html .= '</div>';
+        }
+        $html .= '</div>'; // calendar-year-grid
+
+        $html .= '</div>'; // domilocus-admin-calendar
+
+        return $html;
+    }
+
     /**
      * Get week data for admin calendar
      */
