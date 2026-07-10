@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.15
+Stable tag: 1.5.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.16 =
+* Changed: allineamento visivo della riga filtri (appartamento/vista) e del pannello "Azioni rapide" nel calendario admin — stesso stile a riquadro, campi e pulsanti alla stessa altezza, invece di due impaginazioni diverse una sotto l'altra.
 
 = 1.5.15 =
 * Changed: restyling del calendario admin — celle più compatte (non più quadrate a piena larghezza), contenitore centrato con larghezza massima, per essere leggibile anche su schermi desktop larghi.

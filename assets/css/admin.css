@@ -1,6 +1,68 @@
 /* Domilocus WP Admin Styles - VERSIONE AGGIORNATA 2025-11-17 17:00 */
 /* Se non vedi questo commento negli strumenti sviluppatore, hai la cache vecchia */
 
+/* =========================================================
+   Calendario admin: riga filtri (appartamento/vista) e
+   "Azioni rapide" — stesso trattamento visivo (box, altezza
+   campi, spaziatura) così le due righe risultano coerenti
+   invece di sembrare due UI diverse una sopra l'altra.
+   ========================================================= */
+.calendar-filters-row,
+.calendar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding: 14px 18px;
+    margin: 0 0 16px;
+    background: #fff;
+    border: 1px solid #e6e8eb;
+    border-radius: 10px;
+}
+
+.calendar-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.calendar-controls h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d2327;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.calendar-controls .control-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.calendar-controls .control-group label {
+    flex: 0 0 auto;
+    min-width: 190px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.calendar-controls .control-group input,
+.calendar-controls .control-group select {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #c8ccd0;
+    border-radius: 6px;
+}
+
+.calendar-controls .control-group .button {
+    height: 32px;
+    line-height: 30px;
+    padding: 0 14px;
+}
+
 /* Admin Menu Badge Styling */
 #adminmenu .wp-submenu a span[style*="color: #d63638"] {
     display: inline-block;

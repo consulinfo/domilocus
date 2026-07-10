@@ -1017,7 +1017,7 @@ class Domilocus_Admin_Menus {
             <h1><?php esc_html_e('Booking Calendar', 'domilocus'); ?></h1>
             <?php self::render_page_nav('domilocus-calendar'); ?>
             <?php if ($apartments): ?>
-                <form method="get" id="calendar-filters-form" style="margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <form method="get" id="calendar-filters-form" class="calendar-filters-row">
                     <input type="hidden" name="page" value="domilocus-calendar">
                     
                     <div>
