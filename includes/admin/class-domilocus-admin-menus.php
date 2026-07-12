@@ -145,6 +145,16 @@ class Domilocus_Admin_Menus {
         remove_submenu_page('domilocus', 'domilocus-frontend-license');
         remove_submenu_page('domilocus', 'domilocus-license');
         
+        // Import/Export prenotazioni (trasferimento fra siti)
+        add_submenu_page(
+            'domilocus',
+            __('Importa / Esporta prenotazioni', 'domilocus'),
+            __('Importa/Esporta', 'domilocus'),
+            'manage_options',
+            'domilocus-import-export',
+            array('Domilocus_Import_Export', 'render_page')
+        );
+
         // Settings
         add_submenu_page(
             'domilocus',

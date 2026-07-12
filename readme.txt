@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.16
+Stable tag: 1.5.17
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.17 =
+* Added: nuova pagina "Importa/Esporta" nel menu Domilocus — esporta tutte le prenotazioni (dati completi, meta collegati come tariffa/orari/tassa di soggiorno, nome dell'appartamento) in un file JSON e le importa su un altro sito Domilocus: gli appartamenti vengono abbinati per nome, i duplicati vengono saltati (importazione ripetibile senza doppioni) e il calendario/disponibilità viene ricostruito automaticamente per le notti prenotate. Non trasferisce documenti check-in né firme elettroniche, legati al sito di origine.
 
 = 1.5.16 =
 * Changed: allineamento visivo della riga filtri (appartamento/vista) e del pannello "Azioni rapide" nel calendario admin — stesso stile a riquadro, campi e pulsanti alla stessa altezza, invece di due impaginazioni diverse una sotto l'altra.
