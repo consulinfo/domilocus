@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.17
+Stable tag: 1.5.18
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.18 =
+* Fixed: la barra di navigazione tra le sezioni Domilocus spariva del tutto aprendo la pagina Appartamenti o una qualsiasi delle 17+ pagine degli addon (Contratti, Statistiche, Prezzi Dinamici, ecc.) — dato che il menu laterale nativo di WordPress resta volutamente nascosto, l'utente restava senza alcun modo per spostarsi da una sezione all'altra. La barra ora compare automaticamente su ogni pagina Domilocus, senza dover essere richiamata singolarmente da ciascuna pagina.
+* Changed: l'elenco "Altri moduli" (17+ pagine) non è più una singola riga con barra di scorrimento orizzontale, ma è raggruppato per piano (Starter/Premium/Professional) e si dispone su più righe, sempre interamente visibile.
 
 = 1.5.17 =
 * Added: nuova pagina "Importa/Esporta" nel menu Domilocus — esporta tutte le prenotazioni (dati completi, meta collegati come tariffa/orari/tassa di soggiorno, nome dell'appartamento) in un file JSON e le importa su un altro sito Domilocus: gli appartamenti vengono abbinati per nome, i duplicati vengono saltati (importazione ripetibile senza doppioni) e il calendario/disponibilità viene ricostruito automaticamente per le notti prenotate. Non trasferisce documenti check-in né firme elettroniche, legati al sito di origine.

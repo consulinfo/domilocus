@@ -188,7 +188,6 @@ class Domilocus_Admin_Settings {
         ?>
         <div class="wrap domilocus-settings">
             <h1><?php esc_html_e('Impostazioni Domilocus', 'domilocus'); ?></h1>
-            <?php if (class_exists('Domilocus_Admin_Menus')) { Domilocus_Admin_Menus::render_page_nav('domilocus-settings'); } ?>
 
             <?php self::render_feedback_notices(); ?>
 

@@ -21,6 +21,42 @@ class Domilocus_Admin_Menus {
         add_action('admin_bar_menu', array(__CLASS__, 'add_admin_bar_menu'), 100);
         add_action('admin_head', array(__CLASS__, 'hide_sidebar_submenu_css'));
         add_action('admin_head', array(__CLASS__, 'force_top_level_dashboard_link'));
+
+        // Disegna la barra di navigazione su OGNI pagina admin di Domilocus
+        // (core + tutti gli addon) automaticamente — il menu laterale nativo
+        // di WordPress resta nascosto (vedi hide_sidebar_submenu_css), quindi
+        // questa barra è l'unico modo per spostarsi da una sezione all'altra.
+        // Prima veniva chiamata a mano da ogni singola pagina: 4 pagine core
+        // lo facevano, le 17+ pagine degli addon no, quindi aprendole si
+        // restava senza alcuna navigazione visibile. Un unico hook globale
+        // elimina la possibilità di dimenticarlo su una pagina futura.
+        add_action('in_admin_header', array(__CLASS__, 'maybe_render_page_nav'));
+    }
+
+    /**
+     * Mostra la barra di navigazione su qualunque schermata admin legata a
+     * Domilocus: pagine admin.php?page=domilocus-* e la lista Appartamenti
+     * (un custom post type, schermata edit.php separata dove prima la barra
+     * spariva del tutto).
+     */
+    public static function maybe_render_page_nav() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $post_type = isset($_GET['post_type']) ? sanitize_key(wp_unslash($_GET['post_type'])) : '';
+
+        $is_domilocus_page   = ($page === 'domilocus' || strpos($page, 'domilocus-') === 0);
+        $is_apartments_admin = ($post_type === 'domilocus_apartment');
+
+        if (!$is_domilocus_page && !$is_apartments_admin) {
+            return;
+        }
+
+        self::render_page_nav();
     }
     
     /**
@@ -437,7 +473,6 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php echo esc_html($translations['dashboard'] ?? __('Dashboard Domilocus', 'domilocus')); ?></h1>
-            <?php self::render_page_nav('domilocus'); ?>
 
             <?php
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -834,7 +869,6 @@ class Domilocus_Admin_Menus {
                 <?php esc_html_e('Add New', 'domilocus'); ?>
             </a>
             <hr class="wp-header-end">
-            <?php self::render_page_nav('domilocus-bookings'); ?>
             <?php
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (isset($_GET['message']) && $_GET['message'] === 'deleted'): ?>
@@ -1025,7 +1059,6 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Booking Calendar', 'domilocus'); ?></h1>
-            <?php self::render_page_nav('domilocus-calendar'); ?>
             <?php if ($apartments): ?>
                 <form method="get" id="calendar-filters-form" class="calendar-filters-row">
                     <input type="hidden" name="page" value="domilocus-calendar">
@@ -1373,7 +1406,6 @@ class Domilocus_Admin_Menus {
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Funzionalità non disponibile', 'domilocus'); ?></h1>
-            <?php self::render_page_nav(); ?>
             <div class="notice notice-warning" style="padding: 15px;">
                 <p><?php esc_html_e('Questa pagina richiede un add-on Domilocus attivo. Installa e attiva l’add-on corrispondente oppure contatta il supporto.', 'domilocus'); ?></p>
             </div>
@@ -1469,28 +1501,82 @@ class Domilocus_Admin_Menus {
 
         if (!empty($extra_tabs)) {
             $active_extra = isset($extra_tabs[$active]);
+
+            // Raggruppati per piano/plugin di origine invece di un unico
+            // elenco piatto di 17+ voci in una riga a scorrimento orizzontale
+            // — con flex-wrap la lista si dispone su più righe, sempre
+            // interamente visibile senza barra di scorrimento, e i gruppi
+            // (Starter/Premium/Professional) usano nomi che l'utente già
+            // conosce, coincidendo con i piani commerciali del prodotto.
+            $grouped = array();
+            foreach ($extra_tabs as $slug => $tab) {
+                $group = self::get_extra_tab_group($slug);
+                $grouped[$group][$slug] = $tab;
+            }
+
             $summary_style = $active_extra
                 ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;font-weight:600;cursor:pointer;'
                 : 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#fff;color:#2271b1;font-weight:600;cursor:pointer;';
 
             echo '<details class="domilocus-extra-tabs"' . ($active_extra ? ' open="open"' : '') . ' style="margin:0 0 18px;">';
-            echo '<summary style="' . esc_attr($summary_style) . '">Altri moduli (' . esc_html((string) count($extra_tabs)) . ')</summary>';
-            echo '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;padding-bottom:2px;">';
-            foreach ($extra_tabs as $slug => $tab) {
-                $is_active = ($slug === $active);
-                $style = $is_active
-                    ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;text-decoration:none;font-size:13px;flex:0 0 auto;'
-                    : 'display:inline-block;padding:6px 10px;border:1px solid #dcdcde;border-radius:4px;background:#fff;color:#2271b1;text-decoration:none;font-size:13px;flex:0 0 auto;';
-                printf(
-                    '<a href="%s" style="%s">%s</a>',
-                    esc_url($tab['url']),
-                    esc_attr($style),
-                    esc_html($tab['label'])
-                );
+            echo '<summary style="' . esc_attr($summary_style) . '">' . esc_html__('Altri moduli', 'domilocus') . ' (' . esc_html((string) count($extra_tabs)) . ')</summary>';
+            echo '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:20px;">';
+            foreach ($grouped as $group_label => $group_tabs) {
+                echo '<div style="min-width:180px;">';
+                echo '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#6b7280;margin-bottom:6px;">' . esc_html($group_label) . '</div>';
+                echo '<div style="display:flex;flex-wrap:wrap;gap:6px;max-width:420px;">';
+                foreach ($group_tabs as $slug => $tab) {
+                    $is_active = ($slug === $active);
+                    $style = $is_active
+                        ? 'display:inline-block;padding:6px 10px;border:1px solid #c3c4c7;border-radius:4px;background:#f0f0f1;color:#1d2327;text-decoration:none;font-size:13px;'
+                        : 'display:inline-block;padding:6px 10px;border:1px solid #dcdcde;border-radius:4px;background:#fff;color:#2271b1;text-decoration:none;font-size:13px;';
+                    printf(
+                        '<a href="%s" style="%s">%s</a>',
+                        esc_url($tab['url']),
+                        esc_attr($style),
+                        esc_html($tab['label'])
+                    );
+                }
+                echo '</div>';
+                echo '</div>';
             }
             echo '</div>';
             echo '</details>';
         }
+    }
+
+    /**
+     * Gruppo di appartenenza (piano/plugin) di uno slug di pagina "extra" —
+     * usato solo per organizzare visivamente "Altri moduli". Uno slug non
+     * mappato finisce nel gruppo "Altro" invece di sparire, così un futuro
+     * addon che aggiunge una pagina resta comunque visibile senza dover
+     * aggiornare questa mappa.
+     */
+    private static function get_extra_tab_group($slug) {
+        $groups = array(
+            'domilocus-import-export' => __('Dati', 'domilocus'),
+
+            'domilocus-contracts'      => __('Piano Starter', 'domilocus'),
+            'domilocus-app-activity'   => __('Piano Starter', 'domilocus'),
+            'domilocus-email-settings' => __('Piano Starter', 'domilocus'),
+            'domilocus-pricing-rules'  => __('Piano Starter', 'domilocus'),
+            'domilocus-shortcodes'     => __('Piano Starter', 'domilocus'),
+            'domilocus-statistics'     => __('Piano Starter', 'domilocus'),
+
+            'domilocus-api'                      => __('Piano Premium', 'domilocus'),
+            'domilocus-premium-lockbox-settings' => __('Piano Premium', 'domilocus'),
+            'domilocus-premium-payments'         => __('Piano Premium', 'domilocus'),
+            'domilocus-reports'                  => __('Piano Premium', 'domilocus'),
+            'domilocus-white-label'              => __('Piano Premium', 'domilocus'),
+
+            'domilocus-pro-dynamic-pricing' => __('Piano Professional', 'domilocus'),
+            'domilocus-pro-emails'          => __('Piano Professional', 'domilocus'),
+            'domilocus-event-articles'      => __('Piano Professional', 'domilocus'),
+            'domilocus-pro-ical'            => __('Piano Professional', 'domilocus'),
+            'domilocus-pro-rate-plans'      => __('Piano Professional', 'domilocus'),
+        );
+
+        return $groups[$slug] ?? __('Altro', 'domilocus');
     }
 
     /**
