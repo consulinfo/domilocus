@@ -398,12 +398,32 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $current_view = !empty($_GET['view']) ? sanitize_text_field(wp_unslash($_GET['view'])) : 'active';
 
+        // Cambiando vista si conserva l'ordinamento scelto: chi ordina per
+        // data e poi passa a "Tutte" per vedere anche il passato si ritrovava
+        // altrimenti l'elenco di nuovo ordinato per ID.
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended
+        $keep = array();
+        if (!empty($_GET['orderby'])) {
+            $keep['orderby'] = sanitize_key(wp_unslash($_GET['orderby']));
+        }
+        if (!empty($_GET['order'])) {
+            $keep['order'] = sanitize_key(wp_unslash($_GET['order']));
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+        $view_url = static function ($view) use ($keep) {
+            return add_query_arg(
+                array_merge(array('page' => 'domilocus-bookings', 'view' => $view), $keep),
+                admin_url('admin.php')
+            );
+        };
+
         // Attive (check_out >= oggi)
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $count_active = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE check_out >= CURDATE()");
         $links['active'] = sprintf(
             '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-            admin_url('admin.php?page=domilocus-bookings&view=active'),
+            $view_url('active'),
             'active' === $current_view ? 'current' : '',
             __('Attive', 'domilocus'),
             $count_active
@@ -414,7 +434,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $count_archive = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE check_out < CURDATE()");
         $links['archive'] = sprintf(
             '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-            admin_url('admin.php?page=domilocus-bookings&view=archive'),
+            $view_url('archive'),
             'archive' === $current_view ? 'current' : '',
             __('Archivio', 'domilocus'),
             $count_archive
@@ -430,7 +450,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         );
         $links['da_completare'] = sprintf(
             '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-            admin_url('admin.php?page=domilocus-bookings&view=da_completare'),
+            $view_url('da_completare'),
             'da_completare' === $current_view ? 'current' : '',
             __('⚠️ Da completare', 'domilocus'),
             $count_incomplete
@@ -441,7 +461,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $count_all = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings");
         $links['all'] = sprintf(
             '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
-            admin_url('admin.php?page=domilocus-bookings&view=all'),
+            $view_url('all'),
             'all' === $current_view ? 'current' : '',
             __('Tutte', 'domilocus'),
             $count_all

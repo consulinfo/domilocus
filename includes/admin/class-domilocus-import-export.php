@@ -335,8 +335,13 @@ class Domilocus_Import_Export {
      * prenotazione importata — stesso effetto della creazione normale.
      */
     private static function rebuild_availability($apartment_id, $booking_id, $check_in, $check_out, $status) {
-        if (!in_array($status, array('confirmed', 'pending'), true)) {
-            return; // cancellate/completate non bloccano il calendario
+        // 'completed' incluso: un soggiorno concluso ha comunque occupato
+        // quelle date e deve restare visibile nel calendario dello storico.
+        // Escluderlo (come faceva la prima versione) rendeva invisibili nel
+        // calendario del sito di destinazione tutte le prenotazioni passate
+        // già chiuse, che sul sito di origine si vedevano ancora.
+        if (!in_array($status, array('confirmed', 'pending', 'completed'), true)) {
+            return; // annullate/rifiutate/scadute non occupano il calendario
         }
 
         $start = DateTime::createFromFormat('Y-m-d', substr($check_in, 0, 10));

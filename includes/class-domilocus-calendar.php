@@ -504,11 +504,15 @@ class Domilocus_Calendar {
         
         // Get bookings for the month
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // 'completed' incluso: un soggiorno già concluso ha comunque occupato
+        // quelle date, e il calendario admin serve anche a rileggere il passato
+        // (confronto con gli stessi mesi degli anni precedenti). Senza, le
+        // prenotazioni chiuse sparivano dal calendario lasciando i mesi vuoti.
         $bookings = $wpdb->get_results($wpdb->prepare(
             "SELECT id, check_in, check_out, status, source, external_platform, platform_booking_code, customer_name
             FROM {$booking_table}
             WHERE apartment_id = %d
-            AND status IN ('confirmed', 'pending')
+            AND status IN ('confirmed', 'pending', 'completed')
             AND (
                 (check_in >= %s AND check_in <= %s) OR
                 (check_out >= %s AND check_out <= %s) OR
@@ -909,7 +913,7 @@ class Domilocus_Calendar {
             "SELECT id, check_in, check_out, status
              FROM {$wpdb->prefix}domilocus_bookings
              WHERE apartment_id = %d
-             AND status IN ('confirmed', 'pending')
+             AND status IN ('confirmed', 'pending', 'completed')
              AND (check_in <= %s AND check_out >= %s)",
             $apartment_id,
             $end_date,

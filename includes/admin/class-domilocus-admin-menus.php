@@ -907,6 +907,29 @@ class Domilocus_Admin_Menus {
             <form method="get">
                 <input type="hidden" name="page" value="domilocus-bookings">
                 <?php
+                // La vista selezionata (Attive/Archivio/Tutte) e l'ordinamento
+                // vanno riportati come campi nascosti: questo form GET sostituisce
+                // l'intera query string quando si usa la ricerca o il pulsante
+                // "Filtra", quindi senza di essi si tornava di colpo alla vista
+                // predefinita "Attive" — che nasconde tutte le prenotazioni già
+                // concluse, facendole sembrare sparite.
+                // phpcs:disable WordPress.Security.NonceVerification.Recommended
+                $preserved = array(
+                    'view'    => isset($_GET['view']) ? sanitize_text_field(wp_unslash($_GET['view'])) : '',
+                    'orderby' => isset($_GET['orderby']) ? sanitize_key(wp_unslash($_GET['orderby'])) : '',
+                    'order'   => isset($_GET['order']) ? sanitize_key(wp_unslash($_GET['order'])) : '',
+                );
+                // phpcs:enable WordPress.Security.NonceVerification.Recommended
+                foreach ($preserved as $preserved_key => $preserved_value) {
+                    if ($preserved_value !== '') {
+                        printf(
+                            '<input type="hidden" name="%s" value="%s">',
+                            esc_attr($preserved_key),
+                            esc_attr($preserved_value)
+                        );
+                    }
+                }
+
                 $table->search_box(__('Cerca prenotazioni', 'domilocus'), 'booking');
                 $table->views();
                 $table->display();

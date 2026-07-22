@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.18
+Stable tag: 1.5.19
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,6 +179,12 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.19 =
+* Fixed: le prenotazioni già concluse (stato "completed") non comparivano nel calendario admin (viste Mese, Settimana e Anno), lasciando vuoti i mesi passati — ora lo storico è visibile per intero, utile per confrontare lo stesso periodo di anni diversi.
+* Fixed: nell'elenco Prenotazioni, l'uso della ricerca o del pulsante "Filtra" faceva perdere la vista selezionata, riportando di colpo a "Attive" (che nasconde tutto il passato) e facendo sembrare sparite le prenotazioni concluse. Vista e ordinamento vengono ora conservati.
+* Fixed: cambiando vista (Attive/Archivio/Tutte) si perdeva l'ordinamento scelto: ora viene mantenuto.
+* Fixed: l'importazione prenotazioni non ricostruiva le date occupate nel calendario per le prenotazioni già concluse, che risultavano quindi invisibili nel calendario del sito di destinazione pur essendo state importate correttamente.
 
 = 1.5.18 =
 * Fixed: la barra di navigazione tra le sezioni Domilocus spariva del tutto aprendo la pagina Appartamenti o una qualsiasi delle 17+ pagine degli addon (Contratti, Statistiche, Prezzi Dinamici, ecc.) — dato che il menu laterale nativo di WordPress resta volutamente nascosto, l'utente restava senza alcun modo per spostarsi da una sezione all'altra. La barra ora compare automaticamente su ogni pagina Domilocus, senza dover essere richiamata singolarmente da ciascuna pagina.
