@@ -148,6 +148,22 @@ class Domilocus_Booking_Form {
                         }
                         ?>
                     </p>
+                    <?php
+                    // Motivo tecnico del fallimento, quando disponibile: senza
+                    // di esso l'host vede solo un messaggio generico e non ha
+                    // modo di capire cosa correggere.
+                    $db_error_key = 'domilocus_booking_save_error_' . get_current_user_id();
+                    $db_error     = get_transient($db_error_key);
+                    if ($db_error) {
+                        delete_transient($db_error_key);
+                        ?>
+                        <p style="margin-top:4px;">
+                            <strong><?php esc_html_e('Dettaglio tecnico:', 'domilocus'); ?></strong>
+                            <code><?php echo esc_html($db_error); ?></code>
+                        </p>
+                        <?php
+                    }
+                    ?>
                 </div>
             <?php endif; ?>
             
@@ -914,8 +930,20 @@ class Domilocus_Booking_Form {
 
         $allowed_statuses = array('pending', 'confirmed', 'cancelled', 'completed', 'no_show');
         if (!in_array($normalized_status, $allowed_statuses, true)) {
-            $normalized_status = $is_edit && $booking && isset($booking->status)
-                ? sanitize_text_field((string) $booking->status)
+            // Stato non riconosciuto: si conserva quello già salvato invece di
+            // degradare la prenotazione a "pending". ($booking non esiste in
+            // questo metodo — vive in render_page() — quindi va riletto dal DB:
+            // prima veniva sempre valutato come nullo e lo stato si perdeva.)
+            $current_status = '';
+            if ($is_edit) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+                $current_status = (string) $wpdb->get_var($wpdb->prepare(
+                    "SELECT status FROM {$wpdb->prefix}domilocus_bookings WHERE id = %d",
+                    $booking_id
+                ));
+            }
+            $normalized_status = $current_status !== ''
+                ? sanitize_text_field($current_status)
                 : 'pending';
         }
 
@@ -989,7 +1017,12 @@ class Domilocus_Booking_Form {
                 if (isset($_POST['access_code'])) {
                     $submitted_access_code = sanitize_text_field(wp_unslash($_POST['access_code']));
                     if ($submitted_access_code === '') {
-                        $booking_data['access_code'] = '';
+                        // NULL, non stringa vuota: la colonna ha un indice
+                        // UNIQUE e MySQL considera due stringhe vuote un
+                        // duplicato, mentre due NULL restano distinti. Con ''
+                        // la seconda prenotazione senza codice non si salvava
+                        // più ("Duplicate entry '' for key 'access_code'").
+                        $booking_data['access_code'] = null;
                     } else {
                         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
                         $access_code_owner = $wpdb->get_var($wpdb->prepare(
@@ -998,7 +1031,11 @@ class Domilocus_Booking_Form {
                             $booking_id
                         ));
                         if ($access_code_owner) {
-                            $booking_data['access_code'] = $orig->access_code ?? '';
+                            // Stesso motivo: se la prenotazione non aveva un
+                            // codice si torna a NULL, mai a stringa vuota.
+                            $booking_data['access_code'] = ($orig->access_code !== null && $orig->access_code !== '')
+                                ? $orig->access_code
+                                : null;
                         } else {
                             $booking_data['access_code'] = $submitted_access_code;
                         }
@@ -1047,6 +1084,7 @@ class Domilocus_Booking_Form {
 
                 wp_safe_redirect(add_query_arg('message', 'updated', admin_url('admin.php?page=domilocus-bookings')));
             } else {
+                self::remember_db_error();
                 wp_safe_redirect(add_query_arg('error', 'save_failed', $redirect_url));
             }
         } else {
@@ -1087,11 +1125,32 @@ class Domilocus_Booking_Form {
 
                 wp_safe_redirect(add_query_arg('message', 'saved', admin_url('admin.php?page=domilocus-bookings')));
             } else {
+                self::remember_db_error();
                 wp_safe_redirect(add_query_arg('error', 'save_failed', $redirect_url));
             }
         }
-        
+
         exit;
+    }
+
+    /**
+     * Conserva l'errore del database fino al caricamento successivo del form.
+     *
+     * Senza questo, un fallimento di scrittura mostra solo "Error saving
+     * booking": il motivo reale (colonna mancante, valore duplicato, dato
+     * troppo lungo) resta invisibile e la diagnosi richiede di leggere i log.
+     */
+    private static function remember_db_error() {
+        global $wpdb;
+        $error = trim((string) $wpdb->last_error);
+        if ($error === '') {
+            return;
+        }
+        set_transient(
+            'domilocus_booking_save_error_' . get_current_user_id(),
+            mb_substr($error, 0, 500),
+            120
+        );
     }
 
     /**

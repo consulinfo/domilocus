@@ -390,9 +390,36 @@ class Domilocus_Install {
         dbDelta($availability_sql);
         dbDelta($pricing_sql);
         dbDelta($ical_sql);
-        
+
+        self::normalize_empty_access_codes();
+
         // Update database version
         update_option('domilocus_manager_db_version', DOMILOCUS_VERSION);
+    }
+
+    /**
+     * Porta a NULL i codici di accesso salvati come stringa vuota.
+     *
+     * `access_code` ha un indice UNIQUE. MySQL tratta due NULL come valori
+     * distinti ma due stringhe vuote come un duplicato: una singola riga con
+     * '' bastava a impedire il salvataggio di qualunque altra prenotazione
+     * senza codice, con un generico "Error saving booking".
+     *
+     * @return int Righe normalizzate.
+     */
+    public static function normalize_empty_access_codes() {
+        global $wpdb;
+        $table = $wpdb->prefix . 'domilocus_bookings';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) !== $table) {
+            return 0;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $affected = $wpdb->query("UPDATE $table SET access_code = NULL WHERE access_code = ''");
+
+        return is_numeric($affected) ? (int) $affected : 0;
     }
     
     /**
