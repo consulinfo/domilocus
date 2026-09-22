@@ -1162,6 +1162,10 @@ class Domilocus_Booking_Form {
      * @param int $booking_id
      */
     private static function save_special_times($booking_id) {
+        if (!isset($_POST['domilocus_booking_nonce']) || !is_string($_POST['domilocus_booking_nonce']) ||
+            !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['domilocus_booking_nonce'])), 'domilocus_save_booking')) {
+            return;
+        }
         if (!function_exists('domilocus_update_booking_meta')) {
             return;
         }

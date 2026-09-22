@@ -3,14 +3,14 @@
  * Plugin Name: Domilocus
  * Plugin URI: https://domilocus.consulinfo.it
  * Description: Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration.
- * Version: 1.5.20
+ * Version: 1.5.21
  * Author: ConsulInfo
  * Author URI: https://domilocus.consulinfo.it
  * Support: dev@consulinfo.it
  * Text Domain: domilocus
  * Domain Path: /languages
  * Requires at least: 6.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * Requires PHP: 8.0
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('DOMILOCUS_VERSION', '1.5.20');
+define('DOMILOCUS_VERSION', '1.5.21');
 define('DOMILOCUS_PLUGIN_FILE', __FILE__);
 define('DOMILOCUS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DOMILOCUS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -97,6 +97,8 @@ final class Domilocus {
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-booking-meta.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-terms-conditions.php';
         require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-receipts.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-guest-guide.php';
+        require_once DOMILOCUS_PLUGIN_DIR . 'includes/functions-guest-icons.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-events-manager.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-eventbrite-api-validator.php';
         // require_once DOMILOCUS_PLUGIN_DIR . 'includes/class-domilocus-tariffs-manager.php';
@@ -164,6 +166,7 @@ final class Domilocus {
 
         // Initialize receipts (non-fiscal)
         Domilocus_Receipts::init();
+        Domilocus_Guest_Guide::init();
         
         // Initialize statistics manager
         // Domilocus_Statistics_Manager::init();
@@ -288,5 +291,3 @@ function domilocus() {
 
 // Initialize the plugin
 domilocus();
-
-

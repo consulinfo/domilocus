@@ -489,7 +489,7 @@ class Domilocus_License {
                 ),
                 'body' => json_encode(array(
                     'license_key' => $license_key,
-                    'domain'      => parse_url(home_url(), PHP_URL_HOST),
+                    'domain'      => wp_parse_url(home_url(), PHP_URL_HOST),
                 )),
             )
         );
@@ -510,6 +510,7 @@ class Domilocus_License {
             return array(
                 'success' => false,
                 'status'  => 'error',
+                /* translators: %d: HTTP status code returned by the license server. */
                 'message' => sprintf(__('Unexpected response from the license server (invalid JSON). HTTP %d.', 'domilocus'), $code),
             );
         }
@@ -520,7 +521,7 @@ class Domilocus_License {
             $expires = '';
 
             if (!empty($body['expires_at'])) {
-                $expires = date('Y-m-d', strtotime($body['expires_at']));
+                $expires = gmdate('Y-m-d', strtotime($body['expires_at']));
             }
 
             return array(

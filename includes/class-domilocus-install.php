@@ -417,7 +417,7 @@ class Domilocus_Install {
         }
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        $affected = $wpdb->query("UPDATE $table SET access_code = NULL WHERE access_code = ''");
+        $affected = $wpdb->query("UPDATE {$wpdb->prefix}domilocus_bookings SET access_code = NULL WHERE access_code = ''");
 
         return is_numeric($affected) ? (int) $affected : 0;
     }

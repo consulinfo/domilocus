@@ -2,9 +2,9 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.20
+Stable tag: 1.5.21
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,7 +67,18 @@ Premium add-ons are installed separately and extend the free version with additi
 
 == External Services ==
 
-**The FREE version of this plugin does NOT connect to any external services.**
+The guest guide includes optional links to external map services. No map is embedded and no location request is made until a guest clicks a map link.
+
+* **Google Maps and Apple Maps (guest directions)**
+    * Used to open directions to the apartment when the guest clicks "Indicazioni stradali".
+    * Data sent on click: apartment destination (coordinates or address), plus standard browser connection data. The map provider handles any request for the guest's current location; Domilocus does not collect it.
+    * Google: [Terms](https://maps.google.com/help/terms_maps/) | [Privacy](https://policies.google.com/privacy)
+    * Apple: [Terms](https://www.apple.com/legal/internet-services/maps/terms-en.html) | [Privacy](https://www.apple.com/legal/privacy/data/en/apple-maps/)
+
+* **Domilocus license service**
+    * Used when activating or checking a paid addon license.
+    * Data sent: the license key and site domain, to the configured Domilocus license server at domilocus.consulinfo.it.
+    * Service website: https://domilocus.consulinfo.it/
 
 Premium add-ons (sold separately) may connect to third-party services to provide specific functionalities:
 
@@ -179,6 +190,17 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.21 =
+* Added: guida al soggiorno configurabile per appartamento, con benvenuto, Wi-Fi, regole, posizione, trasporti, eventi, contatti, negozi, manuali e oggetti utili.
+* Added: editor visuale per i contenuti della guida, ricerca rapida, copia password Wi-Fi e indicazioni stradali con Apple Maps o Google Maps.
+* Improved: icone vettoriali uniformi, sezioni espandibili con selezione evidenziata e apertura esclusiva, layout desktop piu ampio e tabelle scorrevoli su mobile.
+* Fixed: escaping delle icone, sanitizzazione dei contenuti, verifica nonce degli orari speciali e validazione dei file di importazione.
+* Fixed: query di importazione e normalizzazione dei codici, gestione URL e date e commenti per le traduzioni.
+* Changed: aggiornamenti del plugin gratuito affidati esclusivamente al sistema nativo di WordPress.org.
+* Tested: WordPress 7.1.1.
+* Compatibility: con Domilocus Starter la visualizzazione della guida richiede la versione aggiornata dell'addon che conserva le sezioni aggiuntive nel riepilogo.
+
 
 = 1.5.20 =
 * Fixed: **impossibile salvare una prenotazione dall'area amministrativa** ("Error saving booking"). Il campo "Codice generato", se lasciato vuoto, veniva salvato come stringa vuota anziché come valore nullo: la colonna ha un indice univoco e MySQL considera due stringhe vuote un duplicato, quindi bastava una sola prenotazione senza codice per bloccare il salvataggio di tutte le altre. Le righe già salvate così vengono corrette automaticamente all'aggiornamento.
@@ -488,6 +510,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 
 == Upgrade Notice ==
 
+= 1.5.21 =
+Guida ospite con editor visuale, indicazioni stradali e layout responsive. Correzioni di sicurezza e compatibilita WordPress 7.1. Aggiornare anche Starter per visualizzare la guida nel suo riepilogo.
+
+
 = 1.0.2 =
 This version separates free and premium features. Premium functionality now requires separate add-on plugins available at domilocus.consulinfo.it.
 
@@ -498,5 +524,4 @@ For support, feature requests, or bug reports:
 * Premium support: https://domilocus.consulinfo.it/support
 * Documentation: https://domilocus.consulinfo.it/docs
 * GitHub: https://github.com/consulinfo/domilocus
-
 

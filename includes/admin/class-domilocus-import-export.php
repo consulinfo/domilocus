@@ -212,6 +212,10 @@ class Domilocus_Import_Export {
             wp_safe_redirect(add_query_arg('import_error', 'upload_failed', $redirect));
             exit;
         }
+        if (!isset($_FILES['import_file']['size']) || !is_numeric($_FILES['import_file']['size'])) {
+            wp_safe_redirect(add_query_arg('import_error', 'upload_failed', $redirect));
+            exit;
+        }
         if ((int) $_FILES['import_file']['size'] > self::MAX_UPLOAD_BYTES) {
             wp_safe_redirect(add_query_arg('import_error', 'too_large', $redirect));
             exit;
@@ -252,7 +256,7 @@ class Domilocus_Import_Export {
         // possono differire — si importa solo l'intersezione, senza mai
         // fallire per una colonna in più o in meno.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-        $columns = $wpdb->get_col("SHOW COLUMNS FROM {$table}");
+        $columns = $wpdb->get_col("SHOW COLUMNS FROM {$wpdb->prefix}domilocus_bookings");
         $columns = array_diff($columns, array('id'));
 
         // Mappa nome appartamento → id (case-insensitive, spazi normalizzati).
@@ -288,7 +292,7 @@ class Domilocus_Import_Export {
             // Duplicato: stesso appartamento, stesse date, stessa email ospite.
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $exists = (int) $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM {$table} WHERE apartment_id = %d AND check_in = %s AND check_out = %s AND customer_email = %s",
+                "SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings WHERE apartment_id = %d AND check_in = %s AND check_out = %s AND customer_email = %s",
                 $apartment_id,
                 $row['check_in'],
                 $row['check_out'],
