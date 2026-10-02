@@ -43,6 +43,7 @@
             search.hidden = cards.length === 0;
             search.querySelector('input').addEventListener('input', function (event) {
                 var query = normalize(event.target.value.trim());
+                guide.querySelectorAll('.dgg-events-more').forEach(function (more) { more.open = !!query; });
                 var count = 0;
                 cards.forEach(function (card, index) {
                     var match = !query || contents[index].includes(query);

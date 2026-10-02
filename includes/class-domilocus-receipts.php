@@ -67,7 +67,7 @@ class Domilocus_Receipts {
             <h2 style="margin-top:0;"><?php echo esc_html($doc_title); ?></h2>
 
             <?php if ($message_code === 'saved'): ?>
-                <div style="background:#ecfdf5;border:1px solid #a7f3d0;padding:10px 12px;margin-bottom:14px;border-radius:8px;color:#065f46;">Dati aggiornati correttamente. Ora puoi scaricare la ricevuta.</div>
+                <div style="background:#ecfdf5;border:1px solid #a7f3d0;padding:10px 12px;margin-bottom:14px;border-radius:8px;color:#065f46;"><?php esc_html_e('Dati aggiornati correttamente. Ora puoi scaricare la ricevuta.', 'domilocus'); ?></div>
             <?php endif; ?>
 
             <?php if ($error_code !== ''): ?>
@@ -82,9 +82,9 @@ class Domilocus_Receipts {
             $status_raw  = strtolower(trim((string) (isset($booking->status) ? $booking->status : '')));
             $is_noshow   = in_array($status_raw, array('no_show', 'noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true);
             $status_labels = array(
-                'confirmed'  => 'Confermata',
-                'pending'    => 'In attesa',
-                'cancelled'  => 'Cancellata',
+                'confirmed'  => __('Confermata', 'domilocus'),
+                'pending'    => __('In attesa', 'domilocus'),
+                'cancelled'  => __('Cancellata', 'domilocus'),
                 'no_show'    => 'No-Show',
                 'noshow'     => 'No-Show',
                 'no-show'    => 'No-Show',
@@ -123,21 +123,24 @@ class Domilocus_Receipts {
             <!-- Booking details card -->
             <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:16px 20px;margin-bottom:18px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-                    <h3 style="margin:0;font-size:17px;">Prenotazione #<?php echo esc_html((string) $booking->id); ?></h3>
+                    <h3 style="margin:0;font-size:17px;"><?php
+                    /* translators: %d: Booking ID. */
+                    printf(esc_html__('Prenotazione #%d', 'domilocus'), (int) $booking->id);
+                    ?></h3>
                     <span style="background:<?php echo esc_attr($status_bg_color); ?>;color:<?php echo esc_attr($status_color); ?>;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;border:1px solid <?php echo esc_attr($status_color); ?>;"><?php echo esc_html($status_label); ?></span>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-in</span><strong><?php echo esc_html($check_in_label); ?></strong></div>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Check-out</span><strong><?php echo esc_html($check_out_label); ?></strong></div>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Durata</span><strong><?php echo (int) $nights; ?> notte/i</strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Check-in', 'domilocus'); ?></span><strong><?php echo esc_html($check_in_label); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Check-out', 'domilocus'); ?></span><strong><?php echo esc_html($check_out_label); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Durata', 'domilocus'); ?></span><strong><?php echo (int) $nights; ?> <?php esc_html_e('notte/i', 'domilocus'); ?></strong></div>
                     <?php if (!empty($booking->guests)): ?>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Ospiti</span><strong><?php echo (int) $booking->guests; ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Ospiti', 'domilocus'); ?></span><strong><?php echo (int) $booking->guests; ?></strong></div>
                     <?php endif; ?>
                     <?php if ($apt_name !== ''): ?>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Struttura</span><strong><?php echo esc_html($apt_name); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Struttura', 'domilocus'); ?></span><strong><?php echo esc_html($apt_name); ?></strong></div>
                     <?php endif; ?>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Importo</span><strong><?php echo esc_html($total_label); ?></strong></div>
-                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;">Origine</span><strong><?php echo esc_html(self::source_label($booking)); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Importo', 'domilocus'); ?></span><strong><?php echo esc_html($total_label); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Origine', 'domilocus'); ?></span><strong><?php echo esc_html(self::source_label($booking)); ?></strong></div>
                 </div>
             </div>
 
@@ -146,16 +149,16 @@ class Domilocus_Receipts {
                 <h3 style="margin:0 0 10px;font-size:15px;">📄 <?php echo esc_html($doc_title); ?></h3>
                 <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">
                     <?php if ($doc_type === 'penalty_receipt' || $is_noshow): ?>
-                    Ricevuta penale per mancato arrivo. Visualizzala e stampala oppure salvala in PDF dal browser.
+                    <?php esc_html_e('Ricevuta penale per mancato arrivo. Visualizzala e stampala oppure salvala in PDF dal browser.', 'domilocus'); ?>
                     <?php elseif ($doc_type === 'non_fiscal_summary'): ?>
-                    Prospetto riepilogativo del soggiorno con pagamento gestito da intermediario. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser.
+                    <?php esc_html_e('Prospetto riepilogativo del soggiorno con pagamento gestito da intermediario. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser.', 'domilocus'); ?>
                     <?php else: ?>
-                    Ricevuta del tuo soggiorno. Visualizzala, stampala o salvala in PDF tramite la funzione di stampa del browser.
+                    <?php esc_html_e('Ricevuta del tuo soggiorno. Visualizzala, stampala o salvala in PDF tramite la funzione di stampa del browser.', 'domilocus'); ?>
                     <?php endif; ?>
                 </p>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 Visualizza ricevuta</a>
-                    <a href="<?php echo esc_url($print_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">🖨️ Stampa / Salva PDF</a>
+                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 <?php esc_html_e('Visualizza ricevuta', 'domilocus'); ?></a>
+                    <a href="<?php echo esc_url($print_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">🖨️ <?php esc_html_e('Stampa / Salva PDF', 'domilocus'); ?></a>
                 </div>
             </div>
 
@@ -165,8 +168,8 @@ class Domilocus_Receipts {
                  mostrato all'ospite, è un promemoria per l'host, non per chi
                  sta prenotando la sua casa. -->
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:10px;">
-                <h3 style="margin:0 0 4px;font-size:15px;">✏️ Dati ospite per la ricevuta</h3>
-                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;">Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.</p>
+                <h3 style="margin:0 0 4px;font-size:15px;">✏️ <?php esc_html_e('Dati ospite per la ricevuta', 'domilocus'); ?></h3>
+                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;"><?php esc_html_e('Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.', 'domilocus'); ?></p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('domilocus_receipt_portal_save', 'domilocus_receipt_portal_save_nonce'); ?>
                     <input type="hidden" name="action" value="domilocus_receipt_portal_save" />
@@ -174,29 +177,29 @@ class Domilocus_Receipts {
                     <input type="hidden" name="booking_id" value="<?php echo esc_attr((string) $booking->id); ?>" />
                     <input type="hidden" name="booking_key" value="<?php echo esc_attr($receipt_key); ?>" />
                     <p>
-                        <label for="dml_guest_name"><strong>Nome e Cognome / Ragione Sociale</strong></label><br>
+                        <label for="dml_guest_name"><strong><?php esc_html_e('Nome e Cognome / Ragione Sociale', 'domilocus'); ?></strong></label><br>
                         <input id="dml_guest_name" name="customer_name" type="text" required class="regular-text" style="width:100%;max-width:520px;" value="<?php echo esc_attr((string) $booking->customer_name); ?>" />
                     </p>
                     <p>
-                        <label for="dml_guest_fiscal"><strong>Codice Fiscale / ID / P.IVA</strong></label><br>
+                        <label for="dml_guest_fiscal"><strong><?php esc_html_e('Codice Fiscale / ID / P.IVA', 'domilocus'); ?></strong></label><br>
                         <input id="dml_guest_fiscal" name="customer_fiscal_code" type="text" class="regular-text" style="width:100%;max-width:420px;" value="<?php echo esc_attr(isset($booking->customer_fiscal_code) ? (string) $booking->customer_fiscal_code : ''); ?>" />
                     </p>
                     <p>
-                        <label for="dml_guest_address"><strong>Indirizzo di residenza</strong></label><br>
+                        <label for="dml_guest_address"><strong><?php esc_html_e('Indirizzo di residenza', 'domilocus'); ?></strong></label><br>
                         <input id="dml_guest_address" name="customer_residence_address" type="text" required class="regular-text" style="width:100%;max-width:620px;" value="<?php echo esc_attr(isset($booking->customer_residence_address) ? (string) $booking->customer_residence_address : ''); ?>" />
                     </p>
                     <p>
-                        <label for="dml_guest_country"><strong>Nazione</strong></label><br>
+                        <label for="dml_guest_country"><strong><?php esc_html_e('Nazione', 'domilocus'); ?></strong></label><br>
                         <input id="dml_guest_country" name="customer_country" type="text" required class="regular-text" style="width:100%;max-width:320px;" value="<?php echo esc_attr(isset($booking->customer_country) ? (string) $booking->customer_country : ''); ?>" />
                     </p>
                     <p>
                         <label>
                             <input type="checkbox" name="privacy_consent" value="1" required />
-                            Acconsento al trattamento dei dati per gli adempimenti di legge (Polizia di Stato e fini fiscali)
+                            <?php esc_html_e('Acconsento al trattamento dei dati per gli adempimenti di legge (Polizia di Stato e fini fiscali)', 'domilocus'); ?>
                         </label>
                     </p>
                     <p>
-                        <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">💾 Salva dati</button>
+                        <button type="submit" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#00a32a;color:#fff;border:none;border-radius:5px;font-weight:600;font-size:14px;cursor:pointer;">💾 <?php esc_html_e('Salva dati', 'domilocus'); ?></button>
                     </p>
                 </form>
             </div>
@@ -214,7 +217,7 @@ class Domilocus_Receipts {
                 'domilocus_receipt_portal_login'
             )
         ) {
-            wp_die('Richiesta non valida.');
+            wp_die(esc_html__('Richiesta non valida.', 'domilocus'));
         }
 
         $redirect_to = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : home_url('/');
@@ -257,7 +260,7 @@ class Domilocus_Receipts {
                 'domilocus_receipt_portal_save'
             )
         ) {
-            wp_die('Richiesta non valida.');
+            wp_die(esc_html__('Richiesta non valida.', 'domilocus'));
         }
 
         $redirect_to = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : home_url('/');
@@ -383,7 +386,7 @@ class Domilocus_Receipts {
                         &nbsp;<span style="background:#fff4e5;color:#8a4b00;border-radius:3px;padding:1px 5px;font-size:11px;">no-show</span>
                     <?php endif; ?>
                     <?php if ($is_platform): ?>
-                        &nbsp;<span style="background:#f0f6ff;color:#2271b1;border-radius:3px;padding:1px 5px;font-size:11px;">piattaforma</span>
+                        &nbsp;<span style="background:#f0f6ff;color:#2271b1;border-radius:3px;padding:1px 5px;font-size:11px;"><?php esc_html_e('piattaforma', 'domilocus'); ?></span>
                     <?php endif; ?>
                 </p>
                 <button type="button" id="<?php echo esc_attr($btn_id); ?>" class="button button-primary" style="width:100%;">
@@ -414,7 +417,7 @@ class Domilocus_Receipts {
                 <a href="<?php echo esc_url($url); ?>" class="button button-primary" target="_blank" rel="noopener" style="margin-right:8px;">
                     Scarica / Stampa
                 </a>
-                <button type="button" class="button dml-rcpt-close" data-modal="<?php echo esc_attr($modal_id); ?>">Chiudi</button>
+                <button type="button" class="button dml-rcpt-close" data-modal="<?php echo esc_attr($modal_id); ?>"><?php esc_html_e('Chiudi', 'domilocus'); ?></button>
                 <p style="font-size:11px;color:#777;margin:14px 0 0;">Documento non fiscale a numerazione progressiva annuale.</p>
             </div>
         </div>
@@ -487,16 +490,16 @@ class Domilocus_Receipts {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $booking_id = isset($_GET['booking_id']) ? absint($_GET['booking_id']) : 0;
         if (!$booking_id) {
-            wp_die('ID prenotazione non valido.');
+            wp_die(esc_html__('ID prenotazione non valido.', 'domilocus'));
         }
 
         $booking = self::get_booking($booking_id);
         if (!$booking) {
-            wp_die('Prenotazione non trovata.');
+            wp_die(esc_html__('Prenotazione non trovata.', 'domilocus'));
         }
 
         if (!self::authorize_download($booking)) {
-            wp_die('Accesso non autorizzato alla ricevuta.');
+            wp_die(esc_html__('Accesso non autorizzato alla ricevuta.', 'domilocus'));
         }
 
         self::ensure_receipt_for_booking($booking);
@@ -636,7 +639,7 @@ class Domilocus_Receipts {
         header('Cache-Control: private, no-cache');
         ?>
 <!DOCTYPE html>
-<html lang="it">
+<html <?php language_attributes(); ?>>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -690,8 +693,11 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 </head>
 <body>
   <div class="dml-print-bar" style="position:fixed;top:0;left:0;right:0;background:#1e3a5f;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.35);">
-    <span style="font-size:14px;font-weight:600;"><?php echo esc_html($document['title']); ?> <?php echo esc_html($number); ?> &mdash; Prenotazione #<?php echo esc_html((string) $booking_id); ?></span>
-    <button onclick="window.print()" style="background:#fff;color:#1e3a5f;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ Stampa / Salva PDF</button>
+    <span style="font-size:14px;font-weight:600;"><?php echo esc_html($document['title']); ?> <?php echo esc_html($number); ?> &mdash; <?php
+    /* translators: %d: Booking ID. */
+    printf(esc_html__('Prenotazione #%d', 'domilocus'), (int) $booking_id);
+    ?></span>
+    <button onclick="window.print()" style="background:#fff;color:#1e3a5f;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ <?php esc_html_e('Stampa / Salva PDF', 'domilocus'); ?></button>
   </div>
   <div class="dml-spacer" style="height:54px;"></div>
   <div class="doc">
@@ -775,9 +781,9 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         <div class="sign-bollo-row">
             <?php if ($show_bollo_footer): ?>
             <div class="bollo-placeholder">
-                <span class="bollo-label">Marca da bollo</span>
+                <span class="bollo-label"><?php esc_html_e('Marca da bollo', 'domilocus'); ?></span>
                 <span class="bollo-amount">€ 2,00</span>
-                <span class="bollo-sub">da apporre a cura<br>dell'ospite</span>
+                <span class="bollo-sub"><?php esc_html_e('da apporre a cura dell\'ospite', 'domilocus'); ?></span>
             </div>
             <?php else: ?>
             <div></div>
@@ -785,9 +791,9 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
             <div class="sign-wrap">
                 <div class="sign-box">
                     <p class="signature-name"><?php echo esc_html($host_name); ?></p>
-                    <p style="margin:0;"><strong>Firma del locatore</strong></p>
+                    <p style="margin:0;"><strong><?php esc_html_e('Firma del locatore', 'domilocus'); ?></strong></p>
                     <div class="sign-line"></div>
-                    <p class="signature-legal">Documento informatico predisposto dal sistema gestionale - Firma autografa sostituita a mezzo stampa ai sensi dell'art. 3 del D.Lgs. 39/1993</p>
+                    <p class="signature-legal"><?php esc_html_e('Documento informatico predisposto dal sistema gestionale - Firma autografa sostituita a mezzo stampa ai sensi dell\'art. 3 del D.Lgs. 39/1993', 'domilocus'); ?></p>
                 </div>
             </div>
         </div>
@@ -801,9 +807,15 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     </div>
 
     <div class="meta">
-      <div>Prenotazione #<?php echo esc_html((string) $booking_id); ?></div>
+      <div><?php
+      /* translators: %d: Booking ID. */
+      printf(esc_html__('Prenotazione #%d', 'domilocus'), (int) $booking_id);
+      ?></div>
       <?php if ($apartment_name !== ''): ?><div><?php echo esc_html($apartment_name); ?></div><?php endif; ?>
-      <div>Emessa il <?php echo esc_html(wp_date('d/m/Y H:i:s')); ?></div>
+      <div><?php
+      /* translators: %s: Receipt issue date and time, formatted for display. */
+      printf(esc_html__('Emessa il %s', 'domilocus'), esc_html(wp_date('d/m/Y H:i:s')));
+      ?></div>
     </div>
   </div>
 </body>
@@ -1007,10 +1019,10 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         }
 
         switch ($source) {
-            case 'ical_import': return 'iCal / piattaforma esterna';
-            case 'frontend':    return 'Sito Diretto';
+            case 'ical_import': return __('iCal / piattaforma esterna', 'domilocus');
+            case 'frontend':    return __('Sito Diretto', 'domilocus');
             case 'admin':
-            case 'manual':      return 'Inserimento manuale (admin)';
+            case 'manual':      return __('Inserimento manuale (admin)', 'domilocus');
         }
 
         return $source;
@@ -1157,19 +1169,19 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     private static function portal_error_label($code) {
         switch ((string) $code) {
             case 'missing_fields':
-                return 'Compila Numero Prenotazione e Cognome Ospite.';
+                return __('Compila Numero Prenotazione e Cognome Ospite.', 'domilocus');
             case 'booking_not_found':
-                return 'Prenotazione non trovata.';
+                return __('Prenotazione non trovata.', 'domilocus');
             case 'invalid_surname':
-                return 'Il cognome inserito non corrisponde alla prenotazione.';
+                return __('Il cognome inserito non corrisponde alla prenotazione.', 'domilocus');
             case 'access_denied':
-                return 'Accesso non autorizzato.';
+                return __('Accesso non autorizzato.', 'domilocus');
             case 'privacy_required':
-                return 'Devi fornire il consenso privacy per proseguire.';
+                return __('Devi fornire il consenso privacy per proseguire.', 'domilocus');
             case 'feature_locked':
-                return 'Funzione disponibile dal piano Professional.';
+                return __('Funzione disponibile dal piano Professional.', 'domilocus');
             default:
-                return 'Si e verificato un errore. Riprova.';
+                return __('Si e verificato un errore. Riprova.', 'domilocus');
         }
     }
 

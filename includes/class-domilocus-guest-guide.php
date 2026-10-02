@@ -152,8 +152,12 @@ class Domilocus_Guest_Guide {
     public static function render($booking) {
         // This hook is reached only after the confirmation shortcode verifies the booking key.
         $data = self::data((int) $booking->apartment_id);
+        $extras = array();
+        foreach (self::sections() as $section => $label) {
+            $extras[$section] = wp_kses_post(apply_filters('domilocus_guest_guide_section_extra', '', $section, $booking));
+        }
         $destination = self::directions_destination((int) $booking->apartment_id, $data['location'] ?? '');
-        if ($destination === '' && !array_filter($data, static function ($value) { return is_string($value) && trim($value) !== ''; })) {
+        if ($destination === '' && !array_filter($extras) && !array_filter($data, static function ($value) { return is_string($value) && trim($value) !== ''; })) {
             return;
         }
         $base = DOMILOCUS_PLUGIN_DIR . 'assets/';
@@ -192,11 +196,12 @@ class Domilocus_Guest_Guide {
                         </div>
                     </details>
                 <?php endif; ?>
-                <?php foreach (self::sections() as $key => $label) : if (empty(trim($data[$key] ?? '')) && !($key === 'location' && ($destination !== '' || !empty($data['map_url'])))) { continue; } ?>
+                <?php foreach (self::sections() as $key => $label) : if (empty(trim($data[$key] ?? '')) && empty($extras[$key]) && !($key === 'location' && ($destination !== '' || !empty($data['map_url'])))) { continue; } ?>
                     <details class="dgg-card">
                         <?php self::card_heading($key, $label); ?>
                         <div class="dgg-content">
                             <?php echo wp_kses_post(wpautop($data[$key] ?? '')); ?>
+                            <?php echo wp_kses_post($extras[$key]); ?>
                             <?php if ($key === 'location' && $destination !== '') :
                                 $google_url = 'https://www.google.com/maps/dir/?api=1&destination=' . rawurlencode($destination);
                                 $apple_url = 'https://maps.apple.com/?daddr=' . rawurlencode($destination);

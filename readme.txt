@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.21
+Stable tag: 1.5.24
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,19 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.24 =
+* Improved: guest receipt screens and printable documents use translatable labels, messages and document language attributes.
+* Added: bundled translations for standard guest receipt and stay guide text in English, French, Spanish and German.
+* Fixed: missing translator comments for booking IDs and receipt issue dates reported by Plugin Check.
+
+= 1.5.23 =
+* Added: apartment check-in window end time, used by the Premium arrival message preview.
+
+= 1.5.22 =
+* Added integration point for booking-specific guest guide content from addons.
+* Added responsive event cards, expandable event lists and guide search support.
+* Event selection requires Domilocus Professional 1.0.24 or later.
 
 = 1.5.21 =
 * Added: guida al soggiorno configurabile per appartamento, con benvenuto, Wi-Fi, regole, posizione, trasporti, eventi, contatti, negozi, manuali e oggetti utili.
@@ -509,6 +522,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 * Initial public release
 
 == Upgrade Notice ==
+
+= 1.5.24 =
+Traduzioni dei testi standard della ricevuta e della guida ospite. Correzioni Plugin Check. Include le migliorie alla guida e l'orario finale di check-in delle versioni 1.5.22 e 1.5.23.
 
 = 1.5.21 =
 Guida ospite con editor visuale, indicazioni stradali e layout responsive. Correzioni di sicurezza e compatibilita WordPress 7.1. Aggiornare anche Starter per visualizzare la guida nel suo riepilogo.

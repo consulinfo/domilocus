@@ -2,7 +2,7 @@
 # Copyright (C) 2024 Domilocus
 msgid ""
 msgstr ""
-"Project-Id-Version: Domilocus 1.0.0\n"
+"Project-Id-Version: Domilocus 1.5.24\n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
@@ -480,3 +480,357 @@ msgstr "Unterkünfte"
 
 msgid "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."
 msgstr "Komplette Buchungs- und Immobilienverwaltungslösung für Ferienwohnungen, Apartments und Unterkünfte mit Backend-Verwaltung."
+
+msgid "Accesso non autorizzato alla ricevuta."
+msgstr "Unberechtigter Zugriff auf die Quittung."
+
+msgid "Accesso non autorizzato."
+msgstr "Unberechtigter Zugriff."
+
+msgid "Acconsento al trattamento dei dati per gli adempimenti di legge (Polizia di Stato e fini fiscali)"
+msgstr "Ich stimme der Datenverarbeitung für gesetzliche Pflichten zu (italienische Staatspolizei und steuerliche Zwecke)"
+
+msgid "Apri il percorso nelle mappe e scegli auto, mezzi pubblici o a piedi. Se la tua posizione non è disponibile, inserisci il punto di partenza."
+msgstr "Öffnen Sie die Route in der Karte und wählen Sie Auto, öffentliche Verkehrsmittel oder zu Fuß. Falls Ihr Standort nicht verfügbar ist, geben Sie den Startpunkt ein."
+
+msgid "Apri la mappa"
+msgstr "Karte öffnen"
+
+msgid "Apri una sezione per trovare le informazioni utili."
+msgstr "Öffnen Sie einen Abschnitt, um nützliche Informationen zu finden."
+
+msgid "Arrivo e parcheggio"
+msgstr "Anreise und Parken"
+
+msgid "Benvenuto"
+msgstr "Willkommen"
+
+msgid "CIN"
+msgstr "CIN"
+
+msgid "CIR"
+msgstr "CIR"
+
+msgid "Cancellata"
+msgstr "Storniert"
+
+msgid "Cerca nella guida"
+msgstr "Im Leitfaden suchen"
+
+msgid "Chiama la struttura"
+msgstr "Unterkunft anrufen"
+
+msgid "Chiudi"
+msgstr "Schließen"
+
+msgid "Codice Fiscale"
+msgstr "Steueridentifikationsnummer"
+
+msgid "Codice Fiscale / ID / P.IVA"
+msgstr "Steuer-ID / ID / USt-IdNr."
+
+msgid "Come arrivare e dove parcheggiare."
+msgstr "Anreise und Parkmöglichkeiten."
+
+msgid "Come spostarti durante il soggiorno."
+msgstr "Unterwegs während Ihres Aufenthalts."
+
+msgid "Come usare elettrodomestici e servizi."
+msgstr "Bedienung der Geräte und Nutzung der Angebote."
+
+msgid "Compila Numero Prenotazione e Cognome Ospite."
+msgstr "Geben Sie Buchungsnummer und Nachnamen des Gastes ein."
+
+msgid "Confermata"
+msgstr "Bestätigt"
+
+msgid "Copia non disponibile: seleziona la password e copiala manualmente."
+msgstr "Kopieren nicht verfügbar: Wählen Sie das Passwort aus und kopieren Sie es manuell."
+
+msgid "Copia password"
+msgstr "Passwort kopieren"
+
+msgid "Corrispettivo del soggiorno pari a {gross_amount}, corrisposto tramite l'intermediario {platform_name}, incaricato della riscossione."
+msgstr "Aufenthaltsentgelt von {gross_amount}, gezahlt über den mit dem Einzug beauftragten Vermittler {platform_name}."
+
+msgid "Corrispettivo lordo"
+msgstr "Bruttoentgelt"
+
+msgid "Cosa scoprire e fare nei dintorni."
+msgstr "Sehenswertes und Aktivitäten in der Umgebung."
+
+msgid "Data di emissione"
+msgstr "Ausstellungsdatum"
+
+msgid "Data prenotazione"
+msgstr "Buchungsdatum"
+
+msgid "Dati Economici"
+msgstr "Finanzielle Angaben"
+
+msgid "Dati aggiornati correttamente. Ora puoi scaricare la ricevuta."
+msgstr "Daten erfolgreich aktualisiert. Sie können die Quittung jetzt herunterladen."
+
+msgid "Dati del Soggiorno"
+msgstr "Aufenthaltsdaten"
+
+msgid "Dati ospite per la ricevuta"
+msgstr "Gästedaten für die Quittung"
+
+msgid "Devi fornire il consenso privacy per proseguire."
+msgstr "Sie müssen der Datenverarbeitung zustimmen, um fortzufahren."
+
+msgid "Documento informatico predisposto dal sistema gestionale - Firma autografa sostituita a mezzo stampa ai sensi dell'art. 3 del D.Lgs. 39/1993"
+msgstr "Vom Verwaltungssystem erstelltes elektronisches Dokument - Handschriftliche Unterschrift durch Druck ersetzt gemäß Art. 3 des italienischen Gesetzesdekrets 39/1993"
+
+msgid "Documento non fiscale"
+msgstr "Nicht steuerliches Dokument"
+
+msgid "Documento non fiscale emesso a fini riepilogativi."
+msgstr "Nicht steuerliches Dokument zu Übersichtszwecken."
+
+msgid "Dove siamo e come raggiungerci."
+msgstr "Wo Sie uns finden und wie Sie uns erreichen."
+
+msgid "Dove trovare gli oggetti utili in casa."
+msgstr "Wo Sie nützliche Gegenstände im Haus finden."
+
+msgid "Dove trovo…"
+msgstr "Wo finde ich…"
+
+msgid "Durata"
+msgstr "Dauer"
+
+msgid "Emessa il %s"
+msgstr "Ausgestellt am %s"
+
+msgid "Es. Wi-Fi, autobus, pronto soccorso…"
+msgstr "Z. B. WLAN, Bus, Notaufnahme…"
+
+msgid "Eventi e dintorni"
+msgstr "Veranstaltungen und Umgebung"
+
+msgid "Firma del locatore"
+msgstr "Unterschrift des Vermieters"
+
+msgid "Funzione disponibile dal piano Professional."
+msgstr "Funktion ab dem Professional-Tarif verfügbar."
+
+msgid "I riferimenti da tenere a portata di mano."
+msgstr "Kontakte, die Sie griffbereit haben sollten."
+
+msgid "ID prenotazione non valido."
+msgstr "Ungültige Buchungs-ID."
+
+msgid "Il cognome inserito non corrisponde alla prenotazione."
+msgstr "Der eingegebene Nachname stimmt nicht mit der Buchung überein."
+
+msgid "Il locatore dichiara il reddito al lordo delle commissioni trattenute dall'intermediario."
+msgstr "Der Vermieter erklärt die Einkünfte vor Abzug der vom Vermittler einbehaltenen Provisionen."
+
+msgid "Il sottoscritto {host_name} attesta l'importo di {gross_amount} trattenuto a titolo di penale per mancato arrivo (no-show)."
+msgstr "Ich, {host_name}, bestätige, dass {gross_amount} als Gebühr wegen Nichtanreise einbehalten wurde."
+
+msgid "Il tuo soggiorno"
+msgstr "Ihr Aufenthalt"
+
+msgid "Immobile"
+msgstr "Unterkunft"
+
+msgid "Importo"
+msgstr "Betrag"
+
+msgid "Importo riscosso per conto del Comune"
+msgstr "Im Auftrag der Gemeinde erhobener Betrag"
+
+msgid "Importo trattenuto a titolo di penale per mancato arrivo (no-show)."
+msgstr "Als Gebühr wegen Nichtanreise einbehaltener Betrag."
+
+msgid "Imposta di bollo"
+msgstr "Stempelsteuer"
+
+msgid "Imposta di bollo, se dovuta, a carico dell'ospite ai sensi del DPR 642/72."
+msgstr "Die Stempelsteuer, falls fällig, trägt der Gast gemäß dem italienischen Präsidialdekret 642/72."
+
+msgid "In attesa"
+msgstr "Ausstehend"
+
+msgid "Indicazioni stradali"
+msgstr "Wegbeschreibung"
+
+msgid "Indirizzo di residenza"
+msgstr "Wohnanschrift"
+
+msgid "Indirizzo immobile"
+msgstr "Adresse der Unterkunft"
+
+msgid "Inserimento manuale (admin)"
+msgstr "Manueller Eintrag (Admin)"
+
+msgid "Intestatario ricevuta (pagante)"
+msgstr "Quittungsinhaber (Zahlender)"
+
+msgid "Io sottoscritto {host_name}, dichiaro di aver ricevuto in data {payment_date} da {guest_name} la somma di {gross_amount}."
+msgstr "Ich, {host_name}, erkläre, am {payment_date} von {guest_name} den Betrag von {gross_amount} erhalten zu haben."
+
+msgid "Le informazioni per vivere bene la casa."
+msgstr "Informationen für einen angenehmen Aufenthalt."
+
+msgid "Locatore"
+msgstr "Vermieter"
+
+msgid "Manuali e istruzioni"
+msgstr "Handbücher und Anleitungen"
+
+msgid "Marca da bollo"
+msgstr "Steuermarke"
+
+msgid "Nazione"
+msgstr "Land"
+
+msgid "Negozi utili"
+msgstr "Nützliche Geschäfte"
+
+msgid "Nessun risultato. Prova un’altra parola o contatta la struttura."
+msgstr "Keine Ergebnisse. Versuchen Sie ein anderes Wort oder kontaktieren Sie die Unterkunft."
+
+msgid "Nome e Cognome / Ragione Sociale"
+msgstr "Vollständiger Name / Firmenname"
+
+msgid "Nome ospite"
+msgstr "Name des Gastes"
+
+msgid "Notti"
+msgstr "Nächte"
+
+msgid "Numeri e contatti utili"
+msgstr "Nützliche Telefonnummern und Kontakte"
+
+msgid "Operazione esclusa dal campo di applicazione dell'IVA ai sensi dell'art. 15 del DPR 633/72."
+msgstr "Vorgang außerhalb des Anwendungsbereichs der Mehrwertsteuer gemäß Art. 15 des italienischen Präsidialdekrets 633/72."
+
+msgid "Operazione fuori campo IVA ai sensi dell'art. 1, comma 2, lett. c) della Legge 431/98 e dell'art. 4 del DL 50/2017"
+msgstr "Vorgang außerhalb des Anwendungsbereichs der Mehrwertsteuer gemäß Art. 1 Abs. 2 Buchst. c des italienischen Gesetzes 431/98 und Art. 4 des Gesetzesdekrets 50/2017"
+
+msgid "Origine"
+msgstr "Quelle"
+
+msgid "Origine prenotazione"
+msgstr "Buchungsquelle"
+
+msgid "Ospite / Intestatario"
+msgstr "Gast / Quittungsinhaber"
+
+msgid "Ospite soggiornante"
+msgstr "Übernachtender Gast"
+
+msgid "Ospiti"
+msgstr "Gäste"
+
+msgid "Password copiata."
+msgstr "Passwort kopiert."
+
+msgid "Password:"
+msgstr "Passwort:"
+
+msgid "Posizione"
+msgstr "Lage"
+
+msgid "Prenotazione #%d"
+msgstr "Buchung Nr. %d"
+
+msgid "Prenotazione non trovata."
+msgstr "Buchung nicht gefunden."
+
+msgid "Prima di partire"
+msgstr "Vor der Abreise"
+
+msgid "Prospetto Riepilogativo Soggiorno"
+msgstr "Aufenthaltsübersicht"
+
+msgid "Prospetto riepilogativo del soggiorno con pagamento gestito da intermediario. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser."
+msgstr "Aufenthaltsübersicht mit Zahlung über einen Vermittler. Ansehen, drucken oder über die Druckfunktion des Browsers als PDF speichern."
+
+msgid "Regole della casa"
+msgstr "Hausregeln"
+
+msgid "Residenza"
+msgstr "Wohnsitz"
+
+msgid "Rete e password per connetterti."
+msgstr "Netzwerk und Passwort zum Verbinden."
+
+msgid "Rete:"
+msgstr "Netzwerk:"
+
+msgid "Ricevuta"
+msgstr "Quittung"
+
+msgid "Ricevuta Penale per Recesso"
+msgstr "Quittung über Stornogebühren"
+
+msgid "Ricevuta del tuo soggiorno. Visualizzala, stampala o salvala in PDF tramite la funzione di stampa del browser."
+msgstr "Quittung für Ihren Aufenthalt. Ansehen, drucken oder über die Druckfunktion des Browsers als PDF speichern."
+
+msgid "Ricevuta penale per mancato arrivo. Visualizzala e stampala oppure salvala in PDF dal browser."
+msgstr "Quittung über die Gebühr wegen Nichtanreise. Ansehen und drucken oder im Browser als PDF speichern."
+
+msgid "Richiesta non valida."
+msgstr "Ungültige Anfrage."
+
+msgid "Salva dati"
+msgstr "Daten speichern"
+
+msgid "Si e verificato un errore. Riprova."
+msgstr "Ein Fehler ist aufgetreten. Versuchen Sie es erneut."
+
+msgid "Sito Diretto"
+msgstr "Direkte Website"
+
+msgid "Spesa e servizi vicino a te."
+msgstr "Einkaufsmöglichkeiten und Dienstleistungen in der Nähe."
+
+msgid "Stampa / Salva PDF"
+msgstr "Drucken / PDF speichern"
+
+msgid "Struttura"
+msgstr "Unterkunft"
+
+msgid "Tabella: scorri lateralmente per leggere tutte le colonne"
+msgstr "Tabelle: Seitlich scrollen, um alle Spalten zu lesen"
+
+msgid "Tassa di soggiorno"
+msgstr "Kurtaxe"
+
+msgid "Totale complessivo"
+msgstr "Gesamtsumme"
+
+msgid "Trasporti e mezzi pubblici"
+msgstr "Verkehr und öffentliche Verkehrsmittel"
+
+msgid "Tutto il necessario per il check-out."
+msgstr "Alles für den Check-out."
+
+msgid "Un saluto per iniziare il soggiorno."
+msgstr "Ein Willkommensgruß für Ihren Aufenthalt."
+
+msgid "Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti."
+msgstr "Prüfen und aktualisieren Sie Ihre Daten. Sie können sie jederzeit ändern: Die Quittung zeigt immer die neuesten Daten."
+
+msgid "Visualizza ricevuta"
+msgstr "Quittung ansehen"
+
+msgid "da apporre a cura dell'ospite"
+msgstr "vom Gast anzubringen"
+
+msgid "iCal / piattaforma esterna"
+msgstr "iCal / Externe Plattform"
+
+msgid "intermediario di prenotazione"
+msgstr "Buchungsvermittler"
+
+msgid "notte/i"
+msgstr "Nacht/Nächte"
+
+msgid "piattaforma"
+msgstr "Plattform"

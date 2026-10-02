@@ -243,6 +243,8 @@ class Domilocus_Metaboxes {
                 </th>
                 <td>
                     <input type="time" id="domilocus_checkin_time" name="domilocus_checkin_time" value="<?php echo esc_attr($checkin_time); ?>" />
+                    <label for="domilocus_checkin_end_time"><?php esc_html_e('Fine fascia check-in', 'domilocus'); ?></label>
+                    <input type="time" id="domilocus_checkin_end_time" name="domilocus_checkin_end_time" value="<?php echo esc_attr(get_post_meta($post->ID, '_domilocus_checkin_end_time', true)); ?>" />
                 </td>
             </tr>
             <tr>
@@ -947,6 +949,7 @@ class Domilocus_Metaboxes {
             'domilocus_bed_type',
             'domilocus_size',
             'domilocus_checkin_time',
+            'domilocus_checkin_end_time',
             'domilocus_checkout_time',
             'domilocus_gallery',
             'domilocus_base_price',
