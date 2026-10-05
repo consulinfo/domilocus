@@ -94,7 +94,7 @@ class Domilocus_Guest_Guide {
     public static function metabox($post) {
         $data = self::data($post->ID);
         wp_nonce_field('domilocus_guest_guide_save', 'domilocus_guest_guide_nonce');
-        echo '<p>' . esc_html__('Queste informazioni compaiono nel riepilogo privato della prenotazione. Le sezioni vuote vengono nascoste. Usa la lingua desiderata per i tuoi ospiti.', 'domilocus') . '</p>';
+        echo '<p>' . esc_html__('Queste informazioni compaiono nel riepilogo privato della prenotazione. Le sezioni vuote vengono nascoste. Se usi le traduzioni automatiche di Starter, scrivi il testo originale in italiano.', 'domilocus') . '</p>';
         echo '<p>' . esc_html__('Il pulsante Indicazioni stradali usa le coordinate della scheda Posizione dell’appartamento oppure, se assenti, indirizzo, città e paese. Inserisci l’indirizzo completo, incluso il numero civico.', 'domilocus') . '</p>';
         foreach (self::fields() as $key => $label) {
             $type = $key === 'map_url' ? 'url' : 'text';
@@ -104,7 +104,8 @@ class Domilocus_Guest_Guide {
         echo '<p>' . esc_html__('Apri una sezione e usa l’editor Visuale per titoli, paragrafi, elenchi e collegamenti. Per i manuali inserisci un link al PDF o al video; in “Dove trovo…” indica stanza e mobile degli oggetti utili. Salva le modifiche con il pulsante Aggiorna dell’appartamento.', 'domilocus') . '</p>';
         foreach (self::sections() as $key => $label) {
             $editor_id = 'domilocus_guide_' . $key;
-            echo '<details style="border-top:1px solid #ddd;padding:12px 0"><summary style="cursor:pointer"><strong>' . esc_html($label) . '</strong></summary>';
+            // TinyMCE must initialize in a visible container to display saved content reliably.
+            echo '<details open style="border-top:1px solid #ddd;padding:12px 0"><summary style="cursor:pointer"><strong>' . esc_html($label) . '</strong></summary>';
             echo '<div style="margin-top:12px"><label class="screen-reader-text" for="' . esc_attr($editor_id) . '">' . esc_html($label) . '</label>';
             wp_editor($data[$key] ?? '', $editor_id, array(
                 'textarea_name' => 'domilocus_guest_guide[' . $key . ']',
@@ -157,6 +158,7 @@ class Domilocus_Guest_Guide {
             $extras[$section] = wp_kses_post(apply_filters('domilocus_guest_guide_section_extra', '', $section, $booking));
         }
         $destination = self::directions_destination((int) $booking->apartment_id, $data['location'] ?? '');
+        $data = apply_filters('domilocus_guest_guide_data', $data, (int) $booking->apartment_id);
         if ($destination === '' && !array_filter($extras) && !array_filter($data, static function ($value) { return is_string($value) && trim($value) !== ''; })) {
             return;
         }

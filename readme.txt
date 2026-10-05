@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.24
+Stable tag: 1.5.26
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,12 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.26 =
+* Fixed: apartment guide editors initialize in visible sections so saved content displays correctly in Visual mode. Sections can still be collapsed manually.
+
+= 1.5.25 =
+* Added: integration point for saved apartment guide translations provided by Starter. Map directions continue to use the original apartment location.
 
 = 1.5.24 =
 * Improved: guest receipt screens and printable documents use translatable labels, messages and document language attributes.
@@ -522,6 +528,9 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 * Initial public release
 
 == Upgrade Notice ==
+
+= 1.5.25 =
+Supporto alle traduzioni salvate della guida appartamento. Aggiornare anche Starter alla 1.6.19 per configurare DeepL e generare le traduzioni.
 
 = 1.5.24 =
 Traduzioni dei testi standard della ricevuta e della guida ospite. Correzioni Plugin Check. Include le migliorie alla guida e l'orario finale di check-in delle versioni 1.5.22 e 1.5.23.
