@@ -105,13 +105,29 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         
         $nights = (new DateTime($item->check_in))->diff(new DateTime($item->check_out))->days;
         
+        $stay_status = '';
+        $today = new DateTimeImmutable(current_time('Y-m-d'), wp_timezone());
+        $arrival = new DateTimeImmutable($item->check_in, wp_timezone());
+        $departure = new DateTimeImmutable($item->check_out, wp_timezone());
+        if (!in_array($item->status, array('cancelled', 'rejected', 'expired'), true)) {
+            if ($departure == $today) {
+                $stay_status = __('Check-out oggi', 'domilocus');
+            } elseif ($arrival <= $today && $departure > $today) {
+                $remaining = $today->diff($departure)->days;
+                $stay_status = sprintf(_n('Manca %d giorno al check-out', 'Mancano %d giorni al check-out', $remaining, 'domilocus'), $remaining);
+                if ($arrival == $today) {
+                    $stay_status = __('Check-in oggi', 'domilocus') . ' · ' . $stay_status;
+                }
+            }
+        }
+
         return sprintf(
             '<strong>%s</strong> → <strong>%s</strong><br><small>%d %s</small>',
             esc_html($check_in),
             esc_html($check_out),
             $nights,
             _n('notte', 'notti', $nights, 'domilocus')
-        );
+        ) . ($stay_status !== '' ? '<br><small>' . esc_html($stay_status) . '</small>' : '');
     }
     
     public function column_amount($item) {

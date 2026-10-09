@@ -1081,6 +1081,7 @@ class Domilocus_Booking_Form {
                 }
 
                 self::save_special_times($booking_id);
+                do_action('domilocus_booking_admin_saved', $booking_id);
 
                 wp_safe_redirect(add_query_arg('message', 'updated', admin_url('admin.php?page=domilocus-bookings')));
             } else {
@@ -1122,6 +1123,7 @@ class Domilocus_Booking_Form {
                 }
 
                 self::save_special_times($new_booking_id);
+                do_action('domilocus_booking_admin_saved', $new_booking_id);
 
                 wp_safe_redirect(add_query_arg('message', 'saved', admin_url('admin.php?page=domilocus-bookings')));
             } else {

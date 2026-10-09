@@ -2,9 +2,9 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 7.1
+Tested up to: 7.1.3
 Requires PHP: 8.0
-Stable tag: 1.5.26
+Stable tag: 1.5.28
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,13 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.28 =
+* Compatibility: tested with WordPress 7.1.3 (functional verification by the site owner).
+* Fixed: general booking saves notify add-ons so the tourist tax can be saved and recalculated after changing guests or dates.
+
+= 1.5.27 =
+* Added: booking dates show today's arrivals and departures, plus days remaining until check-out for active stays.
 
 = 1.5.26 =
 * Fixed: apartment guide editors initialize in visible sections so saved content displays correctly in Visual mode. Sections can still be collapsed manually.
