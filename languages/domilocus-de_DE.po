@@ -834,3 +834,12 @@ msgstr "Nacht/Nächte"
 
 msgid "piattaforma"
 msgstr "Plattform"
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Abfall und Mülltrennung"
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "Wie Sie Abfälle trennen und wo Sie sie entsorgen."
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Geben Sie an, wo sich die Müllbehälter befinden, wie die Materialien getrennt werden und an welchen Tagen und zu welchen Zeiten der Müll abgeholt wird."

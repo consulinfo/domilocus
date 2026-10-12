@@ -850,3 +850,12 @@ msgstr "night(s)"
 
 msgid "piattaforma"
 msgstr "platform"
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Waste and recycling"
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "How to sort waste and where to dispose of it."
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Specify where the bins are, how to separate materials and any collection days and times."

@@ -27,6 +27,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'cb' => '<input type="checkbox" />',
             'id' => __('ID', 'domilocus'),
             'customer' => __('Customer', 'domilocus'),
+            'source' => __('Provenienza', 'domilocus'),
             'apartment' => __('Apartment', 'domilocus'),
             'dates' => __('Date', 'domilocus'),
             'guests' => __('Guests', 'domilocus'),
@@ -60,6 +61,37 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
     
     public function column_cb($item) {
         return sprintf('<input type="checkbox" name="booking[]" value="%s" />', $item->id);
+    }
+
+    public function column_source($item) {
+        $source = strtolower(trim((string) ($item->source ?? '')));
+        $platform = strtolower(trim((string) ($item->external_platform ?? '')));
+        $labels = array(
+            'booking' => 'Booking.com', 'booking.com' => 'Booking.com',
+            'airbnb' => 'Airbnb', 'vrbo' => 'VRBO', 'expedia' => 'Expedia',
+            'direct' => __('Diretta', 'domilocus'),
+            'admin' => __('Inserita dal gestore', 'domilocus'),
+            'app_guest' => __('App Ospite', 'domilocus'),
+            'ical_import' => __('Calendario ICS', 'domilocus'),
+        );
+        $key = $platform !== '' ? $platform : $source;
+        return esc_html($labels[$key] ?? ($key !== '' ? $key : __('Non specificata', 'domilocus')));
+    }
+
+    private static function source_filter_sql($source) {
+        global $wpdb;
+        $platforms = array('booking' => array('booking', 'booking.com'), 'airbnb' => array('airbnb'), 'vrbo' => array('vrbo'), 'expedia' => array('expedia'));
+        if (isset($platforms[$source])) {
+            $aliases = $platforms[$source];
+            $placeholders = implode(', ', array_fill(0, count($aliases), '%s'));
+            // Match the OTA column first, falling back to legacy source values.
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            return $wpdb->prepare("(LOWER(TRIM(COALESCE(external_platform, ''))) IN ({$placeholders}) OR (TRIM(COALESCE(external_platform, '')) = '' AND LOWER(TRIM(source)) IN ({$placeholders})))", array_merge($aliases, $aliases));
+        }
+        if ($source === 'direct') {
+            return "(LOWER(TRIM(source)) IN ('direct', 'admin') AND TRIM(COALESCE(external_platform, '')) = '')";
+        }
+        return $wpdb->prepare('source = %s', $source);
     }
     
     public function column_customer($item) {
@@ -109,11 +141,12 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $today = new DateTimeImmutable(current_time('Y-m-d'), wp_timezone());
         $arrival = new DateTimeImmutable($item->check_in, wp_timezone());
         $departure = new DateTimeImmutable($item->check_out, wp_timezone());
-        if (!in_array($item->status, array('cancelled', 'rejected', 'expired'), true)) {
+        if (!in_array($item->status, array('cancelled', 'rejected', 'expired', 'no_show'), true)) {
             if ($departure == $today) {
                 $stay_status = __('Check-out oggi', 'domilocus');
             } elseif ($arrival <= $today && $departure > $today) {
                 $remaining = $today->diff($departure)->days;
+                /* translators: %d: number of days remaining until check-out. */
                 $stay_status = sprintf(_n('Manca %d giorno al check-out', 'Mancano %d giorni al check-out', $remaining, 'domilocus'), $remaining);
                 if ($arrival == $today) {
                     $stay_status = __('Check-in oggi', 'domilocus') . ' · ' . $stay_status;
@@ -140,7 +173,8 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'confirmed' => '#5cb85c',
             'pending-payment' => '#ff9800',
             'cancelled' => '#d9534f',
-            'completed' => '#5bc0de'
+            'completed' => '#5bc0de',
+            'no_show' => '#7c3aed'
         );
 
         $labels = array(
@@ -148,7 +182,8 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
             'confirmed' => __('Confirmed', 'domilocus'),
             'pending-payment' => __('In attesa integrazione', 'domilocus'),
             'cancelled' => __('Cancelled', 'domilocus'),
-            'completed' => __('Completed', 'domilocus')
+            'completed' => __('Completed', 'domilocus'),
+            'no_show' => __('Non presentato', 'domilocus')
         );
 
         $color = $colors[$item->status] ?? '#999';
@@ -157,7 +192,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $is_past    = strtotime($item->check_out) < current_time('timestamp');
         $is_settled = in_array($item->status, array('confirmed', 'completed'), true)
                       && $item->payment_status === 'paid';
-        $is_closed  = in_array($item->status, array('cancelled', 'rejected', 'expired'), true);
+        $is_closed  = in_array($item->status, array('cancelled', 'rejected', 'expired', 'no_show'), true);
 
         $badge = '';
         if ($is_past && !$is_closed) {
@@ -264,7 +299,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         } elseif ( 'da_completare' === $view ) {
             // Prenotazioni passate non chiuse e non ancora risolte (non pagate o non confermate)
             $where[] = 'check_out < CURDATE()';
-            $where[] = "status NOT IN ('cancelled', 'rejected', 'expired')";
+            $where[] = "status NOT IN ('cancelled', 'rejected', 'expired', 'no_show')";
             $where[] = "NOT (status IN ('confirmed', 'completed') AND payment_status = 'paid')";
         } elseif ( 'all' !== $view ) { // default: active
             $where[] = 'check_out >= CURDATE()';
@@ -312,7 +347,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if (!empty($_GET['source'])) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $where[] = $wpdb->prepare('source = %s', sanitize_text_field(wp_unslash($_GET['source'])));
+            $where[] = self::source_filter_sql(strtolower(trim(sanitize_text_field(wp_unslash($_GET['source'])))));
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -396,6 +431,9 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
                 <option value="direct" <?php selected($source, 'direct'); ?>><?php esc_html_e('Dirette', 'domilocus'); ?></option>
                 <option value="booking" <?php selected($source, 'booking'); ?>><?php esc_html_e('Booking', 'domilocus'); ?></option>
                 <option value="airbnb" <?php selected($source, 'airbnb'); ?>><?php esc_html_e('Airbnb', 'domilocus'); ?></option>
+                <option value="vrbo" <?php selected($source, 'vrbo'); ?>><?php esc_html_e('VRBO', 'domilocus'); ?></option>
+                <option value="expedia" <?php selected($source, 'expedia'); ?>><?php esc_html_e('Expedia', 'domilocus'); ?></option>
+                <option value="ical_import" <?php selected($source, 'ical_import'); ?>><?php esc_html_e('Calendario ICS', 'domilocus'); ?></option>
                 <option value="app_guest" <?php selected($source, 'app_guest'); ?>><?php esc_html_e('App Ospite', 'domilocus'); ?></option>
             </select>
             <input type="date" name="checkin_from" value="<?php echo esc_attr($checkin_from); ?>" placeholder="<?php esc_attr_e('Check-in da', 'domilocus'); ?>" />
@@ -461,7 +499,7 @@ class Domilocus_Bookings_List_Table extends WP_List_Table {
         $count_incomplete = (int) $wpdb->get_var(
             "SELECT COUNT(*) FROM {$wpdb->prefix}domilocus_bookings
              WHERE check_out < CURDATE()
-               AND status NOT IN ('cancelled','rejected','expired')
+               AND status NOT IN ('cancelled','rejected','expired','no_show')
                AND NOT (status IN ('confirmed','completed') AND payment_status = 'paid')"
         );
         $links['da_completare'] = sprintf(

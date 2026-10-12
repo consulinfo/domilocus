@@ -23,6 +23,7 @@ class Domilocus_Guest_Guide {
             'shops' => __('Negozi utili', 'domilocus'),
             'manuals' => __('Manuali e istruzioni', 'domilocus'),
             'essentials' => __('Dove trovo…', 'domilocus'),
+            'waste' => __('Rifiuti e raccolta differenziata', 'domilocus'),
             'checkout' => __('Prima di partire', 'domilocus'),
         );
     }
@@ -40,6 +41,7 @@ class Domilocus_Guest_Guide {
             'shops' => array(__('Spesa e servizi vicino a te.', 'domilocus')),
             'manuals' => array(__('Come usare elettrodomestici e servizi.', 'domilocus')),
             'essentials' => array(__('Dove trovare gli oggetti utili in casa.', 'domilocus')),
+            'waste' => array(__('Come separare i rifiuti e dove portarli.', 'domilocus')),
             'checkout' => array(__('Tutto il necessario per il check-out.', 'domilocus')),
         );
         echo '<summary class="domilocus-action-card dgg-card-heading">';
@@ -107,6 +109,9 @@ class Domilocus_Guest_Guide {
             // TinyMCE must initialize in a visible container to display saved content reliably.
             echo '<details open style="border-top:1px solid #ddd;padding:12px 0"><summary style="cursor:pointer"><strong>' . esc_html($label) . '</strong></summary>';
             echo '<div style="margin-top:12px"><label class="screen-reader-text" for="' . esc_attr($editor_id) . '">' . esc_html($label) . '</label>';
+            if ($key === 'waste') {
+                echo '<p>' . esc_html__('Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta.', 'domilocus') . '</p>';
+            }
             wp_editor($data[$key] ?? '', $editor_id, array(
                 'textarea_name' => 'domilocus_guest_guide[' . $key . ']',
                 'textarea_rows' => 10,

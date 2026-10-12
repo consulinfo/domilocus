@@ -25,6 +25,7 @@ function domilocus_guest_icon($name) {
         'shops' => '<path d="M5 7h14l2 14H3ZM8 8V6a4 4 0 0 1 8 0v2"/>',
         'manuals' => '<path d="M12 5C9 3 5 3 2 4v16c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Zm0 0v16"/>',
         'essentials' => '<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V3h8v4m-4 4v6m-3-3h6"/>',
+        'waste' => '<path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/>',
         'checkout' => '<rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 6V3h6v3M9 10v7m6-7v7M8 21v1m8-1v1"/>',
         'checkin' => '<rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="m8 13 3 3 5-6"/>',
         'done' => '<circle cx="12" cy="12" r="9"/><path d="m7 12 3 3 7-7"/>',

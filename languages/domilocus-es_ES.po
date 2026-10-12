@@ -834,3 +834,12 @@ msgstr "noche(s)"
 
 msgid "piattaforma"
 msgstr "plataforma"
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Residuos y reciclaje"
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "Cómo separar los residuos y dónde depositarlos."
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Indica dónde están los contenedores, cómo separar los materiales y los días y horarios de recogida, si los hay."

@@ -2,9 +2,9 @@
 Contributors: consulinfolm
 Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
-Tested up to: 7.1.3
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.28
+Stable tag: 1.5.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,17 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.31 =
+* Fixed: OTA source filters use the external platform field for calendar imports and legacy source values when no platform is set.
+* Added: booking origin column and VRBO, Expedia and ICS filter choices.
+
+= 1.5.30 =
+* Fixed: no-show bookings are closed and excluded from the outstanding bookings view and count, with an explicit status label.
+
+= 1.5.29 =
+* Added a waste and recycling section to the apartment guest guide, with a dedicated line icon and visual editor.
+* Included section labels in English, French, Spanish and German.
 
 = 1.5.28 =
 * Compatibility: tested with WordPress 7.1.3 (functional verification by the site owner).

@@ -834,3 +834,12 @@ msgstr "nuit(s)"
 
 msgid "piattaforma"
 msgstr "plateforme"
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Déchets et tri sélectif"
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "Comment trier les déchets et où les déposer."
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Indiquez où se trouvent les poubelles, comment trier les matériaux et les éventuels jours et horaires de collecte."

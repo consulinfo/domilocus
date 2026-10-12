@@ -2689,3 +2689,12 @@ msgstr "La tua richiesta di pagamento con PayPal è stata registrata. Ti avviser
 
 msgid "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."
 msgstr "Soluzione completa per la gestione di prenotazioni e proprietà per case vacanze, appartamenti e alloggi con amministrazione backend."
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Rifiuti e raccolta differenziata"
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "Come separare i rifiuti e dove portarli."
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
