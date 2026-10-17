@@ -582,7 +582,7 @@ class Domilocus_Receipts {
         $number = $series . '-' . $seq . '/' . $year;
 
         $created_at  = current_time('mysql');
-        $tourist_tax = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
+        $tourist_tax = self::get_tourist_tax_amount($booking);
         $total       = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
         $is_no_show  = self::is_no_show_booking($booking_id, $booking);
 
@@ -756,14 +756,13 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     <?php endif; ?>
   </div>
   <?php endif; ?>
-  <div class="dml-print-bar" style="position:fixed;top:0;left:0;right:0;background:#1e3a5f;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.35);">
+  <div class="dml-print-bar" style="position:sticky;top:0;background:#1e3a5f;color:#fff;padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.35);">
     <span style="font-size:14px;font-weight:600;"><?php echo esc_html($document['title']); ?> <?php echo esc_html($number); ?> &mdash; <?php
     /* translators: %d: Booking ID. */
     printf(esc_html__('Prenotazione #%d', 'domilocus'), (int) $booking_id);
     ?></span>
     <button onclick="window.print()" style="background:#fff;color:#1e3a5f;border:none;padding:8px 20px;border-radius:6px;font-weight:700;cursor:pointer;font-size:14px;">🖨️ <?php esc_html_e('Stampa / Salva PDF', 'domilocus'); ?></button>
   </div>
-  <div class="dml-spacer" style="height:54px;"></div>
   <div class="doc">
         <div class="head-grid">
             <div class="head-col">
@@ -1071,11 +1070,51 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         return $source;
     }
 
+    public static function get_tourist_tax_amount($booking) {
+        $booking_id = (int) $booking->id;
+        // Tax administration stores its authoritative amount separately from pricing meta.
+        if (class_exists('Domilocus_Plan_Premium_Lockbox')) {
+            global $wpdb;
+            $table = Domilocus_Plan_Premium_Lockbox::table_name();
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $row = $wpdb->get_row($wpdb->prepare("SELECT tax_amount, tax_status FROM {$table} WHERE booking_id = %d", $booking_id), ARRAY_A);
+            $manual = domilocus_get_booking_meta($booking_id, '_domilocus_lockbox_tax_manual', true);
+            if ($row && ($manual || $row['tax_status'] === 'paid' || (float) $row['tax_amount'] > 0)) {
+                return max(0.0, round((float) $row['tax_amount'], 2));
+            }
+        }
+        $stored = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
+        if ($stored > 0 || !class_exists('Domilocus_Premium_Pricing')) {
+            return max(0.0, round($stored, 2));
+        }
+        // Imports may have no pricing meta. Calculate for display without creating a payment or document.
+        $arrival = date_create_immutable((string) $booking->check_in);
+        $departure = date_create_immutable((string) $booking->check_out);
+        if (!$arrival || !$departure || $departure <= $arrival) {
+            return 0.0;
+        }
+        $breakdown = array();
+        foreach (array('adults', 'children', 'children_over_10', 'paying_guests', 'child_ages', 'daily_guests') as $key) {
+            $value = domilocus_get_booking_meta($booking_id, '_domilocus_' . $key, true);
+            if (in_array($key, array('child_ages', 'daily_guests'), true) && is_string($value)) {
+                $value = json_decode($value, true);
+            }
+            if ($value !== '' && $value !== null && $value !== false) {
+                $breakdown[$key] = $value;
+            }
+        }
+        $guests = max(0, (int) ($booking->guests ?? 0));
+        if (isset($breakdown['adults']) && (int) $breakdown['adults'] + (int) ($breakdown['children'] ?? 0) !== $guests) {
+            $breakdown = array();
+        }
+        return max(0.0, round(Domilocus_Premium_Pricing::calculate_tourist_tax($arrival->diff($departure)->days, $guests, $breakdown), 2));
+    }
+
     private static function build_receipt_context($booking) {
         $booking_id = (int) $booking->id;
 
         $gross_total = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
-        $tourist_tax = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
+        $tourist_tax = self::get_tourist_tax_amount($booking);
 
         $platform_data = self::detect_platform_data($booking);
         $is_platform   = (bool) $platform_data['is_platform'];

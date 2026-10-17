@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.36
+Stable tag: 1.5.37
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.37 =
+* Read tourist tax from the tax administration record, preserving manual exemptions and falling back to pricing for imports without tax meta.
+* Reuse the resolved tax in OTA splits and prevent the print toolbar from covering the preview confirmation.
+
 
 = 1.5.36 =
 * OTA totals include tourist tax: show the stay amount excluding tax and the separate tax row without adding tax twice.
