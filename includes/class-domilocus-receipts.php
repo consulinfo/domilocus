@@ -20,6 +20,7 @@ class Domilocus_Receipts {
     const META_NET_AMOUNT  = '_domilocus_receipt_net_amount';
     const META_IS_PLATFORM = '_domilocus_receipt_is_platform';
     const META_PLATFORM    = '_domilocus_receipt_platform';
+    const META_ISSUED      = '_domilocus_receipt_issued';
 
     // Fixed landlord identity for receipt header.
     const LANDLORD_NAME        = '[Nome Cognome Locatore]';
@@ -28,7 +29,6 @@ class Domilocus_Receipts {
     const LANDLORD_CIN_CIR     = '[CIN/CIR Struttura]';
 
     public static function init() {
-        add_action('domilocus_booking_created', array(__CLASS__, 'on_booking_created'), 20, 1);
         add_action('admin_post_domilocus_download_receipt', array(__CLASS__, 'handle_download'));
         add_action('admin_post_nopriv_domilocus_download_receipt', array(__CLASS__, 'handle_download'));
         add_action('admin_post_domilocus_receipt_portal_login', array(__CLASS__, 'handle_portal_login'));
@@ -36,18 +36,6 @@ class Domilocus_Receipts {
         add_action('admin_post_domilocus_receipt_portal_save', array(__CLASS__, 'handle_portal_save'));
         add_action('admin_post_nopriv_domilocus_receipt_portal_save', array(__CLASS__, 'handle_portal_save'));
         add_action('domilocus_booking_sidebar_boxes', array(__CLASS__, 'render_admin_box'));
-    }
-
-    public static function on_booking_created($booking_id) {
-        $booking_id = (int) $booking_id;
-        if ($booking_id <= 0) {
-            return;
-        }
-        $booking = self::get_booking($booking_id);
-        if (!$booking) {
-            return;
-        }
-        self::ensure_receipt_for_booking($booking);
     }
 
     public static function render_portal_block($booking, $receipt_key) {
@@ -140,6 +128,7 @@ class Domilocus_Receipts {
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Struttura', 'domilocus'); ?></span><strong><?php echo esc_html($apt_name); ?></strong></div>
                     <?php endif; ?>
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Importo', 'domilocus'); ?></span><strong><?php echo esc_html($total_label); ?></strong></div>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Tassa di soggiorno', 'domilocus'); ?></span><strong><?php echo esc_html(number_format((float) $context['tourist_tax'], 2, ',', '.') . ' ' . $currency); ?></strong></div>
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Origine', 'domilocus'); ?></span><strong><?php echo esc_html(self::source_label($booking)); ?></strong></div>
                 </div>
             </div>
@@ -157,7 +146,7 @@ class Domilocus_Receipts {
                     <?php endif; ?>
                 </p>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 <?php esc_html_e('Visualizza documento', 'domilocus'); ?></a>
+                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 <?php esc_html_e('Anteprima / Documento', 'domilocus'); ?></a>
                     <a href="<?php echo esc_url($print_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">🖨️ <?php esc_html_e('Stampa / Salva PDF', 'domilocus'); ?></a>
                 </div>
             </div>
@@ -334,12 +323,14 @@ class Domilocus_Receipts {
             return;
         }
 
-        self::ensure_receipt_for_booking($booking);
-
         $context       = self::build_receipt_context($booking);
         $number        = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
         $created_at    = (string) domilocus_get_booking_meta($booking_id, self::META_CREATED_AT, true);
-        $created_label = wp_date('d/m/Y', strtotime((string) $booking->check_out));
+        if (domilocus_get_booking_meta($booking_id, self::META_ISSUED, true) !== '1') {
+            $number = '';
+            $created_at = '';
+        }
+        $created_label = $created_at !== '' ? wp_date('d/m/Y', strtotime($created_at)) : __('Non emesso', 'domilocus');
         $gross_amount  = (float) $context['gross_total'];
         $tourist_tax   = (float) $context['tourist_tax'];
         $is_platform   = (bool) $context['is_platform'];
@@ -349,7 +340,7 @@ class Domilocus_Receipts {
         $currency      = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));
         $gross_label   = number_format($gross_amount, 2, ',', '.') . ' ' . $currency;
         $tax_label     = number_format($tourist_tax, 2, ',', '.') . ' ' . $currency;
-        $url           = self::get_admin_download_url($booking_id);
+        $url           = add_query_arg('preview', '1', self::get_admin_download_url($booking_id));
         $modal_id      = 'dml-rcpt-modal-' . $booking_id;
         $btn_id        = 'dml-rcpt-btn-'   . $booking_id;
         ?>
@@ -377,7 +368,7 @@ class Domilocus_Receipts {
                     <?php endif; ?>
                 </p>
                 <button type="button" id="<?php echo esc_attr($btn_id); ?>" class="button button-primary" style="width:100%;">
-                    Apri ricevuta
+                    <?php esc_html_e('Anteprima documento', 'domilocus'); ?>
                 </button>
             </div>
         </div>
@@ -402,7 +393,7 @@ class Domilocus_Receipts {
                     <?php endif; ?>
                 </table>
                 <a href="<?php echo esc_url($url); ?>" class="button button-primary" target="_blank" rel="noopener" style="margin-right:8px;">
-                    Scarica / Stampa
+                    <?php esc_html_e('Anteprima / Richiedi emissione', 'domilocus'); ?>
                 </a>
                 <button type="button" class="button dml-rcpt-close" data-modal="<?php echo esc_attr($modal_id); ?>"><?php esc_html_e('Chiudi', 'domilocus'); ?></button>
                 <p style="font-size:11px;color:#777;margin:14px 0 0;">Documento non fiscale a numerazione progressiva annuale.</p>
@@ -489,8 +480,42 @@ class Domilocus_Receipts {
             wp_die(esc_html__('Accesso non autorizzato alla ricevuta.', 'domilocus'));
         }
 
-        self::ensure_receipt_for_booking($booking);
-        self::stream_receipt_html($booking);
+        $issued = domilocus_get_booking_meta($booking_id, self::META_ISSUED, true) === '1';
+        if (!$issued && isset($_POST['confirm_issue'])) {
+            check_admin_referer('domilocus_issue_document_' . $booking_id, 'dml_issue_nonce');
+            $blocked_reason = self::issuance_blocked_reason($booking);
+            if ($blocked_reason !== '') {
+                wp_die(esc_html($blocked_reason));
+            }
+            if (sanitize_text_field(wp_unslash($_POST['confirm_issue'])) !== '1') {
+                wp_die(esc_html__('Conferma di emissione richiesta.', 'domilocus'));
+            }
+            // Serialize issuance across bookings, so parallel requests cannot reuse a number.
+            global $wpdb;
+            $lock = 'dml_document_' . md5($wpdb->prefix);
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $locked = $wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s, 5)', $lock));
+            if ((string) $locked !== '1') {
+                wp_die(esc_html__('Emissione occupata. Riprova tra qualche istante.', 'domilocus'));
+            }
+            try {
+                // Discard option cache populated before acquiring the lock.
+                foreach (array(self::META_NUMBER, self::META_ISSUED) as $meta_key) {
+                    wp_cache_delete('domilocus_bmeta_' . $booking_id . '_' . $meta_key, 'options');
+                }
+                wp_cache_delete('notoptions', 'options');
+                self::ensure_receipt_for_booking($booking);
+                domilocus_update_booking_meta($booking_id, self::META_ISSUED, '1');
+                $issued = true;
+            } finally {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $lock));
+            }
+        }
+        // An explicit preview never emits, including for an already issued document.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $preview_requested = isset($_GET['preview']) && sanitize_key(wp_unslash($_GET['preview'])) === '1';
+        self::stream_receipt_html($booking, !$issued || ($preview_requested && !isset($_POST['confirm_issue'])));
         exit;
     }
 
@@ -517,6 +542,25 @@ class Domilocus_Receipts {
     // Receipt creation / numbering.
     // -------------------------------------------------------------------------
 
+    public static function issuance_blocked_reason($booking) {
+        $platform = self::detect_platform_data($booking);
+        $date = $platform['is_platform'] ? ($booking->check_out ?? '') : ($booking->check_in ?? '');
+        $valid_date = DateTimeImmutable::createFromFormat('!Y-m-d', substr((string) $date, 0, 10), wp_timezone());
+        $date_errors = DateTimeImmutable::getLastErrors();
+        if (!$valid_date || ($date_errors && ($date_errors['warning_count'] || $date_errors['error_count']))) {
+            return __('Completa le date della prenotazione prima di emettere il documento.', 'domilocus');
+        }
+        if ($valid_date->format('Y-m-d') > current_time('Y-m-d')) {
+            return $platform['is_platform']
+                ? __('Il riepilogo OTA può essere emesso solo dal giorno del check-out. L’anteprima non assegna numeri.', 'domilocus')
+                : __('La ricevuta può essere emessa solo dal giorno del check-in, dopo il pagamento completo. L’anteprima non assegna numeri.', 'domilocus');
+        }
+        if (!$platform['is_platform'] && !in_array((string) ($booking->payment_status ?? ''), array('paid', 'completed'), true)) {
+            return __('Per emettere la ricevuta diretta è necessario registrare il pagamento completo.', 'domilocus');
+        }
+        return '';
+    }
+
     private static function ensure_receipt_for_booking($booking) {
         $booking_id = (int) $booking->id;
         $existing   = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
@@ -525,10 +569,12 @@ class Domilocus_Receipts {
         }
 
         $year   = (int) wp_date('Y');
-        $seq    = self::next_sequence($year);
-        $number = str_pad((string) $seq, 2, '0', STR_PAD_LEFT) . '/' . $year;
+        $platform = self::detect_platform_data($booking);
+        $series = $platform['is_platform'] ? 'RIEP' : 'RIC';
+        $seq    = self::next_sequence($year, $series);
+        $number = $series . '-' . $seq . '/' . $year;
 
-        $created_at  = !empty($booking->created_at) ? (string) $booking->created_at : current_time('mysql');
+        $created_at  = current_time('mysql');
         $tourist_tax = (float) domilocus_get_booking_meta($booking_id, '_domilocus_tourist_tax', true);
         $total       = isset($booking->total_amount) ? (float) $booking->total_amount : 0.0;
         $is_no_show  = self::is_no_show_booking($booking_id, $booking);
@@ -551,8 +597,9 @@ class Domilocus_Receipts {
         domilocus_update_booking_meta($booking_id, '_domilocus_receipt_no_show', $is_no_show ? '1' : '0');
     }
 
-    private static function next_sequence($year) {
-        $key     = 'domilocus_receipt_counter_' . (int) $year;
+    private static function next_sequence($year, $series) {
+        $key     = 'domilocus_document_counter_' . $series . '_' . (int) $year;
+        wp_cache_delete($key, 'options');
         $current = (int) get_option($key, 0);
         $next    = $current + 1;
         update_option($key, $next, false);
@@ -563,9 +610,13 @@ class Domilocus_Receipts {
     // HTML receipt document.
     // -------------------------------------------------------------------------
 
-    private static function stream_receipt_html($booking) {
+    private static function stream_receipt_html($booking, $preview = false) {
         $booking_id    = (int) $booking->id;
         $number        = (string) domilocus_get_booking_meta($booking_id, self::META_NUMBER, true);
+        $already_issued = domilocus_get_booking_meta($booking_id, self::META_ISSUED, true) === '1';
+        if ($preview) {
+            $number = $already_issued ? __('Anteprima', 'domilocus') . ' ' . $number : __('Anteprima — documento non emesso', 'domilocus');
+        }
         $created_at    = (string) domilocus_get_booking_meta($booking_id, self::META_CREATED_AT, true);
         $context       = self::build_receipt_context($booking);
         $gross_total   = (float) $context['gross_total'];
@@ -599,10 +650,9 @@ class Domilocus_Receipts {
             $apartment_address = (string) get_post_meta((int) $booking->apartment_id, '_domilocus_address', true);
         }
 
-        $check_out_ts = strtotime((string) $booking->check_out);
-        $payment_ts = $check_out_ts ? $check_out_ts : current_time('timestamp');
+        $payment_ts = !$preview && $created_at !== '' ? strtotime($created_at) : current_time('timestamp');
         $issue_date_label = wp_date('d/m/Y', $payment_ts);
-        $booking_created_at = $created_at !== '' ? $created_at : (isset($booking->created_at) ? (string) $booking->created_at : '');
+        $booking_created_at = isset($booking->created_at) ? (string) $booking->created_at : '';
         $booking_date_ts = strtotime($booking_created_at);
         $booking_date_label = $booking_date_ts ? wp_date('d/m/Y', $booking_date_ts) : '-';
         $check_in_label = wp_date('d/m/Y', strtotime((string) $booking->check_in));
@@ -681,6 +731,23 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 </style>
 </head>
 <body>
+  <?php if ($preview): ?>
+  <div style="padding:18px;border:2px solid #d97706;background:#fffbeb;margin-bottom:18px;">
+    <strong><?php esc_html_e('ANTEPRIMA — nessuna emissione e nessun nuovo numero assegnato', 'domilocus'); ?></strong>
+    <?php $blocked_reason = self::issuance_blocked_reason($booking); ?>
+    <?php if ($already_issued): ?>
+    <p><a href="<?php echo esc_url(remove_query_arg('preview')); ?>"><?php esc_html_e('Apri documento già emesso', 'domilocus'); ?></a></p>
+    <?php elseif ($blocked_reason !== ''): ?>
+    <p><?php echo esc_html($blocked_reason); ?></p>
+    <?php else: ?>
+    <form method="post" class="dml-print-bar" style="position:static;margin-top:12px;">
+      <?php wp_nonce_field('domilocus_issue_document_' . $booking_id, 'dml_issue_nonce'); ?>
+      <p><label><input type="checkbox" name="confirm_issue" value="1" required> <?php esc_html_e('Confermo di voler emettere questo documento e assegnare il numero progressivo.', 'domilocus'); ?></label></p>
+      <button type="submit"><?php esc_html_e('Conferma emissione', 'domilocus'); ?></button>
+    </form>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
   <div class="dml-print-bar" style="position:fixed;top:0;left:0;right:0;background:#1e3a5f;color:#fff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.35);">
     <span style="font-size:14px;font-weight:600;"><?php echo esc_html($document['title']); ?> <?php echo esc_html($number); ?> &mdash; <?php
     /* translators: %d: Booking ID. */
@@ -751,7 +818,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
             <td><?php echo esc_html(self::t('label_gross_amount')); ?></td>
             <td><strong class="amount"><?php echo esc_html($gross_label); ?></strong></td>
         </tr>
-        <?php if ($tourist_tax > 0): ?>
+        <?php if ($is_summary || $tourist_tax > 0): ?>
         <tr>
             <td><?php echo esc_html(self::t('label_tourist_tax')); ?></td>
             <td><?php echo esc_html($tax_label); ?></td>
@@ -798,7 +865,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
   </div>
 </body>
 <?php
-        if ($is_pdf_output) {
+        if ($is_pdf_output && !$preview) {
             echo '<script>window.onload=function(){window.print();};</script>';
         }
 ?>

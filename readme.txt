@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.34
+Stable tag: 1.5.35
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,13 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.35 =
+* Documents are optional: preview does not allocate a number; issuance requires explicit confirmation.
+* Separate yearly RIEP and RIC number series; existing numbers are retained.
+* OTA issuance starts on checkout day; direct receipts require full payment and check-in day or later.
+* Tourist tax is shown separately in OTA summaries, including zero amounts.
+
 
 = 1.5.34 =
 * Simplified OTA booking summaries: no stamp duty box, signature, payout forecasts or payment declarations.
