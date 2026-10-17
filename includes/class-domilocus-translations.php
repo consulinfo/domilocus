@@ -16,7 +16,7 @@ class Domilocus_Translations {
      *
      * @var array
      */
-    private static $supported_languages = array('it', 'en', 'fr', 'es', 'de');
+    private static $supported_languages = array('it', 'en', 'fr', 'es', 'de', 'pt');
 
     /**
      * Get supported language codes.
@@ -29,7 +29,7 @@ class Domilocus_Translations {
      * Sanitize any incoming locale/language code.
      */
     public static function sanitize_language($language) {
-        $language = strtolower((string) $language);
+        $language = strtolower(str_replace('-', '_', (string) $language));
         if (strpos($language, '_') !== false) {
             $language = substr($language, 0, 2);
         }
@@ -75,6 +75,9 @@ class Domilocus_Translations {
                 break;
             case 'es':
                 $translations = self::get_spanish_translations();
+                break;
+            case 'pt':
+                $translations = json_decode(file_get_contents(dirname(__DIR__) . '/languages/interface-pt.json'), true) ?: array();
                 break;
             case 'de':
                 $translations = self::get_german_translations();

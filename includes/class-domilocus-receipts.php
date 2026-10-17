@@ -76,7 +76,7 @@ class Domilocus_Receipts {
                 </div>
             <?php endif; ?>
 
-            <?php $online_checkin_enabled = self::is_online_checkin_documents_enabled(); ?>
+            <?php $billing = self::get_billing_details($booking); ?>
 
             <?php
             $status_raw  = strtolower(trim((string) (isset($booking->status) ? $booking->status : '')));
@@ -145,6 +145,7 @@ class Domilocus_Receipts {
             </div>
 
             <!-- Receipt section -->
+            <p><?php echo esc_html(self::payment_channel_note($booking)); ?></p>
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:18px;">
                 <h3 style="margin:0 0 10px;font-size:15px;">📄 <?php echo esc_html($doc_title); ?></h3>
                 <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">
@@ -162,35 +163,31 @@ class Domilocus_Receipts {
                 </div>
             </div>
 
-            <?php if ($online_checkin_enabled): ?>
-            <!-- Data form — solo se la funzione è effettivamente disponibile: un
-                 messaggio "disponibile dal piano Professional" non ha senso
-                 mostrato all'ospite, è un promemoria per l'host, non per chi
-                 sta prenotando la sua casa. -->
+            <!-- Receipt details are independent of document check-in. -->
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:10px;">
                 <h3 style="margin:0 0 4px;font-size:15px;">✏️ <?php esc_html_e('Dati ospite per la ricevuta', 'domilocus'); ?></h3>
-                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;"><?php esc_html_e('Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti.', 'domilocus'); ?></p>
+                <p style="margin:0 0 16px;color:#4b5563;font-size:13px;"><?php esc_html_e('Prima di stampare, completa i dati dell’intestatario: persona o ditta. Questi dati vengono salvati nella prenotazione, separatamente dai dati dell’ospite che soggiorna.', 'domilocus'); ?></p>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <?php wp_nonce_field('domilocus_receipt_portal_save', 'domilocus_receipt_portal_save_nonce'); ?>
                     <input type="hidden" name="action" value="domilocus_receipt_portal_save" />
-                    <input type="hidden" name="redirect_to" value="<?php echo esc_url(get_permalink()); ?>" />
+                    <input type="hidden" name="redirect_to" value="<?php echo esc_url(add_query_arg('view', 'ricevuta', get_permalink())); ?>" />
                     <input type="hidden" name="booking_id" value="<?php echo esc_attr((string) $booking->id); ?>" />
                     <input type="hidden" name="booking_key" value="<?php echo esc_attr($receipt_key); ?>" />
                     <p>
                         <label for="dml_guest_name"><strong><?php esc_html_e('Nome e Cognome / Ragione Sociale', 'domilocus'); ?></strong></label><br>
-                        <input id="dml_guest_name" name="customer_name" type="text" required class="regular-text" style="width:100%;max-width:520px;" value="<?php echo esc_attr((string) $booking->customer_name); ?>" />
+                        <input id="dml_guest_name" name="customer_name" type="text" required class="regular-text" style="width:100%;max-width:520px;" value="<?php echo esc_attr($billing['name']); ?>" />
                     </p>
                     <p>
                         <label for="dml_guest_fiscal"><strong><?php esc_html_e('Codice Fiscale / ID / P.IVA', 'domilocus'); ?></strong></label><br>
-                        <input id="dml_guest_fiscal" name="customer_fiscal_code" type="text" class="regular-text" style="width:100%;max-width:420px;" value="<?php echo esc_attr(isset($booking->customer_fiscal_code) ? (string) $booking->customer_fiscal_code : ''); ?>" />
+                        <input id="dml_guest_fiscal" name="customer_fiscal_code" type="text" required class="regular-text" style="width:100%;max-width:420px;" value="<?php echo esc_attr($billing['fiscal_code']); ?>" />
                     </p>
                     <p>
-                        <label for="dml_guest_address"><strong><?php esc_html_e('Indirizzo di residenza', 'domilocus'); ?></strong></label><br>
-                        <input id="dml_guest_address" name="customer_residence_address" type="text" required class="regular-text" style="width:100%;max-width:620px;" value="<?php echo esc_attr(isset($booking->customer_residence_address) ? (string) $booking->customer_residence_address : ''); ?>" />
+                        <label for="dml_guest_address"><strong><?php esc_html_e('Residenza / sede: via, numero civico, CAP, città e provincia', 'domilocus'); ?></strong></label><br>
+                        <input id="dml_guest_address" name="customer_residence_address" type="text" required class="regular-text" style="width:100%;max-width:620px;" value="<?php echo esc_attr($billing['address']); ?>" />
                     </p>
                     <p>
                         <label for="dml_guest_country"><strong><?php esc_html_e('Nazione', 'domilocus'); ?></strong></label><br>
-                        <input id="dml_guest_country" name="customer_country" type="text" required class="regular-text" style="width:100%;max-width:320px;" value="<?php echo esc_attr(isset($booking->customer_country) ? (string) $booking->customer_country : ''); ?>" />
+                        <input id="dml_guest_country" name="customer_country" type="text" required class="regular-text" style="width:100%;max-width:320px;" value="<?php echo esc_attr($billing['country']); ?>" />
                     </p>
                     <p>
                         <label>
@@ -203,7 +200,6 @@ class Domilocus_Receipts {
                     </p>
                 </form>
             </div>
-            <?php endif; ?>
         </div>
         <?php
         return (string) ob_get_clean();
@@ -274,19 +270,6 @@ class Domilocus_Receipts {
             exit;
         }
 
-        if (!self::is_online_checkin_documents_enabled()) {
-            $return_url = add_query_arg(
-                array(
-                    'booking_id'   => (int) $booking->id,
-                    'key'          => $post_booking_key,
-                    'dml_rcpt_err' => 'feature_locked',
-                ),
-                $redirect_to
-            );
-            wp_safe_redirect($return_url);
-            exit;
-        }
-
         if ($privacy_consent !== '1') {
             $return_url = add_query_arg(
                 array(
@@ -305,22 +288,19 @@ class Domilocus_Receipts {
         $customer_residence_address = isset($_POST['customer_residence_address']) ? sanitize_text_field(wp_unslash($_POST['customer_residence_address'])) : '';
         $customer_country = isset($_POST['customer_country']) ? sanitize_text_field(wp_unslash($_POST['customer_country'])) : '';
 
-        global $wpdb;
-        $table = $wpdb->prefix . 'domilocus_bookings';
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->update(
-            $table,
-            array(
-                'customer_name' => $customer_name,
-                'customer_fiscal_code' => $customer_fiscal_code,
-                'customer_residence_address' => $customer_residence_address,
-                'customer_country' => $customer_country,
-            ),
-            array('id' => (int) $booking->id),
-            array('%s', '%s', '%s', '%s'),
-            array('%d')
-        );
+        if ($customer_name === '' || $customer_fiscal_code === '' || $customer_residence_address === '' || $customer_country === '') {
+            wp_safe_redirect(add_query_arg(array('booking_id' => $booking_id, 'key' => $post_booking_key, 'dml_rcpt_err' => 'missing_fields'), $redirect_to));
+            exit;
+        }
 
+        // Keep the staying guest and document data intact when billing a company.
+        domilocus_update_booking_meta($booking_id, '_domilocus_receipt_payer_name', $customer_name);
+        domilocus_update_booking_meta($booking_id, '_domilocus_receipt_billing', array(
+            'name' => $customer_name,
+            'fiscal_code' => $customer_fiscal_code,
+            'address' => $customer_residence_address,
+            'country' => $customer_country,
+        ));
         domilocus_update_booking_meta((int) $booking->id, '_domilocus_receipt_privacy_consent', '1');
         domilocus_update_booking_meta((int) $booking->id, '_domilocus_receipt_privacy_consent_at', current_time('mysql'));
 
@@ -379,6 +359,14 @@ class Domilocus_Receipts {
                 <h2><?php echo esc_html($doc_title); ?></h2>
             </div>
             <div class="inside" style="padding:10px 12px;">
+                <?php $billing = self::get_billing_details($booking); ?>
+                <p><strong><?php esc_html_e('Intestazione ricevuta', 'domilocus'); ?></strong><br>
+                    <?php echo esc_html($billing['name']); ?><br>
+                    <?php echo esc_html($billing['fiscal_code']); ?><br>
+                    <?php echo esc_html($billing['address']); ?><br>
+                    <?php echo esc_html($billing['country']); ?>
+                </p>
+                <p><?php echo esc_html(self::payment_channel_note($booking)); ?></p>
                 <p style="margin:0 0 8px;font-size:13px;">
                     <strong>N.&nbsp;<?php echo esc_html($number ?: '-'); ?></strong>
                     &nbsp;&mdash;&nbsp;<?php echo esc_html($created_label); ?>
@@ -410,7 +398,7 @@ class Domilocus_Receipts {
                     <?php if (!$is_no_show): ?>
                     <tr>
                         <td style="padding:5px 0;"><strong>Tassa soggiorno</strong></td>
-                        <td style="padding:5px 0;"><?php echo esc_html($tax_label); ?><?php if ($tourist_tax > 0): ?> <small style="color:#555;">(incassata direttamente)</small><?php endif; ?></td>
+                        <td style="padding:5px 0;"><?php echo esc_html($tax_label); ?> <small style="color:#555;"><?php echo esc_html(self::tourist_tax_channel_note($booking)); ?></small></td>
                     </tr>
                     <?php endif; ?>
                 </table>
@@ -596,9 +584,10 @@ class Domilocus_Receipts {
         $host_cin         = $cin_cir_parts['cin'];
         $host_cir         = $cin_cir_parts['cir'];
 
-        $guest_fiscal_code = trim((string) (isset($booking->customer_fiscal_code) ? $booking->customer_fiscal_code : ''));
-        $guest_residence_address = trim((string) (isset($booking->customer_residence_address) ? $booking->customer_residence_address : ''));
-        $guest_country = trim((string) (isset($booking->customer_country) ? $booking->customer_country : ''));
+        $billing = self::get_billing_details($booking);
+        $guest_fiscal_code = $billing['fiscal_code'];
+        $guest_residence_address = $billing['address'];
+        $guest_country = $billing['country'];
 
         $apartment_name    = '';
         $apartment_address = '';
@@ -714,7 +703,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
             <div class="head-col">
                 <h3><?php echo esc_html(self::t('header_guest')); ?></h3>
                 <p><strong><?php echo esc_html($guest_display_name); ?></strong></p>
-                <?php if ($is_pdf_output && $guest_fiscal_code !== ''): ?>
+                <?php if ($guest_fiscal_code !== ''): ?>
                 <p><strong><?php echo esc_html(self::t('label_tax_code')); ?>:</strong> <?php echo esc_html($guest_fiscal_code); ?></p>
                 <?php endif; ?>
                 <?php if ($guest_residence_address !== ''): ?>
@@ -737,6 +726,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         <p><strong><?php echo esc_html(self::t('label_booking_source')); ?>:</strong> <?php echo esc_html($source_label !== '' ? $source_label : self::t('source_direct_site')); ?></p>
 
         <p><?php echo esc_html($payment_declaration); ?></p>
+        <p><?php echo esc_html(self::payment_channel_note($booking)); ?></p>
 
         <?php if ($is_no_show): ?>
         <p class="note"><?php echo esc_html(self::t('noshow_iva_line')); ?></p>
@@ -765,7 +755,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         <?php if ($tourist_tax > 0): ?>
         <tr>
             <td><?php echo esc_html(self::t('label_tourist_tax')); ?></td>
-            <td><?php echo esc_html($tax_label); ?> <small style="color:#555;">(<?php echo esc_html(self::t('label_collected_for_municipality')); ?>)</small></td>
+            <td><?php echo esc_html($tax_label); ?> <small style="color:#555;"><?php echo esc_html(self::tourist_tax_channel_note($booking)); ?></small></td>
         </tr>
         <?php endif; ?>
         <tr style="border-top:2px solid #374151;">
@@ -850,16 +840,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
             );
         }
 
-        $source = strtolower(trim((string) (isset($booking->source) ? $booking->source : '')));
-        $external = strtolower(trim((string) (isset($booking->external_platform) ? $booking->external_platform : '')));
-        $payment_method = strtolower(trim((string) (isset($booking->payment_method) ? $booking->payment_method : '')));
-        $sources = array($source, $external);
-        $is_platform_source = in_array('booking.com', $sources, true)
-            || in_array('booking', $sources, true)
-            || in_array('bookingcom', $sources, true)
-            || in_array('airbnb', $sources, true);
-
-        if ($is_platform_source) {
+        if (!empty($context['is_platform'])) {
             return array(
                 'title' => self::t('doc_title_non_fiscal_summary'),
                 'type'  => 'non_fiscal_summary',
@@ -1109,6 +1090,44 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
 
         $status = isset($booking->status) ? strtolower(trim((string) $booking->status)) : '';
         return in_array($status, array('no_show', 'noshow', 'no-show', 'mancato_arrivo', 'mancato-arrivo'), true);
+    }
+
+    public static function tourist_tax_channel_note($booking) {
+        $platform = self::detect_platform_data($booking);
+        if ($platform['is_platform'] && strpos(strtolower($platform['platform_name']), 'airbnb') !== false) {
+            return __('Tassa di soggiorno gestita da Airbnb: nessun pagamento aggiuntivo alla struttura.', 'domilocus');
+        }
+        return __('Tassa di soggiorno riscossa separatamente dalla struttura per conto del Comune.', 'domilocus');
+    }
+
+    public static function payment_channel_note($booking) {
+        $platform = self::detect_platform_data($booking);
+        if (!$platform['is_platform']) {
+            return __('Prenotazione diretta (sito o manuale): pagamento del soggiorno e tassa di soggiorno gestiti dalla struttura.', 'domilocus');
+        }
+        $name = strtolower($platform['platform_name']);
+        if (strpos($name, 'booking') !== false) {
+            $date = date_create_immutable((string) $booking->check_in, wp_timezone());
+            $expected = $date ? wp_date('d/m/Y', $date->modify('next thursday')->getTimestamp()) : '';
+            /* translators: %s: expected payout date. */
+            return sprintf(__('Soggiorno pagato tramite Booking.com. Accredito previsto il giovedì dopo il check-in (%s), da verificare prima di registrarlo come incassato. Tassa di soggiorno gestita separatamente dalla struttura.', 'domilocus'), $expected);
+        }
+        if (strpos($name, 'airbnb') !== false || strpos($name, 'vrbo') !== false) {
+            /* translators: %s: booking platform name. */
+            return sprintf(__('Soggiorno pagato tramite %s. Accredito previsto dopo il check-in; la previsione non conferma l’incasso.', 'domilocus'), $platform['platform_name']) . ' ' . self::tourist_tax_channel_note($booking);
+        }
+        return __('Soggiorno gestito dalla piattaforma OTA. La struttura gestisce separatamente la tassa di soggiorno; verificare l’accredito della piattaforma prima di registrare l’incasso.', 'domilocus');
+    }
+
+    public static function get_billing_details($booking) {
+        $stored = domilocus_get_booking_meta((int) $booking->id, '_domilocus_receipt_billing', true);
+        $people = self::get_receipt_people($booking);
+        return wp_parse_args(is_array($stored) ? $stored : array(), array(
+            'name' => $people['payer_name'],
+            'fiscal_code' => isset($booking->customer_fiscal_code) ? (string) $booking->customer_fiscal_code : '',
+            'address' => isset($booking->customer_residence_address) ? (string) $booking->customer_residence_address : '',
+            'country' => isset($booking->customer_country) ? (string) $booking->customer_country : '',
+        ));
     }
 
     private static function get_receipt_people($booking) {

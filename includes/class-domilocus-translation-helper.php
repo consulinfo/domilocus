@@ -84,6 +84,8 @@ class Domilocus_Translation_Helper {
             'fr_FR' => 'fr',
             'es_ES' => 'es',
             'de_DE' => 'de',
+            'pt_PT' => 'pt',
+            'pt_BR' => 'pt',
             'en_GB' => 'en',
             'en_US' => 'en'
         );

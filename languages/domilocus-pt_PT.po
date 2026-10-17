@@ -1,0 +1,4787 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\nLanguage: pt_PT\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid " Manca anche il SELFIE con documento."
+msgstr " Falta também a SELFIE com o documento."
+
+msgid " e "
+msgstr " e "
+
+msgid " ⚠️ Compila i campi mancanti."
+msgstr " ⚠️ Preencha os campos em falta."
+
+msgid "%d eventi importati"
+msgstr "%d eventos importados"
+
+msgid "%s: carica almeno la pagina dati/fronte del documento."
+msgstr "%s: carregue pelo menos a página de dados/frente do documento."
+
+msgid "%s: il contenuto letto sembra molto simile a \"%s\" (%s). Se hai fotografato di nuovo lo stesso lato per errore, carica invece l'altro lato; se sei sicuro che sia corretta, puoi caricarla comunque."
+msgstr "%s: o conteúdo lido parece muito semelhante a \"%s\" (%s). Se fotografou novamente o mesmo lado por engano, carregue o outro lado; se tiver a certeza de que está correto, pode carregá-lo na mesma."
+
+msgid "%s: manca %s del documento."
+msgstr "%s: falta %s do documento."
+
+msgid "%s: non riesco a distinguere fronte e retro da questa foto. Selezionalo manualmente qui sopra e ricarica."
+msgstr "%s: não consigo distinguir a frente do verso nesta fotografia. Selecione o lado manualmente acima e volte a carregar."
+
+msgid "%s: questa immagine è identica a \"%s\" (%s)."
+msgstr "%s: esta imagem é idêntica a \"%s\" (%s)."
+
+msgid "%s: questo documento risulta già caricato per l'ospite \"%s\". Ogni ospite deve avere il proprio documento — non è possibile condividerlo."
+msgstr "%s: este documento já foi carregado para o hóspede \"%s\". Cada hóspede deve ter o seu próprio documento — não é possível partilhá-lo."
+
+msgid "%s: scatta un selfie con il documento."
+msgstr "%s: tire uma selfie com o documento."
+
+msgid "%s: seleziona fronte o retro e ricarica la foto."
+msgstr "%s: selecione frente ou verso e volte a carregar a fotografia."
+
+msgid "%s: seleziona il tipo documento nel riquadro immagini."
+msgstr "%s: selecione o tipo de documento no quadro das imagens."
+
+msgid "(firma verificata tramite codice OTP inviato via email)"
+msgstr "(assinatura verificada através de código OTP enviado por e-mail)"
+
+msgid "+ Aggiungi familiare"
+msgstr "+ Adicionar familiar"
+
+msgid "+ Aggiungi membro gruppo"
+msgstr "+ Adicionar membro do grupo"
+
+msgid "/night"
+msgstr "/noite"
+
+msgid "/notte"
+msgstr "/noite"
+
+msgid "API Key"
+msgstr "Chave API"
+
+msgid "API access for integrations"
+msgstr "Acesso API para integrações"
+
+msgid "Abbiamo inviato un codice di verifica a"
+msgstr "Enviámos um código de verificação para"
+
+msgid "Abilita Analisi Concorrenza"
+msgstr "Ativar análise da concorrência"
+
+msgid "Abilita Analisi Domanda"
+msgstr "Ativar análise da procura"
+
+msgid "Abilita Analisi Eventi"
+msgstr "Ativar análise de eventos"
+
+msgid "Abilita Analisi Occupazione"
+msgstr "Ativar análise da ocupação"
+
+msgid "Abilita Analisi Stagionale"
+msgstr "Ativar análise sazonal"
+
+msgid "Abilita Prezzi Automatici"
+msgstr "Ativar preços automáticos"
+
+msgid "Accessibile in Sedia a Rotelle"
+msgstr "Acessível a cadeiras de rodas"
+
+msgid "Accesso API per integrazioni"
+msgstr "Acesso API para integrações"
+
+msgid "Accesso alla Spiaggia"
+msgstr "Acesso à praia"
+
+msgid "Accesso alla struttura"
+msgstr "Acesso ao alojamento"
+
+msgid "Accesso alle Piste da Sci"
+msgstr "Acesso às pistas de esqui"
+
+msgid "Accesso negato"
+msgstr "Acesso negado"
+
+msgid "Accesso non autorizzato alla ricevuta."
+msgstr "Acesso ao recibo não autorizado."
+
+msgid "Accesso non autorizzato."
+msgstr "Acesso não autorizado."
+
+msgid "Acconsento al trattamento dei dati per gli adempimenti di legge (Polizia di Stato e fini fiscali)"
+msgstr "Consinto no tratamento dos dados para cumprimento das obrigações legais (polícia e fins fiscais)"
+
+msgid "Action completed successfully"
+msgstr "Ação concluída com sucesso"
+
+msgid "Adatta i prezzi in base ai prezzi della concorrenza locale"
+msgstr "Adapta os preços aos da concorrência local"
+
+msgid "Adatta i prezzi in base al tasso di occupazione della tua zona. Quando molti appartamenti sono prenotati, i prezzi aumentano automaticamente."
+msgstr "Analisa a taxa de ocupação da zona e ajusta os preços em função da disponibilidade do mercado."
+
+msgid "Adatta i prezzi in base al tasso di occupazione della zona"
+msgstr "Adapta os preços à taxa de ocupação da zona"
+
+msgid "Adatta i prezzi in base alla velocità di prenotazione e volume di ricerche"
+msgstr "Adapta os preços à velocidade das reservas e ao volume de pesquisas"
+
+msgid "Add Apartment"
+msgstr "Adicionar apartamento"
+
+msgid "Add New"
+msgstr "Adicionar novo"
+
+msgid "Address"
+msgstr "Morada"
+
+msgid "Adulti"
+msgstr "Adultos"
+
+msgid "Adults"
+msgstr "Adultos"
+
+msgid "Advanced reporting dashboards"
+msgstr "Painéis de relatórios avançados"
+
+msgid "Aggiorna Dati Mercato"
+msgstr "Atualizar dados de mercado"
+
+msgid "Aggiorna Stato"
+msgstr "Atualizar estado"
+
+msgid "Aggiorna le impostazioni all'inizio di ogni stagione per adattarle alle condizioni di mercato."
+msgstr "Atualize as definições no início de cada época para as adaptar às condições do mercado."
+
+msgid "Aggiornamento riuscito! Ricaricamento..."
+msgstr "Atualização bem-sucedida! A recarregar..."
+
+msgid "Aggiungere almeno un ospite."
+msgstr "Adicione pelo menos um hóspede."
+
+msgid "Aggiungi Appartamento"
+msgstr "Adicionar apartamento"
+
+msgid "Aggiungi Evento"
+msgstr "Adicionar evento"
+
+msgid "Aggiungi Feed"
+msgstr "Adicionar feed"
+
+msgid "Aggiungi Festività"
+msgstr "Adicionar feriado"
+
+msgid "Aggiungi Nuovo"
+msgstr "Adicionar novo"
+
+msgid "Aggiungi Nuovo Feed iCal"
+msgstr "Adicionar novo feed iCal"
+
+msgid "Aggiungi Sconto"
+msgstr "Adicionar desconto"
+
+msgid "Aggiungi Stagione"
+msgstr "Adicionar época"
+
+msgid "Aggiungi Tariffa"
+msgstr "Adicionar tarifa"
+
+msgid "Aggiungi almeno un ospite."
+msgstr "Adicione pelo menos um hóspede."
+
+msgid "Aggiungi ospite"
+msgstr "Adicionar hóspede"
+
+msgid "Aggiungi un altro ospite"
+msgstr "Adicionar outro hóspede"
+
+msgid "Aggiustamento Massimo"
+msgstr "Ajuste máximo"
+
+msgid "Aggiustamento Massimo (%)"
+msgstr "Ajuste máximo (%)"
+
+msgid "Aggiustamento Minimo"
+msgstr "Ajuste mínimo"
+
+msgid "Aggiustamento Stagionale"
+msgstr "Ajuste sazonal"
+
+msgid "Agosto"
+msgstr "Agosto"
+
+msgid "Air Conditioning"
+msgstr "Ar condicionado"
+
+msgid "Alcune delle date richieste non sono più disponibili."
+msgstr "Algumas das datas pedidas já não estão disponíveis."
+
+msgid "All Apartments"
+msgstr "Todos os apartamentos"
+
+msgid "Allinea alla Concorrenza"
+msgstr "Alinhar com a concorrência"
+
+msgid "Alloggio:"
+msgstr "Alojamento:"
+
+msgid "Altre date sono temporaneamente riservate da un altro utente."
+msgstr "Outras datas estão temporariamente reservadas por outro utilizador."
+
+msgid "Altri documenti: il sistema prova a leggere i dati sul fronte. Fotografa il lato intero, nitido e senza riflessi; carica anche l’altro lato se richiesto. Controlla e correggi sempre i dati."
+msgstr "Outros documentos: o sistema tenta ler os dados na frente. Fotografe o lado completo, nítido e sem reflexos; carregue também o outro lado se solicitado. Verifique e corrija sempre os dados."
+
+msgid "Altro"
+msgstr "Outro"
+
+msgid "Altro documento"
+msgstr "Outro documento"
+
+msgid "Amenities"
+msgstr "Comodidades"
+
+msgid "Ammessi Animali"
+msgstr "Animais de estimação permitidos"
+
+msgid "Amount"
+msgstr "Valor"
+
+msgid "Analisi Concorrenza"
+msgstr "Análise dos concorrentes"
+
+msgid "Analisi Date Popolari"
+msgstr "Análise das datas populares"
+
+msgid "Analisi Domanda"
+msgstr "Análise da procura"
+
+msgid "Analisi Eventi"
+msgstr "Análise de eventos"
+
+msgid "Analisi Occupazione"
+msgstr "Análise da ocupação"
+
+msgid "Analisi Stagionale Avanzata"
+msgstr "Análise sazonal avançada"
+
+msgid "Analizza le ricerche, le visualizzazioni e le tendenze di prenotazione per anticipare i picchi di domanda."
+msgstr "Analisa pesquisas, visualizações e tendências de reservas para antecipar picos de procura."
+
+msgid "Anno"
+msgstr "Ano"
+
+msgid "Annuale"
+msgstr "Anual"
+
+msgid "Annulla"
+msgstr "Cancelar"
+
+msgid "Annullata il: %s"
+msgstr "Cancelada em: %s"
+
+msgid "Anteprima Prezzi"
+msgstr "Pré-visualização de preços"
+
+msgid "Anteprima Tariffa"
+msgstr "Pré-visualização da tarifa"
+
+msgid "Anteprima Template"
+msgstr "Pré-visualização do modelo"
+
+msgid "Anticipo Medio"
+msgstr "Antecedência média"
+
+msgid "Any"
+msgstr "Qualquer"
+
+msgid "Apartment"
+msgstr "Apartamento"
+
+msgid "Apartment Details"
+msgstr "Detalhes do apartamento"
+
+msgid "Apartment not found."
+msgstr "Apartamento não encontrado."
+
+msgid "Apartments"
+msgstr "Apartamentos"
+
+msgid "Appartamenti"
+msgstr "Apartamentos"
+
+msgid "Appartamento"
+msgstr "Apartamento"
+
+msgid "Appartamento non trovato."
+msgstr "Apartamento não encontrado."
+
+msgid "Appartamento non valido."
+msgstr "Apartamento inválido."
+
+msgid "Applica Filtri"
+msgstr "Aplicar filtros"
+
+msgid "Applica Prezzi"
+msgstr "Aplicar preços"
+
+msgid "Applica Stato"
+msgstr "Aplicar estado"
+
+msgid "Applica Template"
+msgstr "Aplicar modelo"
+
+msgid "Applica pattern stagionali intelligenti basati sul tipo di località"
+msgstr "Aplica padrões sazonais inteligentes com base no tipo de localização"
+
+msgid "Applica rapidamente configurazioni di prezzo predefinite."
+msgstr "Aplique rapidamente configurações de preços predefinidas."
+
+msgid "Applica regole stagionali, festività e sconti a questo appartamento."
+msgstr "Aplicar regras sazonais, feriados e descontos a este apartamento."
+
+msgid "Applica variazioni di prezzo basate sui pattern stagionali storici della tua località."
+msgstr "Aplica variações de preço com base nos padrões sazonais históricos da sua localização."
+
+msgid "Apply Prices"
+msgstr "Aplicar preços"
+
+msgid "Apply Status"
+msgstr "Aplicar estado"
+
+msgid "Apri il percorso nelle mappe e scegli auto, mezzi pubblici o a piedi. Se la tua posizione non è disponibile, inserisci il punto di partenza."
+msgstr "Abra o percurso no mapa e escolha carro, transportes públicos ou a pé. Se a sua localização não estiver disponível, introduza o ponto de partida."
+
+msgid "Apri la mappa"
+msgstr "Abrir o mapa"
+
+msgid "Apri una sezione per trovare le informazioni utili."
+msgstr "Abra uma secção para encontrar informações úteis."
+
+msgid "April"
+msgstr "Abril"
+
+msgid "Aprile"
+msgstr "Abril"
+
+msgid "Are you sure you want to delete this item?"
+msgstr "Tem a certeza de que pretende eliminar este elemento?"
+
+msgid "Aria Condizionata"
+msgstr "Ar condicionado"
+
+msgid "Arrivo e parcheggio"
+msgstr "Chegada e estacionamento"
+
+msgid "Ascensore"
+msgstr "Elevador"
+
+msgid "Asciugacapelli"
+msgstr "Secador de cabelo"
+
+msgid "Asciugatrice"
+msgstr "Máquina de secar roupa"
+
+msgid "Attendi qualche secondo prima di richiedere un nuovo codice."
+msgstr "Aguarde alguns segundos antes de pedir um novo código."
+
+msgid "Attenzione"
+msgstr "Atenção"
+
+msgid "Attenzione: Cancellazione Prenotazione Pagata"
+msgstr "Atenção: cancelamento de reserva paga"
+
+msgid "Attico"
+msgstr "Apartamento de cobertura"
+
+msgid "Attiva"
+msgstr "Ativa"
+
+msgid "Attiva la licenza Domilocus Premium per usare le regole di prezzo manuali."
+msgstr "Ative a licença Domilocus Premium para utilizar regras manuais de preços."
+
+msgid "Attiva questa opzione se il numero di ospiti cambia giorno per giorno."
+msgstr "Ative esta opção se o número de hóspedes mudar de dia para dia."
+
+msgid "Attiva regole di prezzo"
+msgstr "Ativar regras de preços"
+
+msgid "Attivo"
+msgstr "Ativo"
+
+msgid "Attuale vs Automatico"
+msgstr "Atual vs. automático"
+
+msgid "August"
+msgstr "Agosto"
+
+msgid "Aumenta automaticamente i prezzi durante eventi locali e festività"
+msgstr "Aumenta automaticamente os preços durante eventos locais e feriados"
+
+msgid "Aumenta automaticamente i prezzi durante eventi locali, festività e periodi di alta affluenza turistica."
+msgstr "Aumenta automaticamente os preços durante eventos locais, feriados e períodos de elevada afluência turística."
+
+msgid "Aumenta i ricavi fino al 20-30% senza dover aggiornare manualmente i prezzi ogni giorno."
+msgstr "Maximize as receitas sem ter de atualizar os preços manualmente todos os dias."
+
+msgid "Aumento Conferenze (%)"
+msgstr "Aumento para conferências (%)"
+
+msgid "Aumento Eventi Importanti (%)"
+msgstr "Aumento para eventos importantes (%)"
+
+msgid "Aumento Festival (%)"
+msgstr "Aumento para festivais (%)"
+
+msgid "Aumento Festività (%)"
+msgstr "Aumento para feriados (%)"
+
+msgid "Aumento Massimo"
+msgstr "Aumento máximo"
+
+msgid "Aumento Massimo Domanda (%)"
+msgstr "Aumento máximo por procura (%)"
+
+msgid "Aumento Massimo Eventi (%)"
+msgstr "Aumento máximo para eventos (%)"
+
+msgid "Automatic Pricing"
+msgstr "Preços automáticos"
+
+msgid "Available"
+msgstr "Disponível"
+
+msgid "Avanti"
+msgstr "Seguinte"
+
+msgid "Azione completata con successo"
+msgstr "Ação concluída com sucesso"
+
+msgid "Azioni"
+msgstr "Ações"
+
+msgid "Azioni rapide"
+msgstr "Ações rápidas"
+
+msgid "Bagni"
+msgstr "Casas de banho"
+
+msgid "Bagni:"
+msgstr "Casas de banho:"
+
+msgid "Balcone"
+msgstr "Varanda"
+
+msgid "Balcony"
+msgstr "Varanda"
+
+msgid "Bambini"
+msgstr "Crianças"
+
+msgid "Bambini oltre 10 anni"
+msgstr "Crianças com mais de 10 anos"
+
+msgid "Banca:"
+msgstr "Banco:"
+
+msgid "Bank Transfer"
+msgstr "Transferência bancária"
+
+msgid "Base"
+msgstr "Base"
+
+msgid "Base Price"
+msgstr "Preço base"
+
+msgid "Base Price (per night)"
+msgstr "Preço base (por noite)"
+
+msgid "Bathrooms"
+msgstr "Casas de banho"
+
+msgid "Beach Access"
+msgstr "Acesso à praia"
+
+msgid "Bed type"
+msgstr "Tipo de cama"
+
+msgid "Bedrooms"
+msgstr "Quartos"
+
+msgid "Beds"
+msgstr "Camas"
+
+msgid "Beneficiario:"
+msgstr "Beneficiário:"
+
+msgid "Beneficio Principale"
+msgstr "Principal vantagem"
+
+msgid "Benvenuto"
+msgstr "Boas-vindas"
+
+msgid "Best Practices"
+msgstr "Boas práticas"
+
+msgid "Blocca automaticamente le date sulle piattaforme esterne"
+msgstr "Bloqueie automaticamente as datas nas plataformas externas"
+
+msgid "Blocca/Sblocca periodo:"
+msgstr "Bloquear/desbloquear período:"
+
+msgid "Bloccato"
+msgstr "Bloqueado"
+
+msgid "Block/Unblock period:"
+msgstr "Bloquear/desbloquear período:"
+
+msgid "Blocked"
+msgstr "Bloqueado"
+
+msgid "Bonifico Bancario"
+msgstr "Transferência bancária"
+
+msgid "Bonifico bancario"
+msgstr "Transferência bancária"
+
+msgid "Bonifico rapido tramite email PayPal della struttura"
+msgstr "Transferência rápida através do e-mail PayPal do alojamento"
+
+msgid "Book Now"
+msgstr "Reservar agora"
+
+msgid "Booked"
+msgstr "Reservado"
+
+msgid "Booking Confirmation"
+msgstr "Confirmação da reserva"
+
+msgid "Booking Data Export"
+msgstr "Exportação de dados das reservas"
+
+msgid "Booking Details"
+msgstr "Detalhes da reserva"
+
+msgid "Booking ID:"
+msgstr "ID da reserva:"
+
+msgid "Booking Information"
+msgstr "Informações da reserva"
+
+msgid "Booking not found."
+msgstr "Reserva não encontrada."
+
+msgid "Bookings"
+msgstr "Reservas"
+
+msgid "CIE e permesso di soggiorno elettronico (cittadini extra-UE): MRZ sul retro. Passaporto: MRZ nella pagina con la foto. Sono le righe con i simboli <<<."
+msgstr "Cartão de identificação eletrónico e título de residência eletrónico (cidadãos de fora da UE): MRZ no verso. Passaporte: MRZ na página com a fotografia. São as linhas com os símbolos <<<."
+
+msgid "CIN"
+msgstr "CIN"
+
+msgid "CIR"
+msgstr "CIR"
+
+msgid "Calcola Prezzo"
+msgstr "Calcular preço"
+
+msgid "Calcolatore Prezzi"
+msgstr "Calculadora de preços"
+
+msgid "Calcolatore con scomposizione prezzi"
+msgstr "Calculadora com discriminação dos preços"
+
+msgid "Calcolatore prezzi semplice"
+msgstr "Calculadora simples de preços"
+
+msgid "Calendar"
+msgstr "Calendário"
+
+msgid "Calendario"
+msgstr "Calendário"
+
+msgid "Calendario Disponibilità"
+msgstr "Calendário de disponibilidade"
+
+msgid "Calendario con prezzi"
+msgstr "Calendário com preços"
+
+msgid "Calendario senza prezzi"
+msgstr "Calendário sem preços"
+
+msgid "Camere da letto"
+msgstr "Quartos"
+
+msgid "Camere:"
+msgstr "Quartos:"
+
+msgid "Campo obbligatorio."
+msgstr "Campo obrigatório."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Cancella API Key"
+msgstr "Eliminar chave API"
+
+msgid "Cancella Prenotazione"
+msgstr "Cancelar reserva"
+
+msgid "Cancellare l'API Key salvata?"
+msgstr "Eliminar a chave API guardada?"
+
+msgid "Cancellata"
+msgstr "Cancelada"
+
+msgid "Cancellazione gratuita entro il %s ore 23:59."
+msgstr "Cancelamento gratuito até %s às 23:59."
+
+msgid "Cancellazione gratuita fino a %1$d giorni prima del check-in (entro il %2$s); oltre tale termine nessun rimborso."
+msgstr "Cancelamento gratuito até %1$d dias antes do check-in (até %2$s); após esse prazo, sem reembolso."
+
+msgid "Cancellazione gratuita fino a %d giorni prima."
+msgstr "Cancelamento gratuito até %d dias antes."
+
+msgid "Cancellazione gratuita fino al giorno precedente il check-in."
+msgstr "Cancelamento gratuito até ao dia anterior ao check-in."
+
+msgid "Cancellazione in corso..."
+msgstr "A cancelar..."
+
+msgid "Cancellazione permanente della prenotazione dal database"
+msgstr "Eliminação permanente da reserva da base de dados"
+
+msgid "Cancellazione secondo la tariffa scelta"
+msgstr "Cancelamento de acordo com a tarifa escolhida"
+
+msgid "Cancelled"
+msgstr "Cancelada"
+
+msgid "Capofamiglia"
+msgstr "Responsável da família"
+
+msgid "Capogruppo"
+msgstr "Responsável do grupo"
+
+msgid "Card details"
+msgstr "Dados do cartão"
+
+msgid "Carica Template"
+msgstr "Carregar modelo"
+
+msgid "Carica almeno un documento leggibile per verifica dati."
+msgstr "Carregue pelo menos um documento legível para verificação dos dados."
+
+msgid "Carica almeno un documento prima di continuare."
+msgstr "Carregue pelo menos um documento antes de continuar."
+
+msgid "Carica comunque"
+msgstr "Carregar na mesma"
+
+msgid "Carica documento e selfie"
+msgstr "Carregar documento e selfie"
+
+msgid "Carica fronte e retro. Lettura automatica dalla MRZ sul retro."
+msgstr "Carregue a frente e o verso. Leitura automática a partir da MRZ no verso."
+
+msgid "Carica fronte e retro. Lettura automatica dei dati sul fronte."
+msgstr "Carregue a frente e o verso. Leitura automática dos dados na frente."
+
+msgid "Caricamento OCR..."
+msgstr "A carregar OCR..."
+
+msgid "Caricamento calendario..."
+msgstr "A carregar calendário..."
+
+msgid "Caricamento..."
+msgstr "A carregar..."
+
+msgid "Carosello a 4 colonne"
+msgstr "Carrossel de 4 colunas"
+
+msgid "Carta (Stripe)"
+msgstr "Cartão (Stripe)"
+
+msgid "Carta d'identità"
+msgstr "Cartão de identificação"
+
+msgid "Carta d'identità elettronica"
+msgstr "Cartão de identificação eletrónico"
+
+msgid "Carta di Credito"
+msgstr "Cartão de crédito"
+
+msgid "Carta di credito / debito (Stripe)"
+msgstr "Cartão de crédito / débito (Stripe)"
+
+msgid "Carta d’identità e permesso elettronico: fronte e retro. Passaporto: pagina con foto e dati."
+msgstr "Cartão de identificação e título eletrónico: frente e verso. Passaporte: página com fotografia e dados."
+
+msgid "Carta online"
+msgstr "Cartão online"
+
+msgid "Cash"
+msgstr "Dinheiro"
+
+msgid "Cassaforte"
+msgstr "Cofre"
+
+msgid "Categorie"
+msgstr "Categorias"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Causale:"
+msgstr "Descrição:"
+
+msgid "Cerca"
+msgstr "Pesquisar"
+
+msgid "Cerca comune…"
+msgstr "Pesquisar município…"
+
+msgid "Cerca nazione…"
+msgstr "Pesquisar país…"
+
+msgid "Cerca nella guida"
+msgstr "Pesquisar no guia"
+
+msgid "Cerca prenotazione"
+msgstr "Pesquisar reserva"
+
+msgid "Cerca prenotazione →"
+msgstr "Pesquisar reserva →"
+
+msgid "Cerca stato…"
+msgstr "Pesquisar país…"
+
+msgid "Check availability"
+msgstr "Verificar disponibilidade"
+
+msgid "Check-in"
+msgstr "Check-in"
+
+msgid "Check-in Autonomo"
+msgstr "Check-in autónomo"
+
+msgid "Check-in Online"
+msgstr "Check-in online"
+
+msgid "Check-in Time"
+msgstr "Hora de check-in"
+
+msgid "Check-in autonomo — Cassetta chiavi"
+msgstr "Check-in autónomo — Caixa de chaves"
+
+msgid "Check-in completato!"
+msgstr "Check-in concluído!"
+
+msgid "Check-in completato."
+msgstr "Check-in concluído."
+
+msgid "Check-in dalle ore %s"
+msgstr "Check-in a partir das %s"
+
+msgid "Check-in già completato. Non è necessario ripetere la procedura."
+msgstr "Check-in já concluído. Não é necessário repetir o procedimento."
+
+msgid "Check-in già inviato."
+msgstr "Check-in já enviado."
+
+msgid "Check-in non consentito"
+msgstr "Check-in não permitido"
+
+msgid "Check-in online"
+msgstr "Check-in online"
+
+msgid "Check-in online completato: ecco il codice per la cassetta chiavi."
+msgstr "Check-in online concluído: aqui está o código da caixa de chaves."
+
+msgid "Check-in:"
+msgstr "Check-in:"
+
+msgid "Check-in: %s — Check-out: %s"
+msgstr "Check-in: %s — Check-out: %s"
+
+msgid "Check-out"
+msgstr "Check-out"
+
+msgid "Check-out Time"
+msgstr "Hora de check-out"
+
+msgid "Check-out entro le ore %s"
+msgstr "Check-out até às %s"
+
+msgid "Check-out non consentito"
+msgstr "Check-out não permitido"
+
+msgid "Check-out:"
+msgstr "Check-out:"
+
+msgid "Chiama la struttura"
+msgstr "Ligar para o alojamento"
+
+msgid "Chiave di accesso non valida."
+msgstr "Chave de acesso inválida."
+
+msgid "Chiave prenotazione non valida."
+msgstr "Chave da reserva inválida."
+
+msgid "Children"
+msgstr "Crianças"
+
+msgid "Chiudi"
+msgstr "Fechar"
+
+msgid "Città"
+msgstr "Cidade"
+
+msgid "City"
+msgstr "Cidade"
+
+msgid "Clausole importanti:"
+msgstr "Cláusulas importantes:"
+
+msgid "Clausole particolari — leggi con attenzione"
+msgstr "Cláusulas especiais — leia com atenção"
+
+msgid "Cleaning Fee"
+msgstr "Custo de limpeza"
+
+msgid "Clicca \"Aggiungi Feed\" per iniziare la sincronizzazione automatica"
+msgstr "Clique em \"Adicionar feed\" para iniciar a sincronização automática"
+
+msgid "Clicca \"Genera URL Esportazione\" per ottenere il link del calendario"
+msgstr "Clique em \"Gerar URL de exportação\" para obter a ligação do calendário"
+
+msgid "Clicca il pulsante copia accanto a uno shortcode per copiarlo negli appunti."
+msgstr "Clique no botão de cópia junto a um shortcode para o copiar para a área de transferência."
+
+msgid "Clicca o scrivi per cercare e selezionare una voce."
+msgstr "Clique ou escreva para pesquisar e selecionar uma opção."
+
+msgid "Clicca o scrivi per cercare il comune di nascita."
+msgstr "Clique ou escreva para pesquisar o município de nascimento."
+
+msgid "Clicca o scrivi per cercare il luogo di rilascio."
+msgstr "Clique ou escreva para pesquisar o local de emissão."
+
+msgid "Clicca qui o trascina qui il documento"
+msgstr "Clique aqui ou arraste o documento para aqui"
+
+msgid "Cliccando confermi la prenotazione. Se previsto dalla tariffa scelta, verrai reindirizzato al pagamento."
+msgstr "Ao clicar, confirma a reserva. Se previsto pela tarifa escolhida, será redirecionado para o pagamento."
+
+msgid "Cliente:"
+msgstr "Cliente:"
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Codice Fiscale"
+msgstr "Número de identificação fiscal"
+
+msgid "Codice Fiscale / ID / P.IVA"
+msgstr "Número fiscal / ID / N.º IVA"
+
+msgid "Codice Paese MRZ rilevato (%s), ma non selezionabile automaticamente."
+msgstr "Código de país MRZ detetado (%s), mas não selecionável automaticamente."
+
+msgid "Codice accesso APP"
+msgstr "Código de acesso à aplicação"
+
+msgid "Codice non corretto. Riprova."
+msgstr "Código incorreto. Tente novamente."
+
+msgid "Codice o email non corrispondono a nessuna prenotazione."
+msgstr "O código ou o e-mail não correspondem a nenhuma reserva."
+
+msgid "Codice prenotazione"
+msgstr "Código da reserva"
+
+msgid "Codice prenotazione: #%d"
+msgstr "Código da reserva: #%d"
+
+msgid "Coffee Machine"
+msgstr "Máquina de café"
+
+msgid "Cognome *"
+msgstr "Apelido *"
+
+msgid "Combina con Regole Manuali"
+msgstr "Combine com regras manuais"
+
+msgid "Come Esportare il Tuo Calendario"
+msgstr "Como exportar o seu calendário"
+
+msgid "Come Importare le Prenotazioni"
+msgstr "Como importar as reservas"
+
+msgid "Come arrivare e dove parcheggiare."
+msgstr "Como chegar e onde estacionar."
+
+msgid "Come separare i rifiuti e dove portarli."
+msgstr "Como separar os resíduos e onde os depositar."
+
+msgid "Come spostarti durante il soggiorno."
+msgstr "Como se deslocar durante a estadia."
+
+msgid "Come usare elettrodomestici e servizi."
+msgstr "Como utilizar os eletrodomésticos e serviços."
+
+msgid "Competition Analysis"
+msgstr "Análise dos concorrentes"
+
+msgid "Compila Numero Prenotazione e Cognome Ospite."
+msgstr "Preencha o número da reserva e o apelido do hóspede."
+
+msgid "Compila le date per impostare lo stato"
+msgstr "Preencha as datas para definir o estado"
+
+msgid "Compila tutti i campi obbligatori"
+msgstr "Preencha todos os campos obrigatórios"
+
+msgid "Compila tutti i campi per impostare i prezzi"
+msgstr "Preencha todos os campos para definir os preços"
+
+msgid "Compila tutti i campi."
+msgstr "Preencha todos os campos."
+
+msgid "Completa il pagamento"
+msgstr "Concluir o pagamento"
+
+msgid "Completa il pagamento del soggiorno per accedere al codice."
+msgstr "Conclua o pagamento da estadia para aceder ao código."
+
+msgid "Completa prima il check-in online."
+msgstr "Conclua primeiro o check-in online."
+
+msgid "Completa prima il pagamento per accedere al check-in online."
+msgstr "Conclua primeiro o pagamento para aceder ao check-in online."
+
+msgid "Completa prima il pagamento."
+msgstr "Conclua primeiro o pagamento."
+
+msgid "Completa prima la lettura e l'accettazione del documento."
+msgstr "Conclua primeiro a leitura e a aceitação do documento."
+
+msgid "Completata"
+msgstr "Concluída"
+
+msgid "Complete booking and property management solution for vacation rentals, apartments, and accommodations with backend administration."
+msgstr "Solução completa de gestão de reservas e propriedades para casas de férias, apartamentos e alojamentos, com administração no painel."
+
+msgid "Complete your payment"
+msgstr "Concluir o pagamento"
+
+msgid "Completed"
+msgstr "Concluída"
+
+msgid "Compresa nella prenotazione Airbnb"
+msgstr "Incluída na reserva Airbnb"
+
+msgid "Comune di nascita *"
+msgstr "Município de nascimento *"
+
+msgid "Con un prezzo base di €100 e limiti di -50% / +200%, il prezzo varierà tra €50 e €300, indipendentemente dai fattori di mercato."
+msgstr "Com um preço base de 100 € e limites de -50% / +200%, o preço variará entre 50 € e 300 €, independentemente dos fatores de mercado."
+
+msgid "Con un tasso base del 70%, se l'occupazione nella tua zona raggiunge l'85%, il sistema aumenterà gradualmente i prezzi. Se scende al 50%, li ridurrà per attirare più prenotazioni."
+msgstr "Com uma taxa base de 70%, se a ocupação na sua zona atingir 85%, o sistema aumentará gradualmente os preços. Se descer para 50%, reduzi-los-á para atrair mais reservas."
+
+msgid "Concierge Service"
+msgstr "Serviço de concierge"
+
+msgid "Condividi il calendario del tuo appartamento con altre piattaforme"
+msgstr "Partilhe o calendário do seu apartamento com outras plataformas"
+
+msgid "Condizioni"
+msgstr "Condições"
+
+msgid "Condizioni applicabili: versione %1$s del %2$s"
+msgstr "Condições aplicáveis: versão %1$s de %2$s"
+
+msgid "Condizioni applicabili: versione %s"
+msgstr "Condições aplicáveis: versão %s"
+
+msgid "Condizioni di accesso e soggiorno"
+msgstr "Condições de acesso e estadia"
+
+msgid "Condizioni di cancellazione applicabili"
+msgstr "Condições de cancelamento aplicáveis"
+
+msgid "Condizioni di cancellazione applicate alla tariffa scelta"
+msgstr "Condições de cancelamento da tarifa escolhida"
+
+msgid "Condizioni di cancellazione e responsabilità danni accettate"
+msgstr "Condições de cancelamento e responsabilidade por danos aceites"
+
+msgid "Condizioni di cancellazione:"
+msgstr "Condições de cancelamento:"
+
+msgid "Condizioni economiche applicate"
+msgstr "Condições financeiras aplicadas"
+
+msgid "Condizioni principali"
+msgstr "Condições principais"
+
+msgid "Conferenze"
+msgstr "Conferências"
+
+msgid "Conferma"
+msgstr "Confirmar"
+
+msgid "Conferma Prenotazione"
+msgstr "Confirmação da reserva"
+
+msgid "Conferma Prenotazione Locale"
+msgstr "Confirmação da reserva direta"
+
+msgid "Conferma Prenotazione OTA"
+msgstr "Confirmação da reserva pela plataforma"
+
+msgid "Conferma check-in"
+msgstr "Confirmar check-in"
+
+msgid "Conferma contratto di soggiorno e accettazione condizioni"
+msgstr "Confirmação do contrato de estadia e aceitação das condições"
+
+msgid "Conferma dei dati personali e del documento fornito"
+msgstr "Confirmação dos dados pessoais e do documento fornecido"
+
+msgid "Conferma i dati del tuo soggiorno"
+msgstr "Confirme os dados da sua estadia"
+
+msgid "Conferma metodo"
+msgstr "Confirmar método"
+
+msgid "Conferma pagamento non riuscita."
+msgstr "Falha na confirmação do pagamento."
+
+msgid "Confermata"
+msgstr "Confirmada"
+
+msgid "Conferme dell'ospite"
+msgstr "Confirmações do hóspede"
+
+msgid "Confirmed"
+msgstr "Confirmada"
+
+msgid "Conflicting bookings"
+msgstr "Reservas em conflito"
+
+msgid "Congressi, fiere commerciali, eventi business."
+msgstr "Congressos, feiras comerciais, eventos empresariais."
+
+msgid "Connection error while loading calendar"
+msgstr "Erro de ligação ao carregar o calendário"
+
+msgid "Connection error while saving"
+msgstr "Erro de ligação ao guardar"
+
+msgid "Connessione non riuscita. Riprova."
+msgstr "Falha na ligação. Tente novamente."
+
+msgid "Contact Details"
+msgstr "Dados de contacto"
+
+msgid "Contanti"
+msgstr "Dinheiro"
+
+msgid "Contanti al check-out"
+msgstr "Dinheiro no check-out"
+
+msgid "Contanti sul tavolo"
+msgstr "Dinheiro em cima da mesa"
+
+msgid "Contattare il cliente per confermare la cancellazione"
+msgstr "Contactar o cliente para confirmar o cancelamento"
+
+msgid "Continua alla conferma soggiorno"
+msgstr "Continuar para a confirmação da estadia"
+
+msgid "Continua →"
+msgstr "Continuar →"
+
+msgid "Contratto di Soggiorno Firmato"
+msgstr "Contrato de estadia assinado"
+
+msgid "Contratto di soggiorno n°&nbsp;%d"
+msgstr "Contrato de estadia n.º&nbsp;%d"
+
+msgid "Contratto sottoscritto il:"
+msgstr "Contrato assinado em:"
+
+msgid "Controlla le simulazioni settimanalmente per verificare che i prezzi siano ottimali."
+msgstr "Verifique as simulações semanalmente para confirmar que os preços são adequados."
+
+msgid "Controllo di sicurezza fallito."
+msgstr "Falha na verificação de segurança."
+
+msgid "Copia"
+msgstr "Copiar"
+
+msgid "Copia URL"
+msgstr "Copiar URL"
+
+msgid "Copia l'URL generato"
+msgstr "Copie o URL gerado"
+
+msgid "Copia l'URL iCal (di solito termina con .ics)"
+msgstr "Copie o URL iCal (normalmente termina em .ics)"
+
+msgid "Copia non disponibile: seleziona la password e copiala manualmente."
+msgstr "Cópia indisponível: selecione a palavra-passe e copie-a manualmente."
+
+msgid "Copia password"
+msgstr "Copiar palavra-passe"
+
+msgid "Copiato!"
+msgstr "Copiado!"
+
+msgid "Corrispettivo del soggiorno pari a {gross_amount}, corrisposto tramite l'intermediario {platform_name}, incaricato della riscossione."
+msgstr "Valor da estadia de {gross_amount}, pago através do intermediário {platform_name}, responsável pela cobrança."
+
+msgid "Corrispettivo lordo"
+msgstr "Valor bruto"
+
+msgid "Cos'è il Pricing Dinamico?"
+msgstr "O que são preços dinâmicos?"
+
+msgid "Cosa scoprire e fare nei dintorni."
+msgstr "O que descobrir e fazer nos arredores."
+
+msgid "Cosa succede se disattivo il pricing dinamico?"
+msgstr "O que acontece se desativar os preços dinâmicos?"
+
+msgid "Costi di servizio:"
+msgstr "Taxas de serviço:"
+
+msgid "Costo Ospite Extra (per persona/notte)"
+msgstr "Custo de hóspede extra (por pessoa/noite)"
+
+msgid "Costo Pulizie"
+msgstr "Custo de limpeza"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Credit Card"
+msgstr "Cartão de crédito"
+
+msgid "Cucina"
+msgstr "Cozinha"
+
+msgid "Custom payment methods"
+msgstr "Métodos de pagamento personalizados"
+
+msgid "Da pagare"
+msgstr "Por pagar"
+
+msgid "Dashboard"
+msgstr "Painel"
+
+msgid "Dashboard di reporting avanzate"
+msgstr "Painéis de relatórios avançados"
+
+msgid "Data"
+msgstr "Data"
+
+msgid "Data Fine"
+msgstr "Data de fim"
+
+msgid "Data Inizio"
+msgstr "Data de início"
+
+msgid "Data arrivo:"
+msgstr "Data de chegada:"
+
+msgid "Data check-in"
+msgstr "Data de check-in"
+
+msgid "Data check-in *"
+msgstr "Data de check-in *"
+
+msgid "Data check-out"
+msgstr "Data de check-out"
+
+msgid "Data di arrivo *"
+msgstr "Data de chegada *"
+
+msgid "Data di arrivo non valida."
+msgstr "Data de chegada inválida."
+
+msgid "Data di emissione"
+msgstr "Data de emissão"
+
+msgid "Data di nascita *"
+msgstr "Data de nascimento *"
+
+msgid "Data fine"
+msgstr "Data de fim"
+
+msgid "Data inizio"
+msgstr "Data de início"
+
+msgid "Data pagamento: %s"
+msgstr "Data de pagamento: %s"
+
+msgid "Data prenotazione"
+msgstr "Data da reserva"
+
+msgid "Data saved successfully"
+msgstr "Dados guardados com sucesso"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Date aggiornate con successo. Nuovo totale: %s"
+msgstr "Datas atualizadas com sucesso. Novo total: %s"
+
+msgid "Date aggiornate. Nuovo totale: %1$s. Differenza da saldare: %2$s. Abbiamo impostato la prenotazione in attesa pagamento integrativo."
+msgstr "Datas atualizadas. Novo total: %1$s. Diferença a pagar: %2$s. A reserva está a aguardar o pagamento adicional."
+
+msgid "Date disponibili!"
+msgstr "Datas disponíveis!"
+
+msgid "Date e ospiti"
+msgstr "Datas e hóspedes"
+
+msgid "Date non valide."
+msgstr "Datas inválidas."
+
+msgid "Date:"
+msgstr "Datas:"
+
+msgid "Dates"
+msgstr "Datas"
+
+msgid "Dates & Guests"
+msgstr "Datas e hóspedes"
+
+msgid "Dati Economici"
+msgstr "Dados financeiros"
+
+msgid "Dati aggiornati con successo"
+msgstr "Dados atualizados com sucesso"
+
+msgid "Dati aggiornati correttamente. Ora puoi scaricare la ricevuta."
+msgstr "Dados atualizados com sucesso. Já pode descarregar o recibo."
+
+msgid "Dati degli ospiti"
+msgstr "Dados dos hóspedes"
+
+msgid "Dati del Soggiorno"
+msgstr "Dados da estadia"
+
+msgid "Dati dell'ospite"
+msgstr "Dados do hóspede"
+
+msgid "Dati della carta"
+msgstr "Dados do cartão"
+
+msgid "Dati della prenotazione"
+msgstr "Dados da reserva"
+
+msgid "Dati della struttura"
+msgstr "Dados do alojamento"
+
+msgid "Dati di Mercato"
+msgstr "Dados de mercado"
+
+msgid "Dati di contatto"
+msgstr "Dados de contacto"
+
+msgid "Dati incompleti."
+msgstr "Dados incompletos."
+
+msgid "Dati mancanti."
+msgstr "Dados em falta."
+
+msgid "Dati non validi."
+msgstr "Dados inválidos."
+
+msgid "Dati ospite per la ricevuta"
+msgstr "Dados do hóspede para o recibo"
+
+msgid "Dati ospiti"
+msgstr "Dados dos hóspedes"
+
+msgid "Dati per il Pagamento"
+msgstr "Dados para pagamento"
+
+msgid "Dati precompilati (%s campi). Verifica e correggi."
+msgstr "Dados preenchidos automaticamente (%s campos). Verifique e corrija."
+
+msgid "Dati salvati con successo"
+msgstr "Dados guardados com sucesso"
+
+msgid "December"
+msgstr "Dezembro"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Demand Analysis"
+msgstr "Análise da procura"
+
+msgid "Descrizione"
+msgstr "Descrição"
+
+msgid "Determina quanto velocemente i prezzi reagiscono ai cambiamenti. Valori più alti = reazioni più forti. Range: 0.1 - 5"
+msgstr "Determina a rapidez com que os preços reagem às alterações. Valores mais elevados = reações mais fortes. Intervalo: 0.1 - 5"
+
+msgid "Dettagli Appartamento"
+msgstr "Detalhes do apartamento"
+
+msgid "Dettagli Prenotazione"
+msgstr "Detalhes da reserva"
+
+msgid "Dettaglio Prezzo"
+msgstr "Discriminação do preço"
+
+msgid "Dettaglio per notte"
+msgstr "Detalhe por noite"
+
+msgid "Devi accettare la Privacy Policy per continuare."
+msgstr "Deve aceitar a Política de Privacidade para continuar."
+
+msgid "Devi confermare entrambe le caselle per continuare."
+msgstr "Deve confirmar ambas as caixas para continuar."
+
+msgid "Devi confermare l'informativa su trattamento e conservazione documenti."
+msgstr "Deve confirmar a informação sobre o tratamento e conservação dos documentos."
+
+msgid "Devi fornire il consenso privacy per proseguire."
+msgstr "Deve dar o consentimento de privacidade para continuar."
+
+msgid "Dicembre"
+msgstr "Dezembro"
+
+msgid "Dichiaro di aver preso visione dell'informativa sul trattamento dei documenti: le immagini caricate (documento di identità e selfie con documento) sono trattate esclusivamente per la procedura di check-in, conservate per un massimo di 30 giorni salvo diversi obblighi di legge, poi eliminate."
+msgstr "Declaro ter lido a informação sobre o tratamento dos documentos: as imagens carregadas (documento de identificação e selfie com documento) são tratadas exclusivamente para o procedimento de check-in, conservadas por um máximo de 30 dias, salvo outras obrigações legais, e depois eliminadas."
+
+msgid "Differenza Prezzo"
+msgstr "Diferença de preço"
+
+msgid "Dimensione:"
+msgstr "Área:"
+
+msgid "Dishwasher"
+msgstr "Máquina de lavar louça"
+
+msgid "Disponibile"
+msgstr "Disponível"
+
+msgid "Divano letto"
+msgstr "Sofá-cama"
+
+msgid "Documentare la cancellazione e il rimborso esternamente"
+msgstr "Documentar o cancelamento e o reembolso externamente"
+
+msgid "Documenti"
+msgstr "Documentos"
+
+msgid "Documento (pagina dati/fronte)"
+msgstr "Documento (página de dados/frente)"
+
+msgid "Documento da firmare non trovato."
+msgstr "Documento a assinar não encontrado."
+
+msgid "Documento di identità"
+msgstr "Documento de identificação"
+
+msgid "Documento e selfie caricati. Controlla i dati e continua."
+msgstr "Documento e selfie carregados. Verifique os dados e continue."
+
+msgid "Documento facoltativo per familiare/membro gruppo."
+msgstr "Documento facultativo para familiar/membro do grupo."
+
+msgid "Documento firmato il:"
+msgstr "Documento assinado em:"
+
+msgid "Documento fronte"
+msgstr "Frente do documento"
+
+msgid "Documento informatico predisposto dal sistema gestionale - Firma autografa sostituita a mezzo stampa ai sensi dell'art. 3 del D.Lgs. 39/1993"
+msgstr "Documento eletrónico preparado pelo sistema de gestão - Assinatura manuscrita substituída por impressão nos termos do art. 3.º do D.Lgs. italiano 39/1993"
+
+msgid "Documento non fiscale"
+msgstr "Documento não fiscal"
+
+msgid "Documento non fiscale emesso a fini riepilogativi."
+msgstr "Documento não fiscal emitido para fins de resumo."
+
+msgid "Documento non trovato."
+msgstr "Documento não encontrado."
+
+msgid "Documento retro"
+msgstr "Verso do documento"
+
+msgid "Documento verificato:"
+msgstr "Documento verificado:"
+
+msgid "Documento, selfie e conferma soggiorno prima dell'arrivo."
+msgstr "Documento, selfie e confirmação da estadia antes da chegada."
+
+msgid "Dom"
+msgstr "Dom"
+
+msgid "Domande Frequenti"
+msgstr "Perguntas frequentes"
+
+msgid "Domenica"
+msgstr "Domingo"
+
+msgid "Domilocus"
+msgstr "Domilocus"
+
+msgid "Dove siamo e come raggiungerci."
+msgstr "Onde estamos e como chegar."
+
+msgid "Dove trovare gli oggetti utili in casa."
+msgstr "Onde encontrar os objetos úteis na casa."
+
+msgid "Dove trovo…"
+msgstr "Onde encontro…"
+
+msgid "Dryer"
+msgstr "Máquina de secar roupa"
+
+msgid "Durata"
+msgstr "Duração"
+
+msgid "Durata Soggiorno"
+msgstr "Duração da estadia"
+
+msgid "Dynamic Pricing Help"
+msgstr "Guia de preços dinâmicos"
+
+msgid "Dynamic pricing rules"
+msgstr "Regras de preços dinâmicos"
+
+msgid "Edit"
+msgstr "Alterar"
+
+msgid "Effettuato"
+msgstr "Efetuado"
+
+msgid "Elaborazione pagamento…"
+msgstr "A processar pagamento…"
+
+msgid "Elaborazione..."
+msgstr "A processar..."
+
+msgid "Elenco Appartamenti"
+msgstr "Lista de apartamentos"
+
+msgid "Elevator"
+msgstr "Elevador"
+
+msgid "Elimina"
+msgstr "Eliminar"
+
+msgid "Elimina Tariffa"
+msgstr "Eliminar tarifa"
+
+msgid "Eliminare questo evento?"
+msgstr "Eliminar este evento?"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email non valida."
+msgstr "E-mail inválido."
+
+msgid "Email prenotazione *"
+msgstr "E-mail da reserva *"
+
+msgid "Emails"
+msgstr "E-mail"
+
+msgid "Emessa il %s"
+msgstr "Emitido em %s"
+
+msgid "End date"
+msgstr "Data de fim"
+
+msgid "Error loading calendar:"
+msgstr "Erro ao carregar o calendário:"
+
+msgid "Error saving:"
+msgstr "Erro ao guardar:"
+
+msgid "Error:"
+msgstr "Erro:"
+
+msgid "Errore"
+msgstr "Erro"
+
+msgid "Errore connessione PayPal: "
+msgstr "Erro de ligação ao PayPal: "
+
+msgid "Errore di connessione durante il caricamento del calendario"
+msgstr "Erro de ligação ao carregar o calendário"
+
+msgid "Errore di connessione durante il salvataggio"
+msgstr "Erro de ligação ao guardar"
+
+msgid "Errore di sincronizzazione"
+msgstr "Erro de sincronização"
+
+msgid "Errore durante la cancellazione."
+msgstr "Erro durante o cancelamento."
+
+msgid "Errore durante la generazione dell'URL di esportazione"
+msgstr "Erro ao gerar o URL de exportação"
+
+msgid "Errore durante la lettura OCR."
+msgstr "Erro durante a leitura OCR."
+
+msgid "Errore imprevisto. Riprovare."
+msgstr "Erro inesperado. Tente novamente."
+
+msgid "Errore interno durante l'aggiornamento date. Riprova tra qualche secondo."
+msgstr "Erro interno ao atualizar as datas. Tente novamente dentro de alguns segundos."
+
+msgid "Errore nel caricamento del calendario:"
+msgstr "Erro ao carregar o calendário:"
+
+msgid "Errore nel completamento del pagamento."
+msgstr "Erro ao concluir o pagamento."
+
+msgid "Errore nel salvare la regola"
+msgstr "Erro ao guardar a regra"
+
+msgid "Errore nel salvataggio:"
+msgstr "Erro ao guardar:"
+
+msgid "Errore nell'applicare il template"
+msgstr "Erro ao aplicar o modelo"
+
+msgid "Errore nell'avvio del pagamento Stripe. Riprova."
+msgstr "Erro ao iniciar o pagamento Stripe. Tente novamente."
+
+msgid "Errore nella creazione ordine PayPal."
+msgstr "Erro ao criar o pedido PayPal."
+
+msgid "Errore sconosciuto"
+msgstr "Erro desconhecido"
+
+msgid "Errore sistema: Modulo Booking Core non attivo."
+msgstr "Erro do sistema: módulo Booking Core inativo."
+
+msgid "Errore:"
+msgstr "Erro:"
+
+msgid "Es. Wi-Fi, autobus, pronto soccorso…"
+msgstr "Ex.: Wi-Fi, autocarro, urgências…"
+
+msgid "Esempi"
+msgstr "Exemplos"
+
+msgid "Esempio: persona con viso scoperto che tiene un documento accanto alla guancia, rivolto verso la fotocamera."
+msgstr "Exemplo: pessoa com rosto descoberto a segurar um documento junto à face, virado para a câmara."
+
+msgid "Esporta CSV"
+msgstr "Exportar CSV"
+
+msgid "Esporta Calendario"
+msgstr "Exportar calendário"
+
+msgid "Esportazione dati prenotazioni"
+msgstr "Exportação de dados das reservas"
+
+msgid "Età"
+msgstr "Idade"
+
+msgid "Età Bambini"
+msgstr "Idades das crianças"
+
+msgid "Event Calendar Integration"
+msgstr "Integração do calendário de eventos"
+
+msgid "Eventi Maggiori"
+msgstr "Grandes eventos"
+
+msgid "Eventi e dintorni"
+msgstr "Eventos e arredores"
+
+msgid "Evento Ricorrente"
+msgstr "Evento recorrente"
+
+msgid "Evento aggiunto con successo"
+msgstr "Evento adicionado com sucesso"
+
+msgid "Evento di sistema"
+msgstr "Evento do sistema"
+
+msgid "Evento eliminato"
+msgstr "Evento eliminado"
+
+msgid "Events Analysis"
+msgstr "Análise de eventos"
+
+msgid "Events Management"
+msgstr "Gestão de eventos"
+
+msgid "Events Management requires an active Domilocus Professional license or higher."
+msgstr "A gestão de eventos requer uma licença Domilocus Professional ativa ou superior."
+
+msgid "Extra Guest Fee (per person/night)"
+msgstr "Custo de hóspede extra (por pessoa/noite)"
+
+msgid "FRONTE"
+msgstr "FRENTE"
+
+msgid "Familiare"
+msgstr "Familiar"
+
+msgid "Fatto, ho verificato i dati"
+msgstr "Concluído, verifiquei os dados"
+
+msgid "Fattore Stagionale"
+msgstr "Fator sazonal"
+
+msgid "Fattori Stagionali"
+msgstr "Fatores sazonais"
+
+msgid "Febbraio"
+msgstr "Fevereiro"
+
+msgid "February"
+msgstr "Fevereiro"
+
+msgid "Feed Esistenti"
+msgstr "Feeds existentes"
+
+msgid "Feed aggiunto con successo e sincronizzazione avviata"
+msgstr "Feed adicionado com sucesso e sincronização iniciada"
+
+msgid "Feed iCal"
+msgstr "Feeds iCal"
+
+msgid "Feed rimosso con successo"
+msgstr "Feed removido com sucesso"
+
+msgid "Femmina"
+msgstr "Feminino"
+
+msgid "Ferro da Stiro"
+msgstr "Ferro de engomar"
+
+msgid "Festival"
+msgstr "Festivais"
+
+msgid "Festival cittadini, sagre, eventi culturali."
+msgstr "Festivais urbanos, festas locais, eventos culturais."
+
+msgid "Festività"
+msgstr "Feriado"
+
+msgid "Festività nazionali, ponti, periodi vacanzieri."
+msgstr "Feriados nacionais, pontes, períodos de férias."
+
+msgid "File troppo grande. Max %sMB."
+msgstr "Ficheiro demasiado grande. Máx. %sMB."
+
+msgid "Fill in all fields to set prices"
+msgstr "Preencha todos os campos para definir os preços"
+
+msgid "Fill in the dates to set status"
+msgstr "Preencha as datas para definir o estado"
+
+msgid "Filtra"
+msgstr "Filtrar"
+
+msgid "Filtri Report"
+msgstr "Filtros dos relatórios"
+
+msgid "Firma"
+msgstr "Assinatura"
+
+msgid "Firma Elettronica Semplice (eIDAS art. 25)"
+msgstr "Assinatura eletrónica simples (art. 25.º do eIDAS)"
+
+msgid "Firma Elettronica Semplice ai sensi art. 25 Reg. UE 910/2014 (eIDAS). Audit trail conservato in forma sicura."
+msgstr "Assinatura eletrónica simples nos termos do art. 25.º do Regulamento UE 910/2014 (eIDAS). Registo de auditoria conservado de forma segura."
+
+msgid "Firma Elettronica Semplice — art. 25 Regolamento eIDAS"
+msgstr "Assinatura eletrónica simples — art. 25.º do Regulamento eIDAS"
+
+msgid "Firma Elettronica Semplice — art. 25 Regolamento eIDAS, verificata via codice OTP inviato via email."
+msgstr "Assinatura eletrónica simples — art. 25.º do Regulamento eIDAS, verificada através de código OTP enviado por e-mail."
+
+msgid "Firma completata."
+msgstr "Assinatura concluída."
+
+msgid "Firma del locatore"
+msgstr "Assinatura do senhorio"
+
+msgid "Firma ospite"
+msgstr "Assinatura do hóspede"
+
+msgid "Firma:"
+msgstr "Assinatura:"
+
+msgid "Firmato il:"
+msgstr "Assinado em:"
+
+msgid "Firmato il: %s"
+msgstr "Assinado em: %s"
+
+msgid "Flessibile"
+msgstr "Flexível"
+
+msgid "Flexible"
+msgstr "Flexível"
+
+msgid "Fonte"
+msgstr "Fonte"
+
+msgid "Formato HEIC/HEIF non supportato. Salva la foto in JPG/PNG e riprova."
+msgstr "Formato HEIC/HEIF não suportado. Guarde a fotografia em JPG/PNG e tente novamente."
+
+msgid "Foto obbligatorie per ogni ospite"
+msgstr "Fotografias obrigatórias para cada hóspede"
+
+msgid "Foto precedente"
+msgstr "Fotografia anterior"
+
+msgid "Foto successiva"
+msgstr "Fotografia seguinte"
+
+msgid "French double bed"
+msgstr "Cama de casal francesa"
+
+msgid "Frequently Asked Questions"
+msgstr "Perguntas frequentes"
+
+msgid "Fri"
+msgstr "Sex"
+
+msgid "Frigorifero"
+msgstr "Frigorífico"
+
+msgid "Funzione disponibile dal piano Professional."
+msgstr "Função disponível a partir do plano Professional."
+
+msgid "Funzione non disponibile."
+msgstr "Função indisponível."
+
+msgid "Garden"
+msgstr "Jardim"
+
+msgid "Genera URL Esportazione"
+msgstr "Gerar URL de exportação"
+
+msgid "Gennaio"
+msgstr "Janeiro"
+
+msgid "Gestione Eventi"
+msgstr "Gestão de eventos"
+
+msgid "Gestione Prezzi"
+msgstr "Gestão de preços"
+
+msgid "Gestione Tariffe"
+msgstr "Gestão de tarifas"
+
+msgid "Gestione multi-proprietà"
+msgstr "Gestão de várias propriedades"
+
+msgid "Gestire il rimborso tramite il metodo di pagamento utilizzato"
+msgstr "Gerir o reembolso através do método de pagamento utilizado"
+
+msgid "Gestisci"
+msgstr "Gerir"
+
+msgid "Gestisci Giorno"
+msgstr "Gerir dia"
+
+msgid "Gestisci eventi che influenzano i prezzi dinamici. Aggiungi eventi manualmente o importali da servizi esterni."
+msgstr "Gira os eventos que influenciam os preços dinâmicos. Adicione eventos manualmente ou importe-os de serviços externos."
+
+msgid "Gestisci pagamento e cancellazione."
+msgstr "Gerir pagamento e cancelamento."
+
+msgid "Gestore:"
+msgstr "Gestor:"
+
+msgid "Giardino"
+msgstr "Jardim"
+
+msgid "Gio"
+msgstr "Qui"
+
+msgid "Giorni Massimi Anticipo"
+msgstr "Dias máximos de antecedência"
+
+msgid "Giorni Massimi Soggiorno"
+msgstr "Dias máximos de estadia"
+
+msgid "Giorni Minimi Anticipo"
+msgstr "Dias mínimos de antecedência"
+
+msgid "Giorni Minimi Soggiorno"
+msgstr "Dias mínimos de estadia"
+
+msgid "Giorni Più Popolari"
+msgstr "Dias da semana mais populares"
+
+msgid "Giorni Progressivi"
+msgstr "Dias progressivos"
+
+msgid "Giorni Weekend"
+msgstr "Dias de fim de semana"
+
+msgid "Giugno"
+msgstr "Junho"
+
+msgid "Gli aggiustamenti basati sulla concorrenza sono limitati dal parametro \"Aggiustamento Massimo\" per evitare variazioni eccessive."
+msgstr "Os ajustes com base na concorrência são limitados pelo parâmetro \"Ajuste máximo\" para evitar variações excessivas."
+
+msgid "Grandi manifestazioni, concerti internazionali, partite importanti."
+msgstr "Grandes manifestações, concertos internacionais, jogos importantes."
+
+msgid "Griglia predefinita a 3 colonne"
+msgstr "Grelha predefinida de 3 colunas"
+
+msgid "Guest"
+msgstr "Hóspede"
+
+msgid "Guests"
+msgstr "Hóspedes"
+
+msgid "Guida Prezzi Dinamici"
+msgstr "Guia de preços dinâmicos"
+
+msgid "Guida Setup"
+msgstr "Guia de configuração"
+
+msgid "Guida Shortcodes"
+msgstr "Guia de shortcodes"
+
+msgid "Gym"
+msgstr "Ginásio"
+
+msgid "Hai raggiunto il numero massimo di codici richiesti per questa firma. Contatta la struttura."
+msgstr "Atingiu o número máximo de códigos pedidos para esta assinatura. Contacte o alojamento."
+
+msgid "Hai scelto di lasciare la tassa di soggiorno in contanti sul tavolo. L’incasso resta da verificare dalla struttura."
+msgstr "Escolheu deixar a taxa turística em dinheiro em cima da mesa. A cobrança ainda será verificada pelo alojamento."
+
+msgid "Hai superato il numero massimo di ospiti."
+msgstr "Excedeu o número máximo de hóspedes."
+
+msgid "Hai superato la capienza massima (%d)."
+msgstr "Excedeu a capacidade máxima (%d)."
+
+msgid "Hair Dryer"
+msgstr "Secador de cabelo"
+
+msgid "Heating"
+msgstr "Aquecimento"
+
+msgid "Ho letto e accetto la %s"
+msgstr "Li e aceito a %s"
+
+msgid "Ho letto e accetto le %s."
+msgstr "Li e aceito as %s."
+
+msgid "Ho letto e accetto le condizioni della prenotazione."
+msgstr "Li e aceito as condições da reserva."
+
+msgid "Ho letto e approvo espressamente le clausole particolari sopra indicate."
+msgstr "Li e aprovo expressamente as cláusulas especiais acima indicadas."
+
+msgid "Ho letto e approvo il contratto e le clausole specifiche indicate."
+msgstr "Li e aprovo o contrato e as cláusulas específicas indicadas."
+
+msgid "Ho preso visione del documento completo e approvo espressamente le condizioni sopra indicate."
+msgstr "Li o documento completo e aprovo expressamente as condições acima indicadas."
+
+msgid "House Rules"
+msgstr "Regras da casa"
+
+msgid "Housekeeping"
+msgstr "Serviço de limpeza"
+
+msgid "I bambini oltre 10 anni non possono superare il totale dei bambini."
+msgstr "O número de crianças com mais de 10 anos não pode exceder o total de crianças."
+
+msgid "I dati degli ospiti sono stati registrati correttamente. Riceverai una conferma via email."
+msgstr "Os dados dos hóspedes foram registados com sucesso. Receberá uma confirmação por e-mail."
+
+msgid "I prezzi torneranno immediatamente al prezzo base o alle eventuali regole manuali configurate."
+msgstr "Os preços regressam imediatamente ao preço base ou às regras manuais configuradas."
+
+msgid "I prezzi vengono ricalcolati ogni 4 ore per bilanciare reattività e stabilità. Questo evita fluttuazioni troppo frequenti che potrebbero confondere i clienti."
+msgstr "Os preços são recalculados a cada 4 horas para equilibrar rapidez de resposta e estabilidade. Evita flutuações demasiado frequentes que poderiam confundir os clientes."
+
+msgid "I riferimenti da tenere a portata di mano."
+msgstr "Os contactos que convém ter à mão."
+
+msgid "ID Prenotazione:"
+msgstr "ID da reserva:"
+
+msgid "ID appartamento mancante."
+msgstr "Falta o ID do apartamento."
+
+msgid "ID dell'appartamento per calcolare i prezzi"
+msgstr "ID do apartamento para calcular preços"
+
+msgid "ID dell'appartamento per cui mostrare il calendario"
+msgstr "ID do apartamento para o qual apresentar o calendário"
+
+msgid "ID prenotazione mancante."
+msgstr "Falta o ID da reserva."
+
+msgid "ID prenotazione non valido."
+msgstr "ID da reserva inválido."
+
+msgid "IP:"
+msgstr "IP:"
+
+msgid "Identificativo documento: %s"
+msgstr "Identificador do documento: %s"
+
+msgid "Il check-in non è consentito in questo giorno della settimana."
+msgstr "Não é permitido fazer check-in neste dia da semana."
+
+msgid "Il check-in è già stato inviato."
+msgstr "O check-in já foi enviado."
+
+msgid "Il check-out deve essere successivo al check-in."
+msgstr "O check-out deve ser posterior ao check-in."
+
+msgid "Il check-out non è consentito in questo giorno della settimana."
+msgstr "Não é permitido fazer check-out neste dia da semana."
+
+msgid "Il codice che hai ricevuto via email o nell'app Domilocus."
+msgstr "O código recebido por e-mail ou na aplicação Domilocus."
+
+msgid "Il codice che ti ha fornito la struttura."
+msgstr "O código fornecido pelo alojamento."
+
+msgid "Il codice della cassetta chiavi sarà visibile qui appena avrai completato la conferma del soggiorno (firma) più sopra."
+msgstr "O código da caixa de chaves ficará visível aqui assim que concluir a confirmação da estadia (assinatura) acima."
+
+msgid "Il codice della cassetta chiavi sarà visibile qui appena avrai completato tutte le fasi del check-in online qui sopra."
+msgstr "O código da caixa de chaves ficará visível aqui assim que concluir todas as etapas do check-in online acima."
+
+msgid "Il codice non è disponibile per questa prenotazione."
+msgstr "O código não está disponível para esta reserva."
+
+msgid "Il codice sarà disponibile dal %s, dopo il completamento dei passaggi richiesti. Ricarica questa pagina a partire da quell’orario."
+msgstr "O código estará disponível a partir de %s, após a conclusão dos passos exigidos. Recarregue esta página a partir dessa hora."
+
+msgid "Il codice è scaduto. Richiedine uno nuovo."
+msgstr "O código expirou. Peça um novo."
+
+msgid "Il cognome inserito non corrisponde alla prenotazione."
+msgstr "O apelido introduzido não corresponde à reserva."
+
+msgid "Il contratto e il pagamento del soggiorno sono gestiti dalla piattaforma. Completa il check-in online e verifica qui sotto la tassa di soggiorno."
+msgstr "O contrato e o pagamento da estadia são geridos pela plataforma. Conclua o check-in online e verifique abaixo a taxa turística."
+
+msgid "Il contratto e il pagamento sono gestiti direttamente dalla piattaforma di prenotazione. Non sono richieste ulteriori azioni online."
+msgstr "O contrato e o pagamento são geridos diretamente pela plataforma de reservas. Não são necessárias outras ações online."
+
+msgid "Il documento non è ancora firmato."
+msgstr "O documento ainda não está assinado."
+
+msgid "Il link di accesso non è valido. Verifica di aver usato il link esatto ricevuto via email."
+msgstr "A ligação de acesso é inválida. Verifique se utilizou a ligação exata recebida por e-mail."
+
+msgid "Il locatore dichiara il reddito al lordo delle commissioni trattenute dall'intermediario."
+msgstr "O senhorio declara o rendimento bruto, antes das comissões retidas pelo intermediário."
+
+msgid "Il nome è obbligatorio."
+msgstr "O nome é obrigatório."
+
+msgid "Il numero di ospiti varia durante il soggiorno"
+msgstr "O número de hóspedes varia durante a estadia"
+
+msgid "Il pagamento è stato annullato. Puoi riprovare qui sotto."
+msgstr "O pagamento foi cancelado. Pode tentar novamente abaixo."
+
+msgid "Il prezzo non aumenterà mai oltre questa percentuale rispetto al prezzo base."
+msgstr "O preço nunca aumentará acima desta percentagem relativamente ao preço base."
+
+msgid "Il prezzo non scenderà mai sotto questa percentuale rispetto al prezzo base."
+msgstr "O preço nunca descerá abaixo desta percentagem relativamente ao preço base."
+
+msgid "Il pricing dinamico è un sistema che adatta automaticamente i prezzi dei tuoi appartamenti in base a diversi fattori di mercato in tempo reale. Questo ti permette di massimizzare i ricavi durante i periodi di alta domanda e rimanere competitivo nei periodi più tranquilli."
+msgstr "Os preços dinâmicos adaptam automaticamente os preços dos apartamentos a vários fatores de mercado em tempo real. Permitem maximizar as receitas nos períodos de elevada procura e manter a competitividade nos períodos mais tranquilos."
+
+msgid "Il punto di riferimento per l'occupazione. Se l'occupazione reale è superiore, i prezzi aumentano; se è inferiore, diminuiscono."
+msgstr "O valor de referência da ocupação. Se a ocupação real for superior, os preços aumentam; se for inferior, diminuem."
+
+msgid "Il saldo è ancora da versare."
+msgstr "O saldo ainda está por pagar."
+
+msgid "Il sistema di prezzi dinamici automatici adatta i tuoi prezzi in tempo reale basandosi su occupazione zona, eventi, concorrenza e domanda."
+msgstr "O sistema de preços dinâmicos automáticos adapta os preços em tempo real com base na ocupação da zona, eventos, concorrência e procura."
+
+msgid "Il sistema rileva automaticamente gli eventi nella tua zona attraverso calendari pubblici e database turistici."
+msgstr "O sistema deteta automaticamente os eventos na sua zona através de calendários públicos e bases de dados turísticas."
+
+msgid "Il sottoscritto {host_name} attesta l'importo di {gross_amount} trattenuto a titolo di penale per mancato arrivo (no-show)."
+msgstr "O abaixo-assinado {host_name} declara que o valor de {gross_amount} foi retido como penalização por não comparência (no-show)."
+
+msgid "Il telefono è obbligatorio."
+msgstr "O telefone é obrigatório."
+
+msgid "Il tuo soggiorno"
+msgstr "A sua estadia"
+
+msgid "Il tuo viso e il documento devono essere visibili insieme nella stessa foto, come in questo esempio."
+msgstr "O seu rosto e o documento devem estar visíveis juntos na mesma fotografia, como neste exemplo."
+
+msgid "Immagine acquisita. I dati vengono letti dal lato "
+msgstr "Imagem recolhida. Os dados são lidos do lado "
+
+msgid "Immobile"
+msgstr "Imóvel"
+
+msgid "Impatto"
+msgstr "Impacto"
+
+msgid "Impatto Occupazione"
+msgstr "Impacto na ocupação"
+
+msgid "Impatto Prezzo"
+msgstr "Impacto no preço"
+
+msgid "Impatto Ricavi"
+msgstr "Impacto nas receitas"
+
+msgid "Importa Eventi"
+msgstr "Importar eventos"
+
+msgid "Importa Eventi Esterni"
+msgstr "Importar eventos externos"
+
+msgid "Importa Prenotazioni"
+msgstr "Importar reservas"
+
+msgid "Importa eventi da servizi esterni come Predicthq per rilevamento automatico di concerti, festival, conferenze e eventi sportivi."
+msgstr "Importe eventos de serviços externos, como o Predicthq, para deteção automática de concertos, festivais, conferências e eventos desportivos."
+
+msgid "Importante"
+msgstr "Importante"
+
+msgid "Importo"
+msgstr "Valor"
+
+msgid "Importo da pagare: %1$s — metodo scelto: %2$s. Il pagamento viene verificato automaticamente con Stripe."
+msgstr "Valor a pagar: %1$s — método escolhido: %2$s. O pagamento é verificado automaticamente pela Stripe."
+
+msgid "Importo da pagare: %1$s — metodo scelto: %2$s. Lo stato diventa pagato dopo la conferma della struttura."
+msgstr "Valor a pagar: %1$s — método escolhido: %2$s. O estado passa a pago após confirmação do alojamento."
+
+msgid "Importo dovuto: %1$s — metodo scelto: %2$s. In attesa di conferma da parte della struttura: riceverai il codice della cassetta chiavi appena il pagamento sarà verificato."
+msgstr "Valor devido: %1$s — método escolhido: %2$s. A aguardar confirmação do alojamento: receberá o código da caixa de chaves assim que o pagamento for verificado."
+
+msgid "Importo riscosso per conto del Comune"
+msgstr "Valor cobrado por conta do Município"
+
+msgid "Importo totale"
+msgstr "Valor total"
+
+msgid "Importo totale soggiorno: %s €"
+msgstr "Valor total da estadia: %s €"
+
+msgid "Importo trattenuto a titolo di penale per mancato arrivo (no-show)."
+msgstr "Valor retido como penalização por não comparência (no-show)."
+
+msgid "Importo:"
+msgstr "Valor:"
+
+msgid "Impossibile autenticarsi con PayPal. Verifica le credenziali."
+msgstr "Não foi possível autenticar no PayPal. Verifique as credenciais."
+
+msgid "Impossibile calcolare il prezzo."
+msgstr "Não foi possível calcular o preço."
+
+msgid "Impossibile calcolare il prezzo. Riprova."
+msgstr "Não foi possível calcular o preço. Tente novamente."
+
+msgid "Impossibile caricare PayPal. Riprova."
+msgstr "Não foi possível carregar o PayPal. Tente novamente."
+
+msgid "Impossibile caricare libreria OCR."
+msgstr "Não foi possível carregar a biblioteca OCR."
+
+msgid "Impossibile creare l'ordine PayPal."
+msgstr "Não foi possível criar o pedido PayPal."
+
+msgid "Impossibile creare la prenotazione. Riprova."
+msgstr "Não foi possível criar a reserva. Tente novamente."
+
+msgid "Impossibile creare la sessione di pagamento. Riprova."
+msgstr "Não foi possível criar a sessão de pagamento. Tente novamente."
+
+msgid "Impossibile inizializzare Stripe. Aggiorna la pagina e riprova."
+msgstr "Não foi possível iniciar a Stripe. Atualize a página e tente novamente."
+
+msgid "Impossibile inviare il codice."
+msgstr "Não foi possível enviar o código."
+
+msgid "Impossibile leggere immagine."
+msgstr "Não foi possível ler a imagem."
+
+msgid "Impossibile registrare il pagamento. Riprova."
+msgstr "Não foi possível registar o pagamento. Tente novamente."
+
+msgid "Impossibile salvare la tassa. Riprova."
+msgstr "Não foi possível guardar a taxa. Tente novamente."
+
+msgid "Imposta di bollo"
+msgstr "Imposto do selo"
+
+msgid "Imposta di bollo, se dovuta, a carico dell'ospite ai sensi del DPR 642/72."
+msgstr "Imposto do selo, quando devido, a cargo do hóspede nos termos do DPR italiano 642/72."
+
+msgid "Imposta limiti globali per proteggere i tuoi margini e mantenere prezzi ragionevoli."
+msgstr "Defina limites globais para proteger as margens e manter preços razoáveis."
+
+msgid "Imposta limiti per evitare variazioni eccessive dei prezzi"
+msgstr "Defina limites para evitar variações excessivas dos preços"
+
+msgid "Imposta prezzi per periodo:"
+msgstr "Definir preços por período:"
+
+msgid "Impostazioni"
+msgstr "Definições"
+
+msgid "Impostazioni Prezzi Automatici"
+msgstr "Definições de preços automáticos"
+
+msgid "Impostazioni salvate."
+msgstr "Definições guardadas."
+
+msgid "Imposte:"
+msgstr "Impostos:"
+
+msgid "In Attesa"
+msgstr "Pendente"
+
+msgid "In attesa"
+msgstr "Pendente"
+
+msgid "Inattivo"
+msgstr "Inativo"
+
+msgid "Incassata"
+msgstr "Recebida"
+
+msgid "Incolla gli shortcode direttamente in qualsiasi pagina, post o area widget."
+msgstr "Cole os shortcodes diretamente em qualquer página, artigo ou área de widgets."
+
+msgid "Incolla l'URL nel modulo sopra e seleziona la piattaforma"
+msgstr "Cole o URL no formulário acima e selecione a plataforma"
+
+msgid "Incolla l'URL per importare il tuo calendario Domilocus"
+msgstr "Cole o URL para importar o seu calendário Domilocus"
+
+msgid "Indica dove si trovano i contenitori, come separare i materiali e gli eventuali giorni e orari di raccolta."
+msgstr "Indique onde estão os contentores, como separar os materiais e os eventuais dias e horários de recolha."
+
+msgid "Indica la durata del soggiorno dell'ospite."
+msgstr "Indique a duração da estadia do hóspede."
+
+msgid "Indicatori di Domanda"
+msgstr "Indicadores de procura"
+
+msgid "Indicazioni stradali"
+msgstr "Indicações de percurso"
+
+msgid "Indietro"
+msgstr "Voltar"
+
+msgid "Indirizzo"
+msgstr "Morada"
+
+msgid "Indirizzo di residenza"
+msgstr "Morada de residência"
+
+msgid "Indirizzo immobile"
+msgstr "Morada do imóvel"
+
+msgid "Indirizzo:"
+msgstr "Morada:"
+
+msgid "Infants"
+msgstr "Bebés"
+
+msgid "Info"
+msgstr "Informação"
+
+msgid "Informazioni Prenotazione"
+msgstr "Informações da reserva"
+
+msgid "Inizia con Impostazioni Conservative"
+msgstr "Comece com definições conservadoras"
+
+msgid "Inquadra tutto il viso e tutto il documento. Non coprire foto o dati con le dita."
+msgstr "Enquadre todo o rosto e todo o documento. Não tape a fotografia nem os dados com os dedos."
+
+msgid "Inserimento manuale (admin)"
+msgstr "Introdução manual (administrador)"
+
+msgid "Inserisci codice prenotazione e data di check-in."
+msgstr "Introduza o código da reserva e a data de check-in."
+
+msgid "Inserisci come primo ospite il referente della famiglia o del gruppo: deve essere una persona che soggiorna."
+msgstr "Introduza como primeiro hóspede o responsável da família ou do grupo: deve ser uma pessoa que ficará alojada."
+
+msgid "Inserisci il codice a 6 cifre."
+msgstr "Introduza o código de 6 dígitos."
+
+msgid "Inserisci il codice che hai ricevuto via email/app Domilocus."
+msgstr "Introduza o código recebido por e-mail/aplicação Domilocus."
+
+msgid "Inserisci il codice prenotazione/app."
+msgstr "Introduza o código da reserva/aplicação."
+
+msgid "Inserisci il codice."
+msgstr "Introduza o código."
+
+msgid "Inserisci il cognome come riportato sul documento."
+msgstr "Introduza o apelido tal como consta do documento."
+
+msgid "Inserisci il nome come riportato sul documento."
+msgstr "Introduza o nome tal como consta do documento."
+
+msgid "Inserisci il tuo codice"
+msgstr "Introduza o seu código"
+
+msgid "Inserisci la data di arrivo."
+msgstr "Introduza a data de chegada."
+
+msgid "Integrazione Piattaforme"
+msgstr "Integração de plataformas"
+
+msgid "Integrazione calendario eventi"
+msgstr "Integração do calendário de eventos"
+
+msgid "Integrazione prenotazione #%d - %s"
+msgstr "Pagamento adicional da reserva #%d - %s"
+
+msgid "Integrazione prenotazione #%d – %s"
+msgstr "Pagamento adicional da reserva #%d – %s"
+
+msgid "Intensità dell'aggiustamento stagionale. Valori più alti amplificano le differenze tra alta e bassa stagione."
+msgstr "Intensidade do ajuste sazonal. Valores mais elevados ampliam as diferenças entre a época alta e a baixa."
+
+msgid "Intestatario ricevuta (pagante)"
+msgstr "Titular do recibo (pagador)"
+
+msgid "Intestatario:"
+msgstr "Titular:"
+
+msgid "Invia di nuovo"
+msgstr "Enviar novamente"
+
+msgid "Invia richiesta"
+msgstr "Enviar pedido"
+
+msgid "Invio bloccato: completare tutti i campi obbligatori ministeriali."
+msgstr "Envio bloqueado: preencha todos os campos obrigatórios exigidos pelas autoridades."
+
+msgid "Io sottoscritto {host_name}, dichiaro di aver ricevuto in data {payment_date} da {guest_name} la somma di {gross_amount}."
+msgstr "Eu, {host_name}, declaro ter recebido em {payment_date} de {guest_name} a quantia de {gross_amount}."
+
+msgid "Iron"
+msgstr "Ferro de engomar"
+
+msgid "Istruzioni Setup"
+msgstr "Instruções de configuração"
+
+msgid "Istruzioni Specifiche per Piattaforma"
+msgstr "Instruções específicas por plataforma"
+
+msgid "January"
+msgstr "Janeiro"
+
+msgid "July"
+msgstr "Julho"
+
+msgid "June"
+msgstr "Junho"
+
+msgid "King size bed"
+msgstr "Cama king size"
+
+msgid "Kitchen"
+msgstr "Cozinha"
+
+msgid "L'URL iCal fornito dalla piattaforma di prenotazione"
+msgstr "O URL iCal fornecido pela plataforma de reservas"
+
+msgid "L'ospite dichiara di aver avuto accesso alle condizioni applicabili alla prenotazione e di averle accettate mediante procedura elettronica di conferma tramite OTP."
+msgstr "O hóspede declara ter tido acesso às condições aplicáveis à reserva e tê-las aceite através do procedimento de confirmação eletrónica por OTP."
+
+msgid "La Gestione Eventi richiede una licenza Domilocus Professional attiva o superiore."
+msgstr "A gestão de eventos requer uma licença Domilocus Professional ativa ou superior."
+
+msgid "La data di check-in non può essere nel passato."
+msgstr "A data de check-in não pode ser no passado."
+
+msgid "La data di check-out deve essere successiva al check-in."
+msgstr "A data de check-out deve ser posterior ao check-in."
+
+msgid "La prenotazione #%d non è più attiva."
+msgstr "A reserva #%d já não está ativa."
+
+msgid "La prenotazione richiesta non esiste o è stata eliminata dal sistema."
+msgstr "A reserva solicitada não existe ou foi eliminada do sistema."
+
+msgid "La prenotazione è confermata e pagata. Per modifiche o cancellazioni, contattaci direttamente."
+msgstr "A reserva está confirmada e paga. Para alterações ou cancelamentos, contacte-nos diretamente."
+
+msgid "La tariffa \"%s\" non prevede cancellazione gratuita. Per modifiche, contattaci direttamente."
+msgstr "A tarifa \"%s\" não permite cancelamento gratuito. Para alterações, contacte-nos diretamente."
+
+msgid "La tariffa \"%s\" prevede cancellazione gratuita entro il %s. Puoi cancellare senza costi."
+msgstr "A tarifa \"%s\" permite cancelamento gratuito até %s. Pode cancelar sem custos."
+
+msgid "La tariffa selezionata prevede condizioni di pagamento differite. Segui le istruzioni qui sotto."
+msgstr "A tarifa selecionada prevê pagamento diferido. Siga as instruções abaixo."
+
+msgid "La tassa di soggiorno che Booking.com indica come “da pagare in struttura” viene riscossa direttamente dal gestore, separatamente dal pagamento del soggiorno effettuato sulla piattaforma."
+msgstr "A taxa turística que a Booking.com indica como “a pagar no alojamento” é cobrada diretamente pelo gestor, separadamente do pagamento da estadia efetuado na plataforma."
+
+msgid "La tassa non è pagabile per questa prenotazione."
+msgstr "A taxa não pode ser paga para esta reserva."
+
+msgid "La tua firma:"
+msgstr "A sua assinatura:"
+
+msgid "La tua prenotazione è stata confermata. È stata inviata un'email di conferma."
+msgstr "A sua reserva foi confirmada. Foi enviado um e-mail de confirmação."
+
+msgid "La tua prenotazione è stata creata!"
+msgstr "A sua reserva foi criada!"
+
+msgid "Lato immagine"
+msgstr "Lado da imagem"
+
+msgid "Lavastoviglie"
+msgstr "Máquina de lavar louça"
+
+msgid "Lavatrice"
+msgstr "Máquina de lavar roupa"
+
+msgid "Layout di visualizzazione: grid, list, carousel"
+msgstr "Disposição de apresentação: grid, list, carousel"
+
+msgid "Layout lista con 5 appartamenti"
+msgstr "Lista com 5 apartamentos"
+
+msgid "Le date di check-in e check-out sono obbligatorie."
+msgstr "As datas de check-in e check-out são obrigatórias."
+
+msgid "Le date selezionate non sono disponibili."
+msgstr "As datas selecionadas não estão disponíveis."
+
+msgid "Le date selezionate non sono disponibili. Si prega di scegliere altre date."
+msgstr "As datas selecionadas não estão disponíveis. Escolha outras datas."
+
+msgid "Le date selezionate sono disponibili"
+msgstr "As datas selecionadas estão disponíveis"
+
+msgid "Le informazioni per vivere bene la casa."
+msgstr "Informações para aproveitar a casa."
+
+msgid "Le modalità e il codice di accesso saranno comunicati durante il check-in online, una volta completate le procedure richieste."
+msgstr "As instruções e o código de acesso serão comunicados durante o check-in online, após a conclusão dos procedimentos exigidos."
+
+msgid "Letti"
+msgstr "Camas"
+
+msgid "Letti separati"
+msgstr "Camas separadas"
+
+msgid "Letti separati (Tariffa 3 Ospiti)"
+msgstr "Camas separadas (tarifa de 3 hóspedes)"
+
+msgid "Letto alla francese"
+msgstr "Cama de casal francesa"
+
+msgid "Letto king size"
+msgstr "Cama king size"
+
+msgid "Letto matrimoniale"
+msgstr "Cama de casal"
+
+msgid "Letto matrimoniale standard"
+msgstr "Cama de casal padrão"
+
+msgid "Letto queen size"
+msgstr "Cama queen size"
+
+msgid "Letto singolo"
+msgstr "Cama individual"
+
+msgid "Lettura automatica non riuscita. Per carta identità/passaporto prova con foto più nitida del lato con codici."
+msgstr "A leitura automática falhou. Para cartão de identificação/passaporte, tente uma fotografia mais nítida do lado com os códigos."
+
+msgid "Lettura documento (%s)..."
+msgstr "A ler o documento (%s)..."
+
+msgid "Lettura documento (MRZ)..."
+msgstr "A ler o documento (MRZ)..."
+
+msgid "Lettura documento (OCR)..."
+msgstr "A ler o documento (OCR)..."
+
+msgid "Lettura documento..."
+msgstr "A ler o documento..."
+
+msgid "Liberazione delle date nel calendario"
+msgstr "Libertação das datas no calendário"
+
+msgid "Limite massimo di aumento del prezzo dovuto all'occupazione."
+msgstr "Limite máximo de aumento do preço devido à ocupação."
+
+msgid "Limite massimo di riduzione del prezzo dovuto alla bassa occupazione."
+msgstr "Limite máximo de redução do preço devido à baixa ocupação."
+
+msgid "Limiti di Prezzo"
+msgstr "Limites de preço"
+
+msgid "Lingua"
+msgstr "Idioma"
+
+msgid "Link di gestione non valido o incompleto."
+msgstr "Ligação de gestão inválida ou incompleta."
+
+msgid "Link di gestione non valido o scaduto."
+msgstr "Ligação de gestão inválida ou expirada."
+
+msgid "Lista Eventi"
+msgstr "Lista de eventos"
+
+msgid "Lista ospiti non valida."
+msgstr "Lista de hóspedes inválida."
+
+msgid "Loading calendar..."
+msgstr "A carregar calendário..."
+
+msgid "Loading..."
+msgstr "A carregar..."
+
+msgid "Location"
+msgstr "Localização"
+
+msgid "Locatore"
+msgstr "Senhorio"
+
+msgid "Loft"
+msgstr "Loft"
+
+msgid "Luglio"
+msgstr "Julho"
+
+msgid "Lun"
+msgstr "Seg"
+
+msgid "Luogo rilascio *"
+msgstr "Local de emissão *"
+
+msgid "L’appartamento dispone di un letto matrimoniale e di un divano letto. Se desiderate dormire in letti separati, applichiamo la tariffa per 3 ospiti."
+msgstr "O apartamento dispõe de uma cama de casal e de um sofá-cama. Se pretenderem dormir em camas separadas, aplicamos a tarifa de 3 hóspedes."
+
+msgid "L’orario di accesso deve essere confermato dalla struttura."
+msgstr "A hora de acesso deve ser confirmada pelo alojamento."
+
+msgid "Macchina del Caffè"
+msgstr "Máquina de café"
+
+msgid "Maggio"
+msgstr "Maio"
+
+msgid "Mai"
+msgstr "Nunca"
+
+msgid "Maintenance"
+msgstr "Manutenção"
+
+msgid "Manage"
+msgstr "Gerir"
+
+msgid "Manage Day"
+msgstr "Gerir dia"
+
+msgid "Manca %s dell'ospite %s."
+msgstr "Falta %s do hóspede %s."
+
+msgid "Manca comune o stato di nascita dell'ospite %s."
+msgstr "Falta o município ou país de nascimento do hóspede %s."
+
+msgid "Manca o non valido un campo obbligatorio dell'ospite %d: %s"
+msgstr "Campo obrigatório em falta ou inválido para o hóspede %d: %s"
+
+msgid "Manca provincia di nascita dell'ospite %s."
+msgstr "Falta a província de nascimento do hóspede %s."
+
+msgid "Mantieni i prezzi in linea con la media dei concorrenti. Ideale per bilanciare occupazione e ricavi."
+msgstr "Mantenha os preços alinhados com a média dos concorrentes. Ideal para equilibrar ocupação e receitas."
+
+msgid "Mantieni tutte le piattaforme sincronizzate con il tuo calendario principale"
+msgstr "Mantenha todas as plataformas sincronizadas com o calendário principal"
+
+msgid "Manual"
+msgstr "Manual"
+
+msgid "Manuale"
+msgstr "Manual"
+
+msgid "Manuali e istruzioni"
+msgstr "Manuais e instruções"
+
+msgid "Manutenzione"
+msgstr "Manutenção"
+
+msgid "Mar"
+msgstr "Ter"
+
+msgid "Marca da bollo"
+msgstr "Selo fiscal"
+
+msgid "March"
+msgstr "Março"
+
+msgid "Mare"
+msgstr "Praia"
+
+msgid "Marzo"
+msgstr "Março"
+
+msgid "Maschio"
+msgstr "Masculino"
+
+msgid "Massimo %d ospiti consentiti."
+msgstr "Máximo de %d hóspedes permitido."
+
+msgid "Maximum Guests"
+msgstr "Máximo de hóspedes"
+
+msgid "Maximum Stay (nights)"
+msgstr "Estadia máxima (noites)"
+
+msgid "May"
+msgstr "Maio"
+
+msgid "Membro gruppo"
+msgstr "Membro do grupo"
+
+msgid "Mensile"
+msgstr "Mensal"
+
+msgid "Mer"
+msgstr "Qua"
+
+msgid "Mese"
+msgstr "Mês"
+
+msgid "Mesi Più Popolari"
+msgstr "Meses mais populares"
+
+msgid "Metodi di pagamento personalizzati"
+msgstr "Métodos de pagamento personalizados"
+
+msgid "Metodo di identificazione: documento acquisito (fronte/retro), check-in online completato, conferma tramite codice OTP."
+msgstr "Método de identificação: documento recolhido (frente/verso), check-in online concluído, confirmação através de código OTP."
+
+msgid "Metodo di pagamento"
+msgstr "Método de pagamento"
+
+msgid "Metodo di pagamento non valido."
+msgstr "Método de pagamento inválido."
+
+msgid "Metodo non disponibile per questa prenotazione."
+msgstr "Método indisponível para esta reserva."
+
+msgid "Metodo pagamento:"
+msgstr "Método de pagamento:"
+
+msgid "Metri Quadri"
+msgstr "Metros quadrados"
+
+msgid "Mi impegno a lasciare la tassa di soggiorno in contanti sul tavolo dell’appartamento."
+msgstr "Comprometo-me a deixar a taxa turística em dinheiro em cima da mesa do apartamento."
+
+msgid "Microonde"
+msgstr "Micro-ondas"
+
+msgid "Microwave"
+msgstr "Micro-ondas"
+
+msgid "Minimo %d notti richieste."
+msgstr "Mínimo de %d noites necessário."
+
+msgid "Minimum Stay (nights)"
+msgstr "Estadia mínima (noites)"
+
+msgid "Minimum stay (nights):"
+msgstr "Estadia mínima (noites):"
+
+msgid "Modelli di Prenotazione"
+msgstr "Padrões de reservas"
+
+msgid "Modifica"
+msgstr "Alterar"
+
+msgid "Modifica Date"
+msgstr "Alterar datas"
+
+msgid "Modifica Tariffa"
+msgstr "Editar tarifa"
+
+msgid "Modulo con appartamento pre-selezionato"
+msgstr "Formulário com apartamento pré-selecionado"
+
+msgid "Modulo con stile moderno"
+msgstr "Formulário com estilo moderno"
+
+msgid "Modulo di Prenotazione"
+msgstr "Formulário de reserva"
+
+msgid "Modulo di Ricerca"
+msgstr "Formulário de pesquisa"
+
+msgid "Modulo di firma (Simple eSign) non attivo. Contatta la struttura per completare la prenotazione."
+msgstr "Módulo de assinatura (Simple eSign) inativo. Contacte o alojamento para concluir a reserva."
+
+msgid "Modulo di ricerca orizzontale predefinito"
+msgstr "Formulário de pesquisa horizontal predefinido"
+
+msgid "Modulo predefinito"
+msgstr "Formulário predefinido"
+
+msgid "Moltiplicatore Prezzo"
+msgstr "Multiplicador de preço"
+
+msgid "Moltiplicatore Weekend"
+msgstr "Multiplicador de fim de semana"
+
+msgid "Moltiplicatore per i prezzi del weekend (es. 1.2 = +20%)"
+msgstr "Multiplicador para preços de fim de semana (ex.: 1.2 = +20%)"
+
+msgid "Mon"
+msgstr "Seg"
+
+msgid "Monitora Regolarmente"
+msgstr "Monitorize regularmente"
+
+msgid "Monitora i prezzi dei concorrenti nella tua zona e adatta automaticamente i tuoi prezzi per rimanere competitivo."
+msgstr "Monitoriza os preços dos concorrentes na sua zona e adapta automaticamente os seus preços para manter a competitividade."
+
+msgid "Monolocale"
+msgstr "Estúdio"
+
+msgid "Montagna"
+msgstr "Montanha"
+
+msgid "Mostra 3 mesi"
+msgstr "Apresentar 3 meses"
+
+msgid "Mostra dettagli scomposizione prezzi"
+msgstr "Apresenta a discriminação dos preços"
+
+msgid "Mostra dettaglio per notte"
+msgstr "Mostrar detalhe por noite"
+
+msgid "Mostra i prezzi sui giorni del calendario"
+msgstr "Apresenta preços nos dias do calendário"
+
+msgid "Mostra selettore numero ospiti"
+msgstr "Apresenta o seletor do número de hóspedes"
+
+msgid "Mostra un calcolatore di prezzi per un appartamento."
+msgstr "Apresenta uma calculadora de preços para um apartamento."
+
+msgid "Mostra un calendario delle disponibilità per un appartamento."
+msgstr "Apresenta um calendário de disponibilidade para um apartamento."
+
+msgid "Mostra un modulo completo di prenotazione con selezione date, numero ospiti e appartamento."
+msgstr "Apresenta um formulário de reserva completo com seleção de datas, número de hóspedes e apartamento."
+
+msgid "Mostra un modulo di ricerca per filtrare gli appartamenti disponibili."
+msgstr "Apresenta um formulário de pesquisa para filtrar os apartamentos disponíveis."
+
+msgid "Mostra una griglia o lista di appartamenti disponibili."
+msgstr "Apresenta uma grelha ou lista de apartamentos disponíveis."
+
+msgid "Mostra/nascondi codice"
+msgstr "Mostrar/ocultar código"
+
+msgid "Motivo:"
+msgstr "Motivo:"
+
+msgid "Multi-property management"
+msgstr "Gestão de várias propriedades"
+
+msgid "Nascondi dettaglio per notte"
+msgstr "Ocultar detalhe por noite"
+
+msgid "Nazionalità *"
+msgstr "Nacionalidade *"
+
+msgid "Nazionalità selezionata automaticamente dalla MRZ (%s)."
+msgstr "Nacionalidade selecionada automaticamente a partir da MRZ (%s)."
+
+msgid "Nazione"
+msgstr "País"
+
+msgid "Necessità di gestire manualmente il rimborso al cliente"
+msgstr "Necessidade de gerir manualmente o reembolso ao cliente"
+
+msgid "Negozi utili"
+msgstr "Lojas úteis"
+
+msgid "Nel tuo Extranet Booking.com, vai su Struttura → Calendario → Esporta calendario → Copia l'URL iCal"
+msgstr "Na Extranet da Booking.com, aceda a Alojamento → Calendário → Exportar calendário → Copiar URL iCal"
+
+msgid "Nel tuo dashboard Vrbo, vai su Calendario → Sincronizza calendari → Esporta il tuo calendario → Copia l'URL"
+msgstr "No painel Vrbo, aceda a Calendário → Sincronizar calendários → Exportar o calendário → Copiar URL"
+
+msgid "Nel tuo dashboard host Airbnb, vai su Calendario → Impostazioni disponibilità → Esporta calendario → Copia l'indirizzo del calendario"
+msgstr "No painel de anfitrião Airbnb, aceda a Calendário → Definições de disponibilidade → Exportar calendário → Copiar endereço do calendário"
+
+msgid "Neonati"
+msgstr "Bebés"
+
+msgid "Nessun appartamento trovato."
+msgstr "Nenhum apartamento encontrado."
+
+msgid "Nessun dato disponibile"
+msgstr "Nenhum dado disponível"
+
+msgid "Nessun evento trovato"
+msgstr "Nenhum evento encontrado"
+
+msgid "Nessun feed iCal configurato per questo appartamento"
+msgstr "Nenhum feed iCal configurado para este apartamento"
+
+msgid "Nessun file ricevuto."
+msgstr "Nenhum ficheiro recebido."
+
+msgid "Nessun pagamento in attesa per questa prenotazione."
+msgstr "Nenhum pagamento pendente para esta reserva."
+
+msgid "Nessun rimborso previsto in caso di cancellazione."
+msgstr "Sem reembolso em caso de cancelamento."
+
+msgid "Nessun risultato"
+msgstr "Sem resultados"
+
+msgid "Nessun risultato. Prova un’altra parola o contatta la struttura."
+msgstr "Sem resultados. Experimente outra palavra ou contacte o alojamento."
+
+msgid "Nessuna Tariffa Applicabile"
+msgstr "Nenhuma tarifa aplicável"
+
+msgid "Nessuna opzione letti extra disponibile per questa proprietà."
+msgstr "Não há opções de camas extra disponíveis para esta propriedade."
+
+msgid "Nessuna prenotazione confermata da esportare"
+msgstr "Nenhuma reserva confirmada para exportar"
+
+msgid "Nessuna tassa da pagare."
+msgstr "Nenhuma taxa a pagar."
+
+msgid "Night"
+msgstr "Noite"
+
+msgid "Nights"
+msgstr "Noites"
+
+msgid "No"
+msgstr "Não"
+
+msgid "No Smoking"
+msgstr "Proibido fumar"
+
+msgid "No apartments found."
+msgstr "Nenhum apartamento encontrado."
+
+msgid "Nome"
+msgstr "Nome"
+
+msgid "Nome *"
+msgstr "Nome *"
+
+msgid "Nome Evento"
+msgstr "Nome do evento"
+
+msgid "Nome Feed"
+msgstr "Nome do feed"
+
+msgid "Nome Festività"
+msgstr "Nome do feriado"
+
+msgid "Nome Stagione"
+msgstr "Nome da época"
+
+msgid "Nome Tariffa"
+msgstr "Nome da tarifa"
+
+msgid "Nome e Cognome / Ragione Sociale"
+msgstr "Nome e apelido / Denominação social"
+
+msgid "Nome e cognome"
+msgstr "Nome e apelido"
+
+msgid "Nome e cognome:"
+msgstr "Nome e apelido:"
+
+msgid "Nome ospite"
+msgstr "Nome do hóspede"
+
+msgid "Nome personalizzato opzionale per questo feed"
+msgstr "Nome personalizado opcional para este feed"
+
+msgid "Non Rimborsabile"
+msgstr "Não reembolsável"
+
+msgid "Non disponibile"
+msgstr "Indisponível"
+
+msgid "Non dovuta"
+msgstr "Não devida"
+
+msgid "Non hai ancora effettuato il pagamento? Se lo desideri, puoi cancellare gratuitamente la richiesta."
+msgstr "Ainda não efetuou o pagamento? Se desejar, pode cancelar gratuitamente o pedido."
+
+msgid "Non rimborsabile"
+msgstr "Não reembolsável"
+
+msgid "Non rimborsabile."
+msgstr "Não reembolsável."
+
+msgid "Non è possibile accorciare il soggiorno online dopo la prenotazione. Contatta la struttura."
+msgstr "Não é possível encurtar a estadia online após a reserva. Contacte o alojamento."
+
+msgid "Non è possibile effettuare il check-in in questa data."
+msgstr "Não é possível fazer check-in nesta data."
+
+msgid "Non è possibile effettuare il check-out in questa data."
+msgstr "Não é possível fazer check-out nesta data."
+
+msgid "Nota: è possibile solo estendere il soggiorno. Se il nuovo totale è maggiore e il pagamento era già effettuato, verrà richiesta l'integrazione della differenza."
+msgstr "Nota: apenas é possível prolongar a estadia. Se o novo total for superior e o pagamento já tiver sido efetuado, será pedido o pagamento da diferença."
+
+msgid "Note"
+msgstr "Notas"
+
+msgid "Note (opzionale)"
+msgstr "Notas (opcional)"
+
+msgid "Note / richieste speciali"
+msgstr "Notas / pedidos especiais"
+
+msgid "Note private per questo giorno..."
+msgstr "Notas privadas para este dia..."
+
+msgid "Note:"
+msgstr "Notas:"
+
+msgid "Notes:"
+msgstr "Notas:"
+
+msgid "Notte"
+msgstr "Noite"
+
+msgid "Notti"
+msgstr "Noites"
+
+msgid "Notti Disponibili"
+msgstr "Noites disponíveis"
+
+msgid "Notti Minime"
+msgstr "Mínimo de noites"
+
+msgid "Notti Prenotate"
+msgstr "Noites reservadas"
+
+msgid "Notti Totali"
+msgstr "Total de noites"
+
+msgid "Notti:"
+msgstr "Noites:"
+
+msgid "November"
+msgstr "Novembro"
+
+msgid "Novembre"
+msgstr "Novembro"
+
+msgid "Number of beds"
+msgstr "Número de camas"
+
+msgid "Numeri e contatti utili"
+msgstr "Números e contactos úteis"
+
+msgid "Numero Prenotazioni"
+msgstr "Número de reservas"
+
+msgid "Numero di colonne (solo layout grid)"
+msgstr "Número de colunas (apenas na disposição grid)"
+
+msgid "Numero di letti"
+msgstr "Número de camas"
+
+msgid "Numero di mesi da visualizzare"
+msgstr "Número de meses a apresentar"
+
+msgid "Numero di prenotazione %s"
+msgstr "Número da reserva %s"
+
+msgid "Numero di prenotazione piattaforma"
+msgstr "Número da reserva na plataforma"
+
+msgid "Numero di ricerche per la tua zona e date specifiche."
+msgstr "Número de pesquisas para a sua zona e datas específicas."
+
+msgid "Numero documento *"
+msgstr "Número do documento *"
+
+msgid "Numero massimo di appartamenti da mostrare"
+msgstr "Número máximo de apartamentos a apresentar"
+
+msgid "Numero notti *"
+msgstr "Número de noites *"
+
+msgid "Numero notti:"
+msgstr "Número de noites:"
+
+msgid "Numero ospiti: %d"
+msgstr "Número de hóspedes: %d"
+
+msgid "Nuovo Check-in"
+msgstr "Novo check-in"
+
+msgid "Nuovo Check-out"
+msgstr "Novo check-out"
+
+msgid "OCR standard non riuscito. Prova con una foto più nitida e ben illuminata del documento."
+msgstr "O OCR padrão falhou. Tente uma fotografia mais nítida e bem iluminada do documento."
+
+msgid "Occupancy Analysis"
+msgstr "Análise da ocupação"
+
+msgid "October"
+msgstr "Outubro"
+
+msgid "Ogni ospite deve avere una foto del documento: viene salvata alla prenotazione e i dati anagrafici si compilano da soli. Per Carta d'Identità (cartacea o elettronica) carica fronte e retro; per Passaporto basta la pagina dati."
+msgstr "Cada hóspede deve ter uma fotografia do documento: é guardada na reserva e os dados pessoais são preenchidos automaticamente. Para cartão de identificação (em papel ou eletrónico), carregue a frente e o verso; para passaporte, basta a página de dados."
+
+msgid "Operazione esclusa dal campo di applicazione dell'IVA ai sensi dell'art. 15 del DPR 633/72."
+msgstr "Operação excluída do âmbito de aplicação do IVA nos termos do art. 15.º do DPR italiano 633/72."
+
+msgid "Operazione fuori campo IVA ai sensi dell'art. 1, comma 2, lett. c) della Legge 431/98 e dell'art. 4 del DL 50/2017"
+msgstr "Operação fora do âmbito do IVA nos termos do art. 1.º, n.º 2, alínea c), da Lei italiana 431/98 e do art. 4.º do DL italiano 50/2017"
+
+msgid "Opzionale"
+msgstr "Opcional"
+
+msgid "Orario Check-in"
+msgstr "Hora de check-in"
+
+msgid "Orario Check-out"
+msgstr "Hora de check-out"
+
+msgid "Ordina per: date, title, price, random"
+msgstr "Ordenar por: date, title, price, random"
+
+msgid "Ordine: ASC, DESC"
+msgstr "Ordem: ASC, DESC"
+
+msgid "Origine"
+msgstr "Origem"
+
+msgid "Origine prenotazione"
+msgstr "Origem da reserva"
+
+msgid "Ospite"
+msgstr "Hóspede"
+
+msgid "Ospite / Intestatario"
+msgstr "Hóspede / Titular"
+
+msgid "Ospite principale"
+msgstr "Hóspede principal"
+
+msgid "Ospite soggiornante"
+msgstr "Hóspede alojado"
+
+msgid "Ospite:"
+msgstr "Hóspede:"
+
+msgid "Ospiti"
+msgstr "Hóspedes"
+
+msgid "Ospiti Base"
+msgstr "Hóspedes incluídos"
+
+msgid "Ospiti Massimi"
+msgstr "Máximo de hóspedes"
+
+msgid "Ospiti Minimi"
+msgstr "Mínimo de hóspedes"
+
+msgid "Ospiti max:"
+msgstr "Máximo de hóspedes:"
+
+msgid "Other dates are temporarily reserved by another user."
+msgstr "Outras datas estão temporariamente reservadas por outro utilizador."
+
+msgid "Ottieni una chiave API gratuita su"
+msgstr "Obtenha uma chave API gratuita em"
+
+msgid "Ottobre"
+msgstr "Outubro"
+
+msgid "PAGATA"
+msgstr "PAGA"
+
+msgid "PDF non disponibile."
+msgstr "PDF indisponível."
+
+msgid "PRENOTAZIONE ANNULLATA IL %s — Il presente contratto è privo di effetti a seguito dell'annullamento."
+msgstr "RESERVA CANCELADA EM %s — O presente contrato fica sem efeito devido ao cancelamento."
+
+msgid "Paese"
+msgstr "País"
+
+msgid "Paese MRZ %s non presente nelle tabelle Alloggiati."
+msgstr "O país MRZ %s não consta das tabelas Alloggiati."
+
+msgid "Paga con Carta (Stripe)"
+msgstr "Pagar com cartão (Stripe)"
+
+msgid "Paga con Carta di Credito"
+msgstr "Pagar com cartão de crédito"
+
+msgid "Paga con PayPal"
+msgstr "Pagar com PayPal"
+
+msgid "Paga con bonifico bancario"
+msgstr "Pague por transferência bancária"
+
+msgid "Paga con il tuo account PayPal"
+msgstr "Pague com a sua conta PayPal"
+
+msgid "Paga in modo sicuro con la tua carta di credito"
+msgstr "Pague de forma segura com o seu cartão de crédito"
+
+msgid "Paga la tassa con carta"
+msgstr "Pagar a taxa com cartão"
+
+msgid "Paga ora"
+msgstr "Pagar agora"
+
+msgid "Pagamento"
+msgstr "Pagamento"
+
+msgid "Pagamento Stripe non disponibile."
+msgstr "Pagamento Stripe indisponível."
+
+msgid "Pagamento annullato. Puoi riprovare."
+msgstr "Pagamento cancelado. Pode tentar novamente."
+
+msgid "Pagamento completato con successo! La tua prenotazione è confermata."
+msgstr "Pagamento concluído com sucesso! A sua reserva está confirmada."
+
+msgid "Pagamento completato! Prenotazione confermata."
+msgstr "Pagamento concluído! Reserva confirmada."
+
+msgid "Pagamento con carta completato correttamente. La prenotazione è confermata."
+msgstr "Pagamento com cartão concluído com sucesso. A reserva está confirmada."
+
+msgid "Pagamento da verificare con la struttura."
+msgstr "Pagamento a verificar com o alojamento."
+
+msgid "Pagamento già registrato."
+msgstr "Pagamento já registado."
+
+msgid "Pagamento immediato sicuro online"
+msgstr "Pagamento imediato e seguro online"
+
+msgid "Pagamento in preparazione. Attendi qualche secondo e riprova."
+msgstr "Pagamento em preparação. Aguarde alguns segundos e tente novamente."
+
+msgid "Pagamento in struttura."
+msgstr "Pagamento no alojamento."
+
+msgid "Pagamento non completato (stato: %s)."
+msgstr "Pagamento não concluído (estado: %s)."
+
+msgid "Pagamento non disponibile per questa prenotazione."
+msgstr "Pagamento indisponível para esta reserva."
+
+msgid "Pagamento non disponibile. Riprova."
+msgstr "Pagamento indisponível. Tente novamente."
+
+msgid "Pagamento richiesto alla conferma."
+msgstr "Pagamento exigido na confirmação."
+
+msgid "Pagamento richiesto entro %d giorni prima dell'arrivo."
+msgstr "Pagamento exigido até %d dias antes da chegada."
+
+msgid "Pagamento richiesto entro il %s ore 23:59."
+msgstr "Pagamento exigido até %s às 23:59."
+
+msgid "Pagamento riuscito"
+msgstr "Pagamento bem-sucedido"
+
+msgid "Pagamento sicuro con carta di credito o debito"
+msgstr "Pagamento seguro com cartão de crédito ou débito"
+
+msgid "Pagamento:"
+msgstr "Pagamento:"
+
+msgid "Pagata"
+msgstr "Paga"
+
+msgid "Palestra"
+msgstr "Ginásio"
+
+msgid "Panoramica Dashboard"
+msgstr "Visão geral do painel"
+
+msgid "Parametri"
+msgstr "Parâmetros"
+
+msgid "Parametro"
+msgstr "Parâmetro"
+
+msgid "Parcheggio"
+msgstr "Estacionamento"
+
+msgid "Parking"
+msgstr "Estacionamento"
+
+msgid "Parti con sensibilità bassa e limiti stretti, poi aumenta gradualmente osservando i risultati."
+msgstr "Comece com baixa sensibilidade e limites estreitos; depois aumente gradualmente, observando os resultados."
+
+msgid "Passaporto"
+msgstr "Passaporte"
+
+msgid "Passo %s di %s"
+msgstr "Passo %s de %s"
+
+msgid "Password copiata."
+msgstr "Palavra-passe copiada."
+
+msgid "Password:"
+msgstr "Palavra-passe:"
+
+msgid "Patente di guida"
+msgstr "Carta de condução"
+
+msgid "Pay Now"
+msgstr "Pagar agora"
+
+msgid "Pay by bank transfer"
+msgstr "Pague por transferência bancária"
+
+msgid "Pay securely with your credit card"
+msgstr "Pague de forma segura com o seu cartão de crédito"
+
+msgid "Pay with Credit Card"
+msgstr "Pagar com cartão de crédito"
+
+msgid "Pay with PayPal"
+msgstr "Pagar com PayPal"
+
+msgid "Pay with your PayPal account"
+msgstr "Pague com a sua conta PayPal"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "PayPal / Carta di credito"
+msgstr "PayPal / Cartão de crédito"
+
+msgid "PayPal non configurato."
+msgstr "PayPal não configurado."
+
+msgid "PayPal:"
+msgstr "PayPal:"
+
+msgid "Payment"
+msgstr "Pagamento"
+
+msgid "Payment method"
+msgstr "Método de pagamento"
+
+msgid "Payment successful"
+msgstr "Pagamento bem-sucedido"
+
+msgid "Pending"
+msgstr "Pendente"
+
+msgid "Penthouse"
+msgstr "Apartamento de cobertura"
+
+msgid "Per Notte"
+msgstr "Por noite"
+
+msgid "Per Ospite Per Notte"
+msgstr "Por hóspede por noite"
+
+msgid "Per Ospite Per Soggiorno"
+msgstr "Por hóspede por estadia"
+
+msgid "Per Soggiorno"
+msgstr "Por estadia"
+
+msgid "Per confermare la prenotazione è necessario effettuare il bonifico entro %d ore."
+msgstr "Para confirmar a reserva, é necessário efetuar a transferência no prazo de %d horas."
+
+msgid "Per il passaporto basta la pagina dati (fronte) — un'unica foto. La zona a lettura ottica (MRZ) sono le due righe di caratteri in basso nella pagina: inquadrale per intero."
+msgstr "Para o passaporte, basta a página de dados (frente) — uma única fotografia. A zona de leitura ótica (MRZ) corresponde às duas linhas de caracteres no fundo da página: enquadre-as por completo."
+
+msgid "Percentuale Premium (%)"
+msgstr "Percentagem Premium (%)"
+
+msgid "Percentuale Sconto"
+msgstr "Percentagem de desconto"
+
+msgid "Percentuale Sottobattimento (%)"
+msgstr "Percentagem abaixo da concorrência (%)"
+
+msgid "Percentuale di appartamenti ancora disponibili."
+msgstr "Percentagem de apartamentos ainda disponíveis."
+
+msgid "Perdita dello storico del pagamento ricevuto"
+msgstr "Perda do histórico do pagamento recebido"
+
+msgid "Performance Prezzi Automatici"
+msgstr "Desempenho dos preços automáticos"
+
+msgid "Periodo"
+msgstr "Período"
+
+msgid "Periodo Simulazione"
+msgstr "Período de simulação"
+
+msgid "Periodo personalizzato"
+msgstr "Período personalizado"
+
+msgid "Periodo soggiorno: %1$s — %2$s"
+msgstr "Período da estadia: %1$s — %2$s"
+
+msgid "Permesso Fumare"
+msgstr "Permitido fumar"
+
+msgid "Permesso di soggiorno"
+msgstr "Título de residência"
+
+msgid "Permesso negato."
+msgstr "Permissão negada."
+
+msgid "Pet Friendly"
+msgstr "Animais de estimação permitidos"
+
+msgid "Phone:"
+msgstr "Telefone:"
+
+msgid "Piattaforma"
+msgstr "Plataforma"
+
+msgid "Piscina"
+msgstr "Piscina"
+
+msgid "Platform Integration"
+msgstr "Integração de plataformas"
+
+msgid "Please select a payment method to continue."
+msgstr "Selecione um método de pagamento para continuar."
+
+msgid "Please select a property to view the calendar."
+msgstr "Selecione uma propriedade para ver o calendário."
+
+msgid "Please specify an apartment ID."
+msgstr "Especifique um ID de apartamento."
+
+msgid "Posizionamento Premium"
+msgstr "Posicionamento Premium"
+
+msgid "Posizione"
+msgstr "Localização"
+
+msgid "Posizione Prezzo"
+msgstr "Classificação do meu preço"
+
+msgid "Posizione di Mercato"
+msgstr "Posição no mercado"
+
+msgid "Posso sovrascrivere il pricing dinamico per date specifiche?"
+msgstr "Posso substituir os preços dinâmicos em datas específicas?"
+
+msgid "Posso usare impostazioni diverse per ogni appartamento?"
+msgstr "Posso utilizar definições diferentes para cada apartamento?"
+
+msgid "Pre-seleziona un appartamento specifico"
+msgstr "Pré-seleciona um apartamento específico"
+
+msgid "Precedente"
+msgstr "Anterior"
+
+msgid "Predefinito"
+msgstr "Predefinido"
+
+msgid "Preferenza letti"
+msgstr "Preferência de camas"
+
+msgid "Prefestivo"
+msgstr "Véspera de feriado"
+
+msgid "Premium Festività"
+msgstr "Feriados Premium"
+
+msgid "Prenota Ora"
+msgstr "Reservar agora"
+
+msgid "Prenota questo appartamento"
+msgstr "Reservar este apartamento"
+
+msgid "Prenotato"
+msgstr "Reservado"
+
+msgid "Prenotazione"
+msgstr "Reserva"
+
+msgid "Prenotazione #%2$d - %1$s"
+msgstr "Reserva #%2$d - %1$s"
+
+msgid "Prenotazione #%d"
+msgstr "Reserva #%d"
+
+msgid "Prenotazione #%d - %s"
+msgstr "Reserva #%d - %s"
+
+msgid "Prenotazione %s"
+msgstr "Reserva %s"
+
+msgid "Prenotazione Anticipata"
+msgstr "Reserva antecipada"
+
+msgid "Prenotazione Cancellata"
+msgstr "Reserva cancelada"
+
+msgid "Prenotazione Rifiutata"
+msgstr "Reserva recusada"
+
+msgid "Prenotazione Scaduta"
+msgstr "Reserva expirada"
+
+msgid "Prenotazione annullata &mdash; contratto privo di effetti"
+msgstr "Reserva cancelada &mdash; contrato sem efeito"
+
+msgid "Prenotazione cancellata con successo."
+msgstr "Reserva cancelada com sucesso."
+
+msgid "Prenotazione confermata! Ti abbiamo inviato una email con i dettagli."
+msgstr "Reserva confirmada! Enviámos um e-mail com os detalhes."
+
+msgid "Prenotazione non disponibile."
+msgstr "Reserva indisponível."
+
+msgid "Prenotazione non trovata"
+msgstr "Reserva não encontrada"
+
+msgid "Prenotazione non trovata."
+msgstr "Reserva não encontrada."
+
+msgid "Prenotazione non trovata. %s"
+msgstr "Reserva não encontrada. %s"
+
+msgid "Prenotazione non trovata. Verifica codice e data."
+msgstr "Reserva não encontrada. Verifique o código e a data."
+
+msgid "Prenotazione non trovata. Verifica il codice APP/prenotazione."
+msgstr "Reserva não encontrada. Verifique o código da aplicação/reserva."
+
+msgid "Prenotazioni"
+msgstr "Reservas"
+
+msgid "Prenotazioni Last-Minute"
+msgstr "Reservas de última hora"
+
+msgid "Prenotazioni Totali"
+msgstr "Total de reservas"
+
+msgid "Prenotazioni in conflitto"
+msgstr "Reservas em conflito"
+
+msgid "Preparazione del pagamento…"
+msgstr "A preparar o pagamento…"
+
+msgid "Previeni doppie prenotazioni tra piattaforme"
+msgstr "Evite reservas duplicadas entre plataformas"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Previsto al check-in"
+msgstr "Previsto no check-in"
+
+msgid "Previsto entro il %s"
+msgstr "Previsto até %s"
+
+msgid "Prezzi"
+msgstr "Preços"
+
+msgid "Prezzi Automatici"
+msgstr "Preços automáticos"
+
+msgid "Prezzi Dinamici Automatici"
+msgstr "Preços dinâmicos automáticos"
+
+msgid "Prezzi Festivi"
+msgstr "Preços de feriados"
+
+msgid "Prezzi Stagionali"
+msgstr "Preços sazonais"
+
+msgid "Prezzi Weekend"
+msgstr "Preços de fim de semana"
+
+msgid "Prezzi leggermente inferiori ai concorrenti per massimizzare l'occupazione. Perfetto per appartamenti nuovi o periodi di bassa stagione."
+msgstr "Preços ligeiramente inferiores aos dos concorrentes para maximizar a ocupação. Ideal para apartamentos novos ou períodos de época baixa."
+
+msgid "Prezzi superiori alla media per posizionarsi come offerta di qualità. Adatto per appartamenti con servizi extra o posizioni privilegiate."
+msgstr "Preços superiores à média para posicionar a oferta como sendo de qualidade. Adequado para apartamentos com serviços extra ou localizações privilegiadas."
+
+msgid "Prezzo Base"
+msgstr "Preço base"
+
+msgid "Prezzo Base (per notte)"
+msgstr "Preço base (por noite)"
+
+msgid "Prezzo Finale"
+msgstr "Preço final"
+
+msgid "Prezzo Medio Concorrenza"
+msgstr "Preço médio dos concorrentes"
+
+msgid "Prezzo Progressivo"
+msgstr "Preço progressivo"
+
+msgid "Prezzo non configurato per questa proprietà."
+msgstr "Preço não configurado para esta propriedade."
+
+msgid "Prezzo notte"
+msgstr "Preço da noite"
+
+msgid "Prezzo per notte (€):"
+msgstr "Preço por noite (€):"
+
+msgid "Prezzo per notte:"
+msgstr "Preço por noite:"
+
+msgid "Prezzo €"
+msgstr "Preço €"
+
+msgid "Price Limits"
+msgstr "Limites de preço"
+
+msgid "Price per night (€):"
+msgstr "Preço por noite (€):"
+
+msgid "Price €"
+msgstr "Preço €"
+
+msgid "Pricing"
+msgstr "Preços"
+
+msgid "Pricing Management"
+msgstr "Gestão de preços"
+
+msgid "Prima della conferma puoi visualizzare il documento completo:"
+msgstr "Antes da confirmação, pode consultar o documento completo:"
+
+msgid "Prima di partire"
+msgstr "Antes de partir"
+
+msgid "Prima di ricevere il codice della cassetta chiavi, va pagata la tassa di soggiorno: %s. Come intendi pagare?"
+msgstr "Antes de receber o código da caixa de chaves, deve pagar a taxa turística: %s. Como pretende pagar?"
+
+msgid "Priorità"
+msgstr "Prioridade"
+
+msgid "Privacy Policy"
+msgstr "Política de Privacidade"
+
+msgid "Private notes for this day..."
+msgstr "Notas privadas para este dia..."
+
+msgid "Procedura Consigliata"
+msgstr "Procedimento recomendado"
+
+msgid "Processing..."
+msgstr "A processar..."
+
+msgid "Progressivo"
+msgstr "Progressivo"
+
+msgid "Proprietà:"
+msgstr "Propriedade:"
+
+msgid "Prospetto Riepilogativo Soggiorno"
+msgstr "Resumo da estadia"
+
+msgid "Prospetto riepilogativo del soggiorno con pagamento gestito da intermediario. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser."
+msgstr "Resumo da estadia com pagamento gerido por intermediário. Consulte-o, imprima-o ou guarde-o em PDF através da função de impressão do navegador."
+
+msgid "Prossimo Aggiornamento"
+msgstr "Próxima atualização"
+
+msgid "Prossimo passo: completa il pagamento →"
+msgstr "Próximo passo: concluir o pagamento →"
+
+msgid "Prossimo passo: conferma il soggiorno (firma) →"
+msgstr "Próximo passo: confirmar a estadia (assinatura) →"
+
+msgid "Prossimo passo: fai il check-in online →"
+msgstr "Próximo passo: fazer o check-in online →"
+
+msgid "Prossimo passo: paga la tassa di soggiorno per ricevere il codice della cassetta →"
+msgstr "Próximo passo: pagar a taxa turística para receber o código da caixa de chaves →"
+
+msgid "Pulizia:"
+msgstr "Limpeza:"
+
+msgid "Punteggio Ottimizzazione"
+msgstr "Pontuação de otimização"
+
+msgid "Puoi pagarla online, con bonifico o in contanti, scegliendo uno dei metodi disponibili qui sotto."
+msgstr "Pode pagá-la online, por transferência ou em dinheiro, escolhendo um dos métodos disponíveis abaixo."
+
+msgid "Puoi usare più shortcode nella stessa pagina."
+msgstr "Pode utilizar vários shortcodes na mesma página."
+
+msgid "Quale lato viene letto?"
+msgstr "Que lado é lido?"
+
+msgid "Qualsiasi"
+msgstr "Qualquer"
+
+msgid "Quanto spesso vengono aggiornati i prezzi?"
+msgstr "Com que frequência são atualizados os preços?"
+
+msgid "Quanto velocemente gli appartamenti vengono prenotati."
+msgstr "Rapidez com que os apartamentos são reservados."
+
+msgid "Queen size bed"
+msgstr "Cama queen size"
+
+msgid "Quest'anno"
+msgstr "Este ano"
+
+msgid "Questa azione è irreversibile e comporta:"
+msgstr "Esta ação é irreversível e implica:"
+
+msgid "Questa prenotazione non può più essere modificata online."
+msgstr "Esta reserva já não pode ser alterada online."
+
+msgid "Questo codice è già stato utilizzato."
+msgstr "Este código já foi utilizado."
+
+msgid "Questo documento non è più valido."
+msgstr "Este documento já não é válido."
+
+msgid "Quick Actions"
+msgstr "Ações rápidas"
+
+msgid "RETRO"
+msgstr "VERSO"
+
+msgid "Rapporto Disponibilità"
+msgstr "Rácio de disponibilidade"
+
+msgid "Refrigerator"
+msgstr "Frigorífico"
+
+msgid "Regola di prezzo salvata con successo"
+msgstr "Regra de preços guardada com sucesso"
+
+msgid "Regolamento della struttura"
+msgstr "Regulamento do alojamento"
+
+msgid "Regolamento della struttura e condizioni di soggiorno"
+msgstr "Regulamento do alojamento e condições de estadia"
+
+msgid "Regolamento della struttura, versione %s"
+msgstr "Regulamento do alojamento, versão %s"
+
+msgid "Regolamento struttura: %s"
+msgstr "Regulamento do alojamento: %s"
+
+msgid "Regole della Casa"
+msgstr "Regras da casa"
+
+msgid "Regole della casa"
+msgstr "Regras da casa"
+
+msgid "Regole di Prezzo"
+msgstr "Regras de preços"
+
+msgid "Regole di pricing dinamico"
+msgstr "Regras de preços dinâmicos"
+
+msgid "Reindirizzamento al pagamento sicuro…"
+msgstr "A redirecionar para o pagamento seguro…"
+
+msgid "Report"
+msgstr "Relatórios"
+
+msgid "Reports"
+msgstr "Relatórios"
+
+msgid "Reset"
+msgstr "Repor"
+
+msgid "Residenza"
+msgstr "Residência"
+
+msgid "Responsabilità per eventuali danni documentati"
+msgstr "Responsabilidade por eventuais danos documentados"
+
+msgid "Rete e password per connetterti."
+msgstr "Rede e palavra-passe para se ligar."
+
+msgid "Rete:"
+msgstr "Rede:"
+
+msgid "Revisione Stagionale"
+msgstr "Revisão sazonal"
+
+msgid "Ricavi"
+msgstr "Receita"
+
+msgid "Ricavi Totali"
+msgstr "Receita total"
+
+msgid "Ricavi per Notte"
+msgstr "Receita por noite"
+
+msgid "Ricerca Paese non disponibile."
+msgstr "Pesquisa de país indisponível."
+
+msgid "Ricerca compatta inline"
+msgstr "Pesquisa compacta em linha"
+
+msgid "Riceverai le coordinate bancarie per il pagamento"
+msgstr "Receberá os dados bancários para o pagamento"
+
+msgid "Ricevuta"
+msgstr "Recibo"
+
+msgid "Ricevuta Ospite"
+msgstr "Recibo do hóspede"
+
+msgid "Ricevuta Penale per Recesso"
+msgstr "Recibo de penalização por cancelamento"
+
+msgid "Ricevuta del tuo soggiorno. Visualizzala, stampala o salvala in PDF tramite la funzione di stampa del browser."
+msgstr "Recibo da sua estadia. Consulte-o, imprima-o ou guarde-o em PDF através da função de impressão do navegador."
+
+msgid "Ricevuta penale per mancato arrivo. Visualizzala e stampala oppure salvala in PDF dal browser."
+msgstr "Recibo de penalização por não comparência. Consulte-o e imprima-o ou guarde-o em PDF no navegador."
+
+msgid "Richiedi codice OTP e conferma soggiorno"
+msgstr "Pedir código OTP e confirmar a estadia"
+
+msgid "Richiedi prima un codice di verifica."
+msgstr "Peça primeiro um código de verificação."
+
+msgid "Richiesta inviata con successo!"
+msgstr "Pedido enviado com sucesso!"
+
+msgid "Richiesta inviata correttamente! Riceverai via email tutti i dettagli della prenotazione e della gestione."
+msgstr "Pedido enviado com sucesso! Receberá por e-mail todos os detalhes da reserva e da sua gestão."
+
+msgid "Richiesta inviata correttamente! Una volta completato il bonifico nei tempi previsti, riceverai la conferma con tutti i dettagli via email."
+msgstr "Pedido enviado com sucesso! Após concluir a transferência dentro do prazo previsto, receberá a confirmação com todos os detalhes por e-mail."
+
+msgid "Richiesta non valida."
+msgstr "Pedido inválido."
+
+msgid "Ricorrenza"
+msgstr "Recorrência"
+
+msgid "Riduci la gestione manuale del calendario"
+msgstr "Reduza a gestão manual do calendário"
+
+msgid "Riduzione Massima"
+msgstr "Redução máxima"
+
+msgid "Riduzione Massima Domanda (%)"
+msgstr "Redução máxima por procura (%)"
+
+msgid "Riepilogo"
+msgstr "Resumo"
+
+msgid "Riepilogo check-in"
+msgstr "Resumo do check-in"
+
+msgid "Riepilogo prenotazione"
+msgstr "Resumo da reserva"
+
+msgid "Rifiuti e raccolta differenziata"
+msgstr "Resíduos e recolha seletiva"
+
+msgid "Rilevamento Automatico"
+msgstr "Deteção automática"
+
+msgid "Rimborsabile"
+msgstr "Reembolsável"
+
+msgid "Rimborso del %d%% cancellando entro il %s ore 23:59."
+msgstr "Reembolso de %d%% ao cancelar até %s às 23:59."
+
+msgid "Rimborso del %d%% cancellando fino a %d giorni prima."
+msgstr "Reembolso de %d%% ao cancelar até %d dias antes."
+
+msgid "Rimuovi"
+msgstr "Remover"
+
+msgid "Rimuovi ospite"
+msgstr "Remover hóspede"
+
+msgid "Riscaldamento"
+msgstr "Aquecimento"
+
+msgid "Risposta non valida dal server. Riprova tra qualche secondo."
+msgstr "Resposta inválida do servidor. Tente novamente dentro de alguns segundos."
+
+msgid "Room Type Rates"
+msgstr "Tarifas por tipo de quarto"
+
+msgid "Rurale"
+msgstr "Rural"
+
+msgid "Sab"
+msgstr "Sáb"
+
+msgid "Sabato"
+msgstr "Sábado"
+
+msgid "Safe"
+msgstr "Cofre"
+
+msgid "Salva"
+msgstr "Guardar"
+
+msgid "Salva Prezzi Weekend"
+msgstr "Guardar preços de fim de semana"
+
+msgid "Salva come Template"
+msgstr "Guardar como modelo"
+
+msgid "Salva dati"
+msgstr "Guardar dados"
+
+msgid "Salva e continua →"
+msgstr "Guardar e continuar →"
+
+msgid "Salvataggio non riuscito. Riprova."
+msgstr "Não foi possível guardar. Tente novamente."
+
+msgid "Salvataggio..."
+msgstr "A guardar..."
+
+msgid "Sat"
+msgstr "Sáb"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Saving..."
+msgstr "A guardar..."
+
+msgid "Scadenza pagamento:"
+msgstr "Prazo de pagamento:"
+
+msgid "Scarica PDF"
+msgstr "Descarregar PDF"
+
+msgid "Scarica Report"
+msgstr "Descarregar relatório"
+
+msgid "Scatta la foto"
+msgstr "Tirar fotografia"
+
+msgid "Scatta un selfie con il documento"
+msgstr "Tire uma selfie com o documento"
+
+msgid "Scegli Appartamento"
+msgstr "Escolher apartamento"
+
+msgid "Scegli Tariffa"
+msgstr "Escolher tarifa"
+
+msgid "Scegli come pagare"
+msgstr "Escolha como pagar"
+
+msgid "Scegli famiglia o gruppo prima di caricare i documenti."
+msgstr "Escolha família ou grupo antes de carregar os documentos."
+
+msgid "Sconti Lunghi Soggiorni"
+msgstr "Descontos para estadias longas"
+
+msgid "Scopri come funziona il sistema di prezzi dinamici automatici e come ottimizzare i tuoi ricavi."
+msgstr "Saiba como funciona o sistema de preços dinâmicos automáticos e como otimizar as suas receitas."
+
+msgid "Scrivi qui eventuali richieste o informazioni utili..."
+msgstr "Escreva aqui eventuais pedidos ou informações úteis..."
+
+msgid "Se il pagamento non viene registrato in tempo, la prenotazione viene cancellata automaticamente."
+msgstr "Se o pagamento não for registado a tempo, a reserva será cancelada automaticamente."
+
+msgid "Se pensi ci sia un errore, contatta la struttura."
+msgstr "Se considera que há um erro, contacte o alojamento."
+
+msgid "Search"
+msgstr "Pesquisar"
+
+msgid "Seasonal Adjustment"
+msgstr "Ajuste sazonal"
+
+msgid "Seasonal Rates"
+msgstr "Tarifas sazonais"
+
+msgid "Sei sicuro di voler cancellare questa prenotazione? Questa azione non può essere annullata."
+msgstr "Tem a certeza de que pretende cancelar esta reserva? Esta ação não pode ser anulada."
+
+msgid "Sei sicuro di voler eliminare questa regola?"
+msgstr "Tem a certeza de que pretende eliminar esta regra?"
+
+msgid "Sei sicuro di voler eliminare questo elemento?"
+msgstr "Tem a certeza de que pretende eliminar este elemento?"
+
+msgid "Sei sicuro di voler rimuovere questo feed?"
+msgstr "Tem a certeza de que pretende remover este feed?"
+
+msgid "Select Apartment"
+msgstr "Selecionar apartamento"
+
+msgid "Select the primary bed setup available in the apartment."
+msgstr "Selecione a configuração principal de cama disponível no apartamento."
+
+msgid "Selected dates are not available."
+msgstr "As datas selecionadas não estão disponíveis."
+
+msgid "Seleziona Appartamento"
+msgstr "Selecionar apartamento"
+
+msgid "Seleziona Piattaforma"
+msgstr "Selecionar plataforma"
+
+msgid "Seleziona check-in e check-out."
+msgstr "Selecione check-in e check-out."
+
+msgid "Seleziona il metodo di pagamento per saldare il soggiorno."
+msgstr "Selecione o método de pagamento para liquidar a estadia."
+
+msgid "Seleziona il ruolo dell'ospite nella prenotazione."
+msgstr "Selecione o papel do hóspede na reserva."
+
+msgid "Seleziona la principale configurazione del letto disponibile nell'appartamento."
+msgstr "Selecione a configuração principal de cama disponível no apartamento."
+
+msgid "Seleziona prima il \"Tipo documento\", poi carica il documento."
+msgstr "Selecione primeiro o \"Tipo de documento\" e, depois, carregue o documento."
+
+msgid "Seleziona prima il \"Tipo ospite\" per questo ospite, poi carica il documento."
+msgstr "Selecione primeiro o \"Tipo de hóspede\" para este hóspede e, depois, carregue o documento."
+
+msgid "Seleziona prima un appartamento"
+msgstr "Selecione primeiro um apartamento"
+
+msgid "Seleziona un appartamento dal menu a tendina sopra"
+msgstr "Selecione um apartamento no menu acima"
+
+msgid "Seleziona un comune di nascita valido dall'elenco per l'ospite %s."
+msgstr "Selecione um município de nascimento válido na lista para o hóspede %s."
+
+msgid "Seleziona un luogo rilascio valido dall'elenco per l'ospite %s."
+msgstr "Selecione um local de emissão válido na lista para o hóspede %s."
+
+msgid "Seleziona un metodo di pagamento per continuare."
+msgstr "Selecione um método de pagamento para continuar."
+
+msgid "Seleziona un metodo per continuare"
+msgstr "Selecione um método para continuar"
+
+msgid "Seleziona una cittadinanza valida dall'elenco per l'ospite %s."
+msgstr "Selecione uma nacionalidade válida na lista para o hóspede %s."
+
+msgid "Seleziona una proprietà per visualizzare il calendario."
+msgstr "Selecione uma propriedade para ver o calendário."
+
+msgid "Seleziona uno stato di nascita valido dall'elenco per l'ospite %s."
+msgstr "Selecione um país de nascimento válido na lista para o hóspede %s."
+
+msgid "Selfie con documento: come scattarlo"
+msgstr "Selfie com documento: como tirar"
+
+msgid "Sensibilità Aggiustamento"
+msgstr "Sensibilidade do ajuste"
+
+msgid "Sensibilità Domanda"
+msgstr "Sensibilidade à procura"
+
+msgid "September"
+msgstr "Setembro"
+
+msgid "Serve anche un selfie: viso e documento leggibile affiancati nella stessa foto."
+msgstr "Também é necessária uma selfie: rosto e documento legível lado a lado na mesma fotografia."
+
+msgid "Servizi"
+msgstr "Comodidades"
+
+msgid "Servizio API"
+msgstr "Serviço API"
+
+msgid "Servizio Concierge"
+msgstr "Serviço de concierge"
+
+msgid "Servizio Pulizie"
+msgstr "Serviço de limpeza"
+
+msgid "Sessione non trovata."
+msgstr "Sessão não encontrada."
+
+msgid "Sessione scaduta. Ricarica la pagina."
+msgstr "Sessão expirada. Recarregue a página."
+
+msgid "Sesso *"
+msgstr "Sexo *"
+
+msgid "Set prices for period:"
+msgstr "Definir preços por período:"
+
+msgid "Settembre"
+msgstr "Setembro"
+
+msgid "Settings"
+msgstr "Definições"
+
+msgid "Settings saved successfully"
+msgstr "Definições guardadas com sucesso"
+
+msgid "Settings saved."
+msgstr "Definições guardadas."
+
+msgid "Shortcodes Reference"
+msgstr "Guia de shortcodes"
+
+msgid "Si e verificato un errore. Riprova."
+msgstr "Ocorreu um erro. Tente novamente."
+
+msgid "Si è verificato un errore PayPal. Riprova."
+msgstr "Ocorreu um erro no PayPal. Tente novamente."
+
+msgid "Si è verificato un errore. Riprova."
+msgstr "Ocorreu um erro. Tente novamente."
+
+msgid "Siete una famiglia o un gruppo?"
+msgstr "São uma família ou um grupo?"
+
+msgid "Simula Prezzi"
+msgstr "Simular preços"
+
+msgid "Simulazione Prezzi"
+msgstr "Simulação de preços"
+
+msgid "Sincronizza Ora"
+msgstr "Sincronizar agora"
+
+msgid "Sincronizza Tutti i Feed"
+msgstr "Sincronizar todos os feeds"
+
+msgid "Sincronizza con"
+msgstr "Sincronizar com"
+
+msgid "Sincronizza i tuoi calendari con le principali piattaforme di prenotazione per evitare doppie prenotazioni e mantenere la disponibilità aggiornata automaticamente."
+msgstr "Sincronize os calendários com as principais plataformas de reservas para evitar reservas duplicadas e manter a disponibilidade atualizada automaticamente."
+
+msgid "Sincronizzazione"
+msgstr "A sincronizar"
+
+msgid "Sincronizzazione avviata per tutti i feed"
+msgstr "Sincronização iniciada para todos os feeds"
+
+msgid "Sincronizzazione iCal"
+msgstr "Sincronização iCal"
+
+msgid "Single bed"
+msgstr "Cama individual"
+
+msgid "Singolo"
+msgstr "Individual"
+
+msgid "Sistema"
+msgstr "Sistema"
+
+msgid "Sistema Tariffario"
+msgstr "Sistema de tarifas"
+
+msgid "Sistema booking non disponibile."
+msgstr "Sistema de reservas indisponível."
+
+msgid "Sistema prezzi non disponibile. Contatta l’amministratore."
+msgstr "Sistema de preços indisponível. Contacte o administrador."
+
+msgid "Sito Diretto"
+msgstr "Site direto"
+
+msgid "Ski Access"
+msgstr "Acesso às pistas de esqui"
+
+msgid "Smoking Allowed"
+msgstr "Permitido fumar"
+
+msgid "Sofa Bed Supplement"
+msgstr "Suplemento de sofá-cama"
+
+msgid "Sofa bed"
+msgstr "Sofá-cama"
+
+msgid "Soggiorno"
+msgstr "Estadia"
+
+msgid "Soggiorno Massimo (notti)"
+msgstr "Estadia máxima (noites)"
+
+msgid "Soggiorno Medio"
+msgstr "Estadia média"
+
+msgid "Soggiorno Minimo (notti)"
+msgstr "Estadia mínima (noites)"
+
+msgid "Soggiorno minimo (notti):"
+msgstr "Estadia mínima (noites):"
+
+msgid "Solo dopo: confermare la cancellazione qui sotto"
+msgstr "Só depois: confirmar o cancelamento abaixo"
+
+msgid "Soluzione completa per la gestione di prenotazioni e proprietà per case vacanze, appartamenti e alloggi con amministrazione backend."
+msgstr "Solução completa de gestão de reservas e propriedades para casas de férias, apartamentos e alojamentos, com administração no painel."
+
+msgid "Some of the requested dates are no longer available."
+msgstr "Algumas das datas pedidas já não estão disponíveis."
+
+msgid "Sottocosto Competitivo"
+msgstr "Preço competitivo inferior"
+
+msgid "Specifica un ID appartamento."
+msgstr "Especifique um ID de apartamento."
+
+msgid "Spesa e servizi vicino a te."
+msgstr "Compras e serviços perto de si."
+
+msgid "Square Meters"
+msgstr "Metros quadrados"
+
+msgid "Stagione Estiva"
+msgstr "Época de verão"
+
+msgid "Stai per cancellare una prenotazione <strong>CONFERMATA e PAGATA</strong>."
+msgstr "Está prestes a cancelar uma reserva <strong>CONFIRMADA e PAGA</strong>."
+
+msgid "Stampa / Salva PDF"
+msgstr "Imprimir / Guardar PDF"
+
+msgid "Standard double bed"
+msgstr "Cama de casal padrão"
+
+msgid "Start date"
+msgstr "Data de início"
+
+msgid "Statistiche Occupazione"
+msgstr "Estatísticas de ocupação"
+
+msgid "Statistiche Ricavi"
+msgstr "Estatísticas de receitas"
+
+msgid "Statistiche e Report"
+msgstr "Estatísticas e relatórios"
+
+msgid "Statistics & Reports"
+msgstr "Estatísticas e relatórios"
+
+msgid "Statistics and Reports"
+msgstr "Estatísticas e relatórios"
+
+msgid "Stato"
+msgstr "Estado"
+
+msgid "Stato Prezzi Automatici"
+msgstr "Estado dos preços automáticos"
+
+msgid "Stato Sincronizzazione"
+msgstr "Estado da sincronização"
+
+msgid "Stato di nascita *"
+msgstr "País de nascimento *"
+
+msgid "Stato:"
+msgstr "Estado:"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Status:"
+msgstr "Estado:"
+
+msgid "Stile del modulo: horizontal, vertical, inline"
+msgstr "Estilo do formulário: horizontal, vertical, inline"
+
+msgid "Strategia Competitiva"
+msgstr "Estratégia competitiva"
+
+msgid "Strategie"
+msgstr "Estratégias"
+
+msgid "Stripe could not be initialized. Please refresh the page and try again."
+msgstr "Não foi possível iniciar a Stripe. Atualize a página e tente novamente."
+
+msgid "Stripe ha già confermato il pagamento. Ricarica la prenotazione."
+msgstr "A Stripe já confirmou o pagamento. Recarregue a reserva."
+
+msgid "Stripe non configurato."
+msgstr "Stripe não configurado."
+
+msgid "Stripe non ha completato la richiesta. Riprova."
+msgstr "A Stripe não concluiu o pedido. Tente novamente."
+
+msgid "Strumenti"
+msgstr "Ferramentas"
+
+msgid "Struttura"
+msgstr "Alojamento"
+
+msgid "Struttura:"
+msgstr "Alojamento:"
+
+msgid "Studio"
+msgstr "Estúdio"
+
+msgid "Subtotale soggiorno:"
+msgstr "Subtotal da estadia:"
+
+msgid "Success"
+msgstr "Sucesso"
+
+msgid "Successo"
+msgstr "Sucesso"
+
+msgid "Suggerimenti Rapidi"
+msgstr "Dicas rápidas"
+
+msgid "Sun"
+msgstr "Dom"
+
+msgid "Supplemento Ospite Extra"
+msgstr "Suplemento de hóspede extra"
+
+msgid "Supplemento Weekend (%)"
+msgstr "Suplemento de fim de semana (%)"
+
+msgid "Supplemento divano letto"
+msgstr "Suplemento de sofá-cama"
+
+msgid "Supplemento letti"
+msgstr "Suplemento de camas"
+
+msgid "Supplemento letti separati:"
+msgstr "Suplemento de camas separadas:"
+
+msgid "Swimming Pool"
+msgstr "Piscina"
+
+msgid "Sì"
+msgstr "Sim"
+
+msgid "Sì, le regole manuali e i prezzi impostati manualmente hanno sempre la priorità sul pricing dinamico."
+msgstr "Sim, as regras e os preços definidos manualmente têm sempre prioridade sobre os preços dinâmicos."
+
+msgid "Sì, ogni appartamento può avere le proprie impostazioni di pricing dinamico completamente personalizzate."
+msgstr "Sim, cada apartamento pode ter definições de preços dinâmicos totalmente personalizadas."
+
+msgid "TV"
+msgstr "TV"
+
+msgid "Tabella: scorri lateralmente per leggere tutte le colonne"
+msgstr "Tabela: deslize horizontalmente para ler todas as colunas"
+
+msgid "Tariff Management"
+msgstr "Gestão de tarifas"
+
+msgid "Tariffa"
+msgstr "Tarifa"
+
+msgid "Tariffa Applicata"
+msgstr "Tarifa aplicada"
+
+msgid "Tariffa e regolamento della struttura visionati"
+msgstr "Tarifa e regulamento do alojamento consultados"
+
+msgid "Tariffa selezionata: %1$s (%2$s)"
+msgstr "Tarifa selecionada: %1$s (%2$s)"
+
+msgid "Tariffa selezionata: %s"
+msgstr "Tarifa selecionada: %s"
+
+msgid "Tariffe per tipo camera"
+msgstr "Tarifas por tipo de quarto"
+
+msgid "Tariffe stagionali"
+msgstr "Tarifas sazonais"
+
+msgid "Tassa da verificare con la struttura."
+msgstr "Taxa a verificar com o alojamento."
+
+msgid "Tassa di soggiorno"
+msgstr "Taxa turística"
+
+msgid "Tassa di soggiorno — prenotazione #%d"
+msgstr "Taxa turística — reserva #%d"
+
+msgid "Tassa di soggiorno:"
+msgstr "Taxa turística:"
+
+msgid "Tassa di soggiorno: %s. Come intendi pagare?"
+msgstr "Taxa turística: %s. Como pretende pagar?"
+
+msgid "Tassa già pagata. Ricarica il riepilogo."
+msgstr "Taxa já paga. Recarregue o resumo."
+
+msgid "Tassa modificata: contatta la struttura."
+msgstr "Taxa alterada: contacte o alojamento."
+
+msgid "Tasso Occupazione"
+msgstr "Taxa de ocupação"
+
+msgid "Tasso di Occupazione Base"
+msgstr "Taxa de ocupação base"
+
+msgid "Telefono"
+msgstr "Telefone"
+
+msgid "Telefono:"
+msgstr "Telefone:"
+
+msgid "Tema del modulo: default, modern, minimal"
+msgstr "Tema do formulário: default, modern, minimal"
+
+msgid "Template Tariffe"
+msgstr "Modelos de tarifas"
+
+msgid "Template applicato con successo"
+msgstr "Modelo aplicado com sucesso"
+
+msgid "Template di Prezzo"
+msgstr "Modelos de preços"
+
+msgid "Tempo di Anticipo"
+msgstr "Antecedência das reservas"
+
+msgid "Tendenze Prenotazioni"
+msgstr "Tendências de reservas"
+
+msgid "Tendenze Stagionali"
+msgstr "Tendências sazonais"
+
+msgid "Termini e Condizioni"
+msgstr "Termos e condições"
+
+msgid "Terrace"
+msgstr "Terraço"
+
+msgid "Terrazza"
+msgstr "Terraço"
+
+msgid "Testa Connessione API"
+msgstr "Testar ligação API"
+
+msgid "Testa con la Simulazione"
+msgstr "Teste com a simulação"
+
+msgid "The selected dates are available"
+msgstr "As datas selecionadas estão disponíveis"
+
+msgid "The selected dates are not available. Please choose other dates."
+msgstr "As datas selecionadas não estão disponíveis. Escolha outras datas."
+
+msgid "Thu"
+msgstr "Qui"
+
+msgid "Ti invieremo via email i dettagli bancari per completare il pagamento."
+msgstr "Enviaremos por e-mail os dados bancários para concluir o pagamento."
+
+msgid "Tieni il documento accanto al viso, senza coprirlo, con il lato della foto rivolto alla fotocamera."
+msgstr "Segure o documento junto ao rosto, sem o tapar, com o lado da fotografia virado para a câmara."
+
+msgid "Tipi di Eventi"
+msgstr "Tipos de eventos"
+
+msgid "Tipo"
+msgstr "Tipo"
+
+msgid "Tipo Evento"
+msgstr "Tipo de evento"
+
+msgid "Tipo Località"
+msgstr "Tipo de localização"
+
+msgid "Tipo di Prezzo"
+msgstr "Tipo de preço"
+
+msgid "Tipo documento"
+msgstr "Tipo de documento"
+
+msgid "Tipo file non consentito. Usare JPG, PNG o PDF."
+msgstr "Tipo de ficheiro não permitido. Utilize JPG, PNG ou PDF."
+
+msgid "Tipo ospite *"
+msgstr "Tipo de hóspede *"
+
+msgid "Tipologia letto"
+msgstr "Tipo de cama"
+
+msgid "Token non valido o scaduto."
+msgstr "Token inválido ou expirado."
+
+msgid "Tools"
+msgstr "Ferramentas"
+
+msgid "Torna al riepilogo"
+msgstr "Voltar ao resumo"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Total Bookings"
+msgstr "Total de reservas"
+
+msgid "Total Revenue"
+msgstr "Receita total"
+
+msgid "Total beds prepared for guests (exclude sofa bed on request)."
+msgstr "Total de camas preparadas para os hóspedes (excluindo sofá-cama a pedido)."
+
+msgid "Totale"
+msgstr "Total"
+
+msgid "Totale complessivo"
+msgstr "Total geral"
+
+msgid "Totale letti preparati per gli ospiti (escludi divano letto su richiesta)."
+msgstr "Total de camas preparadas para os hóspedes (excluindo sofá-cama a pedido)."
+
+msgid "Totale:"
+msgstr "Total:"
+
+msgid "Tourist Tax"
+msgstr "Taxa turística"
+
+msgid "Tourist Tax:"
+msgstr "Taxa turística:"
+
+msgid "Trasporti e mezzi pubblici"
+msgstr "Transportes públicos e deslocações"
+
+msgid "Troppe richieste. Riprova più tardi."
+msgstr "Demasiados pedidos. Tente mais tarde."
+
+msgid "Troppi tentativi errati. Richiedi un nuovo codice."
+msgstr "Demasiadas tentativas incorretas. Peça um novo código."
+
+msgid "Trova la tua prenotazione"
+msgstr "Encontre a sua reserva"
+
+msgid "Trova le impostazioni del calendario o esportazione iCal"
+msgstr "Encontre as definições do calendário ou da exportação iCal"
+
+msgid "Tue"
+msgstr "Ter"
+
+msgid "Tutte le Fonti"
+msgstr "Todas as fontes"
+
+msgid "Tutti gli Appartamenti"
+msgstr "Todos os apartamentos"
+
+msgid "Tutti i Tipi"
+msgstr "Todos os tipos"
+
+msgid "Tutti i parametri sono opzionali a meno che non siano contrassegnati come \"richiesto\"."
+msgstr "Todos os parâmetros são opcionais, exceto os assinalados como \"obrigatório\"."
+
+msgid "Tutto"
+msgstr "Tudo"
+
+msgid "Tutto il necessario per il check-out."
+msgstr "Tudo o que precisa para o check-out."
+
+msgid "ULTIMA CONFERMA: Sei assolutamente sicuro di voler cancellare questa prenotazione pagata?"
+msgstr "ÚLTIMA CONFIRMAÇÃO: tem a certeza absoluta de que pretende cancelar esta reserva paga?"
+
+msgid "URL Esportazione"
+msgstr "URL de exportação"
+
+msgid "URL iCal"
+msgstr "URL iCal"
+
+msgid "Ultima Sincronizzazione"
+msgstr "Última sincronização"
+
+msgid "Ultimi 3 mesi"
+msgstr "Últimos 3 meses"
+
+msgid "Ultimi 30 giorni"
+msgstr "Últimos 30 dias"
+
+msgid "Ultimi 6 mesi"
+msgstr "Últimos 6 meses"
+
+msgid "Ultimo Aggiornamento"
+msgstr "Última atualização"
+
+msgid "Ultimo anno"
+msgstr "Último ano"
+
+msgid "Un gruppo (amici, colleghi...)"
+msgstr "Um grupo (amigos, colegas...)"
+
+msgid "Un operatore della struttura controllerà la foto e il documento. Il caricamento non equivale alla verifica dell’identità: se la foto non è chiara, potrà esserti richiesto un nuovo scatto."
+msgstr "Um funcionário do alojamento verificará a fotografia e o documento. O carregamento não equivale à verificação da identidade: se a fotografia não estiver clara, poderá ser solicitada uma nova."
+
+msgid "Un saluto per iniziare il soggiorno."
+msgstr "Uma mensagem de boas-vindas para começar a estadia."
+
+msgid "Una famiglia"
+msgstr "Uma família"
+
+msgid "Unavailable"
+msgstr "Indisponível"
+
+msgid "Unknown error"
+msgstr "Erro desconhecido"
+
+msgid "Urbano"
+msgstr "Urbana"
+
+msgid "Usa il blocco Shortcode nell'editor Gutenberg per una migliore anteprima."
+msgstr "Utilize o bloco Shortcode no editor Gutenberg para uma melhor pré-visualização."
+
+msgid "Usa le regole manuali per eventi specifici e il pricing dinamico per gli aggiustamenti quotidiani."
+msgstr "Utilize regras manuais para eventos específicos e preços dinâmicos para os ajustes diários."
+
+msgid "Usa questi shortcode per mostrare moduli di prenotazione, elenchi di appartamenti e altre funzionalità di Domilocus nelle tue pagine."
+msgstr "Utilize estes shortcodes para apresentar formulários de reserva, listas de apartamentos e outras funcionalidades do Domilocus nas suas páginas."
+
+msgid "Usa sempre la simulazione prima di attivare il pricing dinamico per vedere l'impatto previsto."
+msgstr "Utilize sempre a simulação antes de ativar os preços dinâmicos para avaliar o impacto previsto."
+
+msgid "Usa una buona luce, senza riflessi. Prima di caricare, controlla che il viso sia nitido e i dati del documento siano leggibili."
+msgstr "Utilize boa iluminação, sem reflexos. Antes de carregar, verifique se o rosto está nítido e os dados do documento estão legíveis."
+
+msgid "Uso divano letto / Letto agg."
+msgstr "Utilização do sofá-cama / Cama extra"
+
+msgid "Vai a Pagamento →"
+msgstr "Ir para o pagamento →"
+
+msgid "Vai al pagamento"
+msgstr "Ir para o pagamento"
+
+msgid "Vai alla tua piattaforma di prenotazione (Booking.com, Airbnb, ecc.)"
+msgstr "Aceda à sua plataforma de reservas (Booking.com, Airbnb, etc.)"
+
+msgid "Vai alle impostazioni di importazione calendario della tua piattaforma di prenotazione"
+msgstr "Aceda às definições de importação do calendário na sua plataforma de reservas"
+
+msgid "Valore Medio Prenotazione"
+msgstr "Valor médio da reserva"
+
+msgid "Vantaggi dell'Esportazione"
+msgstr "Vantagens da exportação"
+
+msgid "Vedi Dettagli"
+msgstr "Ver detalhes"
+
+msgid "Vedi dettagli"
+msgstr "Ver detalhes"
+
+msgid "Vedi foto (%d)"
+msgstr "Ver fotografias (%d)"
+
+msgid "Velocità di Prenotazione"
+msgstr "Velocidade das reservas"
+
+msgid "Ven"
+msgstr "Sex"
+
+msgid "Venerdì"
+msgstr "Sexta-feira"
+
+msgid "Verifica disponibilità"
+msgstr "Verificar disponibilidade"
+
+msgid "Verifica e Aggiorna"
+msgstr "Verificar e atualizar"
+
+msgid "Verifica e aggiorna i tuoi dati. Puoi modificarli in qualsiasi momento: la ricevuta rifletterà sempre i dati più recenti."
+msgstr "Verifique e atualize os seus dados. Pode alterá-los a qualquer momento: o recibo refletirá sempre os dados mais recentes."
+
+msgid "Verifica e firma"
+msgstr "Verificar e assinar"
+
+msgid "Verifica non riuscita."
+msgstr "Verificação falhada."
+
+msgid "Verrai reindirizzato a PayPal per completare il pagamento."
+msgstr "Será redirecionado para o PayPal para concluir o pagamento."
+
+msgid "Verrai reindirizzato alla pagina di pagamento sicura Stripe per inserire i dati della tua carta."
+msgstr "Será redirecionado para a página de pagamento segura da Stripe para introduzir os dados do cartão."
+
+msgid "Vietato Fumare"
+msgstr "Proibido fumar"
+
+msgid "View Details"
+msgstr "Ver detalhes"
+
+msgid "View booking details"
+msgstr "Ver os detalhes da reserva"
+
+msgid "View confirmation"
+msgstr "Ver confirmação"
+
+msgid "Villa"
+msgstr "Moradia"
+
+msgid "Visualizza Dettagli"
+msgstr "Ver detalhes"
+
+msgid "Visualizza contratto"
+msgstr "Ver contrato"
+
+msgid "Visualizza documento"
+msgstr "Ver documento"
+
+msgid "Visualizza documento completo"
+msgstr "Ver documento completo"
+
+msgid "Visualizza i dettagli della prenotazione"
+msgstr "Ver os detalhes da reserva"
+
+msgid "Visualizza la conferma"
+msgstr "Ver confirmação"
+
+msgid "Visualizza o scarica la ricevuta in PDF."
+msgstr "Consulte ou descarregue o recibo em PDF."
+
+msgid "Visualizza ricevuta"
+msgstr "Ver recibo"
+
+msgid "Volume di Ricerca"
+msgstr "Volume de pesquisas"
+
+msgid "Washing Machine"
+msgstr "Máquina de lavar roupa"
+
+msgid "We will email you the bank details to complete the payment."
+msgstr "Enviaremos por e-mail os dados bancários para concluir o pagamento."
+
+msgid "Wed"
+msgstr "Qua"
+
+msgid "Weekend Base"
+msgstr "Fim de semana base"
+
+msgid "Weekend Supplement (%)"
+msgstr "Suplemento de fim de semana (%)"
+
+msgid "Weekend esteso"
+msgstr "Fim de semana prolongado"
+
+msgid "What is Dynamic Pricing?"
+msgstr "O que são preços dinâmicos?"
+
+msgid "Wheelchair Accessible"
+msgstr "Acessível a cadeiras de rodas"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "You will be redirected to PayPal to complete the payment."
+msgstr "Será redirecionado para o PayPal para concluir o pagamento."
+
+msgid "Your booking has been created!"
+msgstr "A sua reserva foi criada!"
+
+msgid "Your booking is now confirmed. A confirmation email has been sent."
+msgstr "A sua reserva foi confirmada. Foi enviado um e-mail de confirmação."
+
+msgid "alle ore %s"
+msgstr "às %s"
+
+msgid "anni"
+msgstr "anos"
+
+msgid "cittadinanza"
+msgstr "nacionalidade"
+
+msgid "cognome"
+msgstr "apelido"
+
+msgid "condizioni della prenotazione"
+msgstr "condições da reserva"
+
+msgid "da apporre a cura dell'ospite"
+msgstr "a colocar pelo hóspede"
+
+msgid "da confermare"
+msgstr "por confirmar"
+
+msgid "dalle ore %s"
+msgstr "a partir das %s"
+
+msgid "data di nascita"
+msgstr "data de nascimento"
+
+msgid "di"
+msgstr "de"
+
+msgid "entro le ore %s"
+msgstr "até às %s"
+
+msgid "eventi"
+msgstr "eventos"
+
+msgid "file troppo grande."
+msgstr "ficheiro demasiado grande."
+
+msgid "fronte / pagina dati."
+msgstr "da frente / página de dados."
+
+msgid "iCal / piattaforma esterna"
+msgstr "iCal / plataforma externa"
+
+msgid "iCal Synchronization"
+msgstr "Sincronização iCal"
+
+msgid "in attesa che l'ospite scelga un metodo"
+msgstr "a aguardar que o hóspede escolha um método"
+
+msgid "intermediario di prenotazione"
+msgstr "intermediário de reservas"
+
+msgid "luogo rilascio documento"
+msgstr "local de emissão do documento"
+
+msgid "n. %s"
+msgstr "n.º %s"
+
+msgid "nessuno"
+msgstr "Nenhum"
+
+msgid "nights"
+msgstr "noites"
+
+msgid "nome"
+msgstr "nome"
+
+msgid "notte"
+msgstr "noite"
+
+msgid "notte/i"
+msgstr "noite(s)"
+
+msgid "notti"
+msgstr "noites"
+
+msgid "numero documento"
+msgstr "número do documento"
+
+msgid "piattaforma"
+msgstr "plataforma"
+
+msgid "prenotazioni"
+msgstr "Reservas"
+
+msgid "retro."
+msgstr "do verso."
+
+msgid "richiesto"
+msgstr "obrigatório"
+
+msgid "selezionata"
+msgstr "selecionada"
+
+msgid "sesso"
+msgstr "sexo"
+
+msgid "tariffa scelta"
+msgstr "tarifa escolhida"
+
+msgid "tipo documento"
+msgstr "tipo de documento"
+
+msgid "tipo ospite"
+msgstr "tipo de hóspede"
+
+msgid "un file già caricato"
+msgstr "um ficheiro já carregado"
+
+msgid "versione %1$s, pubblicato il %2$s"
+msgstr "versão %1$s, publicada em %2$s"
+
+msgid "versione %s"
+msgstr "versão %s"
+
+msgid "È richiesta un’email valida."
+msgstr "É necessário um e-mail válido."
+
+msgid "È richiesto almeno 1 adulto."
+msgstr "É necessário pelo menos 1 adulto."
+
+msgid "— Rilevamento automatico —"
+msgstr "— Deteção automática —"
+
+msgid "— Seleziona —"
+msgstr "— Selecione —"
+
+msgid "← Annulla e Torna alle Prenotazioni"
+msgstr "← Cancelar e voltar às reservas"
+
+msgid "⚠ Documento mancante"
+msgstr "⚠ Documento em falta"
+
+msgid "⚠ Selfie mancante"
+msgstr "⚠ Selfie em falta"
+
+msgid "⚠️ AVVISO IMPORTANTE"
+msgstr "⚠️ AVISO IMPORTANTE"
+
+msgid "⚠️ CONFERMO: Cancella Prenotazione Pagata"
+msgstr "⚠️ CONFIRMO: cancelar reserva paga"
+
+msgid "✓ Documento e selfie caricati"
+msgstr "✓ Documento e selfie carregados"
+
+msgid "🔍 Verifica e Aggiorna"
+msgstr "🔍 Verificar e atualizar"

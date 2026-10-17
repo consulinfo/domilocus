@@ -18,7 +18,9 @@ class Domilocus_Frontend {
      * @return string
      */
     private static function translate_with_fallback($text, $fallbacks = array()) {
-        $translated = $text; // Already translated or sanitized
+        // The callers supply the existing catalog keys for this runtime fallback.
+        // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+        $translated = substr(get_locale(), 0, 2) === 'pt' ? __($text, 'domilocus') : $text;
 
         if (!empty($fallbacks)) {
             $locale = get_locale();

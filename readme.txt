@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.31
+Stable tag: 1.5.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,15 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.33 =
+* Fixed: receipt billing form is available independently of document check-in.
+* Added: separate receipt holder and company billing details stored with each booking and visible in the admin receipt box.
+* Fixed: fiscal identification is included in browser print output.
+* Added: OTA payout guidance and separate tourist tax handling for Airbnb and other channels.
+
+= 1.5.32 =
+* Added European Portuguese translations.
 
 = 1.5.31 =
 * Fixed: OTA source filters use the external platform field for calendar imports and legacy source values when no platform is set.
