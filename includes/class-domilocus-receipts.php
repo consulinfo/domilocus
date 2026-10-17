@@ -145,20 +145,19 @@ class Domilocus_Receipts {
             </div>
 
             <!-- Receipt section -->
-            <p><?php echo esc_html(self::payment_channel_note($booking)); ?></p>
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:18px;">
                 <h3 style="margin:0 0 10px;font-size:15px;">📄 <?php echo esc_html($doc_title); ?></h3>
                 <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">
-                    <?php if ($doc_type === 'penalty_receipt' || $is_noshow): ?>
+                    <?php if ($doc_type === 'penalty_receipt'): ?>
                     <?php esc_html_e('Ricevuta penale per mancato arrivo. Visualizzala e stampala oppure salvala in PDF dal browser.', 'domilocus'); ?>
                     <?php elseif ($doc_type === 'non_fiscal_summary'): ?>
-                    <?php esc_html_e('Prospetto riepilogativo del soggiorno con pagamento gestito da intermediario. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser.', 'domilocus'); ?>
+                    <?php esc_html_e('Riepilogo della prenotazione. Visualizzalo, stampalo o salvalo in PDF tramite la funzione di stampa del browser.', 'domilocus'); ?>
                     <?php else: ?>
                     <?php esc_html_e('Ricevuta del tuo soggiorno. Visualizzala, stampala o salvala in PDF tramite la funzione di stampa del browser.', 'domilocus'); ?>
                     <?php endif; ?>
                 </p>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 <?php esc_html_e('Visualizza ricevuta', 'domilocus'); ?></a>
+                    <a href="<?php echo esc_url($receipt_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#2271b1;color:#fff;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">👁 <?php esc_html_e('Visualizza documento', 'domilocus'); ?></a>
                     <a href="<?php echo esc_url($print_url); ?>" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:#f6f7f7;color:#2c3338;border:1px solid #c3c4c7;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">🖨️ <?php esc_html_e('Stampa / Salva PDF', 'domilocus'); ?></a>
                 </div>
             </div>
@@ -574,6 +573,7 @@ class Domilocus_Receipts {
         $is_no_show    = (bool) $context['is_no_show'];
         $document      = self::resolve_document_profile($booking, $context);
         $is_pdf_output = self::is_pdf_output_request();
+        $is_summary    = $document['type'] === 'non_fiscal_summary';
         $platform_name = self::normalize_platform_name((string) $context['platform_name']);
 
         $host_name        = trim((string) get_option('domilocus_manager_owner_name', self::LANDLORD_NAME));
@@ -611,7 +611,7 @@ class Domilocus_Receipts {
         $currency = strtoupper((string) get_option('domilocus_manager_currency', 'EUR'));
         $gross_label = number_format($gross_total, 2, ',', '.') . ' ' . $currency;
         $tax_label = number_format($tourist_tax, 2, ',', '.') . ' ' . $currency;
-        $show_bollo_footer = ($gross_total > 77.47);
+        $show_bollo_footer = !$is_summary && ($gross_total > 77.47);
         $total_complessivo = $gross_total + $tourist_tax;
         $total_label = number_format($total_complessivo, 2, ',', '.') . ' ' . $currency;
 
@@ -719,17 +719,16 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         </div>
 
         <h1 class="title"><?php echo esc_html($document['title']); ?> N. <?php echo esc_html($number); ?></h1>
+        <?php if (!$is_summary): ?>
         <p class="subtitle"><?php echo esc_html(self::t('subtitle_non_fiscal')); ?></p>
+        <?php endif; ?>
 
         <p><strong><?php echo esc_html(self::t('label_issue_date')); ?>:</strong> <?php echo esc_html($issue_date_label); ?></p>
         <p><strong><?php echo esc_html(self::t('label_booking_date')); ?>:</strong> <?php echo esc_html($booking_date_label); ?></p>
         <p><strong><?php echo esc_html(self::t('label_booking_source')); ?>:</strong> <?php echo esc_html($source_label !== '' ? $source_label : self::t('source_direct_site')); ?></p>
 
+        <?php if (!$is_summary): ?>
         <p><?php echo esc_html($payment_declaration); ?></p>
-        <p><?php echo esc_html(self::payment_channel_note($booking)); ?></p>
-
-        <?php if ($is_no_show): ?>
-        <p class="note"><?php echo esc_html(self::t('noshow_iva_line')); ?></p>
         <?php endif; ?>
 
     <?php if ($payer_name !== '' && $guest_name !== '' && strcasecmp($payer_name, $guest_name) !== 0): ?>
@@ -755,7 +754,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         <?php if ($tourist_tax > 0): ?>
         <tr>
             <td><?php echo esc_html(self::t('label_tourist_tax')); ?></td>
-            <td><?php echo esc_html($tax_label); ?> <small style="color:#555;"><?php echo esc_html(self::tourist_tax_channel_note($booking)); ?></small></td>
+            <td><?php echo esc_html($tax_label); ?></td>
         </tr>
         <?php endif; ?>
         <tr style="border-top:2px solid #374151;">
@@ -764,10 +763,7 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
         </tr>
     </table>
 
-    <?php if (!$is_no_show): ?>
-    <p class="note"><?php echo esc_html(self::t('standard_iva_line')); ?></p>
-    <?php endif; ?>
-
+        <?php if (!$is_summary): ?>
         <div class="sign-bollo-row">
             <?php if ($show_bollo_footer): ?>
             <div class="bollo-placeholder">
@@ -783,18 +779,10 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
                     <p class="signature-name"><?php echo esc_html($host_name); ?></p>
                     <p style="margin:0;"><strong><?php esc_html_e('Firma del locatore', 'domilocus'); ?></strong></p>
                     <div class="sign-line"></div>
-                    <p class="signature-legal"><?php esc_html_e('Documento informatico predisposto dal sistema gestionale - Firma autografa sostituita a mezzo stampa ai sensi dell\'art. 3 del D.Lgs. 39/1993', 'domilocus'); ?></p>
                 </div>
             </div>
         </div>
-
-        <div class="footer-block">
-            <div><?php echo esc_html(self::t('footer_non_fiscal')); ?></div>
-            <div><?php echo esc_html(self::t('footer_gross_income')); ?></div>
-            <?php if ($show_bollo_footer): ?>
-            <div><?php echo esc_html(self::t('footer_bollo_note')); ?></div>
-            <?php endif; ?>
-    </div>
+        <?php endif; ?>
 
     <div class="meta">
       <div><?php
@@ -832,18 +820,17 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     }
 
     private static function resolve_document_profile($booking, $context) {
+        if (!empty($context['is_platform'])) {
+            return array(
+                'title' => self::t('doc_title_non_fiscal_summary'),
+                'type' => 'non_fiscal_summary',
+            );
+        }
         $is_no_show = !empty($context['is_no_show']);
         if ($is_no_show) {
             return array(
                 'title' => self::t('doc_title_penalty_receipt'),
                 'type'  => 'penalty_receipt',
-            );
-        }
-
-        if (!empty($context['is_platform'])) {
-            return array(
-                'title' => self::t('doc_title_non_fiscal_summary'),
-                'type'  => 'non_fiscal_summary',
             );
         }
 
