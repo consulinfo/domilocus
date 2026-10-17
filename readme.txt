@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.35
+Stable tag: 1.5.36
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,11 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.36 =
+* OTA totals include tourist tax: show the stay amount excluding tax and the separate tax row without adding tax twice.
+* Identify Airbnb as tax collector; other OTA tourist tax is collected at the property.
+
 
 = 1.5.35 =
 * Documents are optional: preview does not allocate a number; issuance requires explicit confirmation.

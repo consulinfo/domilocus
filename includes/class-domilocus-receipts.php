@@ -128,12 +128,16 @@ class Domilocus_Receipts {
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Struttura', 'domilocus'); ?></span><strong><?php echo esc_html($apt_name); ?></strong></div>
                     <?php endif; ?>
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Importo', 'domilocus'); ?></span><strong><?php echo esc_html($total_label); ?></strong></div>
+                    <?php if ($context['is_platform']): ?>
+                    <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Soggiorno tramite OTA', 'domilocus'); ?></span><strong><?php echo esc_html(number_format((float) $context['gross_total'], 2, ',', '.') . ' ' . $currency); ?></strong></div>
+                    <?php endif; ?>
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Tassa di soggiorno', 'domilocus'); ?></span><strong><?php echo esc_html(number_format((float) $context['tourist_tax'], 2, ',', '.') . ' ' . $currency); ?></strong></div>
                     <div><span style="font-size:11px;color:#6b7280;display:block;margin-bottom:2px;"><?php esc_html_e('Origine', 'domilocus'); ?></span><strong><?php echo esc_html(self::source_label($booking)); ?></strong></div>
                 </div>
             </div>
 
             <!-- Receipt section -->
+            <?php if ($context['is_platform']): ?><p><?php echo esc_html(self::tourist_tax_channel_note($booking)); ?></p><?php endif; ?>
             <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 20px;margin-bottom:18px;">
                 <h3 style="margin:0 0 10px;font-size:15px;">📄 <?php echo esc_html($doc_title); ?></h3>
                 <p style="margin:0 0 14px;color:#4b5563;font-size:13px;">
@@ -331,7 +335,7 @@ class Domilocus_Receipts {
             $created_at = '';
         }
         $created_label = $created_at !== '' ? wp_date('d/m/Y', strtotime($created_at)) : __('Non emesso', 'domilocus');
-        $gross_amount  = (float) $context['gross_total'];
+        $gross_amount  = (float) $context['display_total'];
         $tourist_tax   = (float) $context['tourist_tax'];
         $is_platform   = (bool) $context['is_platform'];
         $is_no_show    = (bool) $context['is_no_show'];
@@ -385,6 +389,9 @@ class Domilocus_Receipts {
                         <td style="padding:5px 0;"><strong>Totale lordo</strong></td>
                         <td style="padding:5px 0;"><?php echo esc_html($gross_label); ?></td>
                     </tr>
+                    <?php if ($is_platform): ?>
+                    <tr><td><?php esc_html_e('Soggiorno tramite OTA', 'domilocus'); ?></td><td><?php echo esc_html(number_format((float) $context['gross_total'], 2, ',', '.') . ' ' . $currency); ?></td></tr>
+                    <?php endif; ?>
                     <?php if (!$is_no_show): ?>
                     <tr>
                         <td style="padding:5px 0;"><strong>Tassa soggiorno</strong></td>
@@ -662,7 +669,8 @@ class Domilocus_Receipts {
         $gross_label = number_format($gross_total, 2, ',', '.') . ' ' . $currency;
         $tax_label = number_format($tourist_tax, 2, ',', '.') . ' ' . $currency;
         $show_bollo_footer = !$is_summary && ($gross_total > 77.47);
-        $total_complessivo = $gross_total + $tourist_tax;
+        // OTA totals already include tourist tax; direct totals exclude it.
+        $total_complessivo = $is_summary ? (float) $context['display_total'] : $gross_total + $tourist_tax;
         $total_label = number_format($total_complessivo, 2, ',', '.') . ' ' . $currency;
 
         $people = self::get_receipt_people($booking);
@@ -815,13 +823,13 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     <h2 class="section-title"><?php echo esc_html(self::t('section_financial_data')); ?></h2>
     <table class="rows" role="presentation">
         <tr>
-            <td><?php echo esc_html(self::t('label_gross_amount')); ?></td>
+            <td><?php echo esc_html($is_summary ? __('Soggiorno tramite OTA', 'domilocus') : self::t('label_gross_amount')); ?></td>
             <td><strong class="amount"><?php echo esc_html($gross_label); ?></strong></td>
         </tr>
         <?php if ($is_summary || $tourist_tax > 0): ?>
         <tr>
             <td><?php echo esc_html(self::t('label_tourist_tax')); ?></td>
-            <td><?php echo esc_html($tax_label); ?></td>
+            <td><?php echo esc_html($tax_label); ?><?php if ($is_summary): ?> — <?php echo esc_html(self::tourist_tax_channel_note($booking)); ?><?php endif; ?></td>
         </tr>
         <?php endif; ?>
         <tr style="border-top:2px solid #374151;">
@@ -1086,9 +1094,14 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
             $tourist_tax = 0.0;
         }
 
+        $gross_total = max(0.0, round($gross_total, 2));
+        $tourist_tax = max(0.0, round($tourist_tax, 2));
+        if ($is_platform) {
+            $tourist_tax = min($tourist_tax, $gross_total);
+        }
         return array(
-            'gross_total'   => max(0.0, $gross_total),
-            'tourist_tax'   => max(0.0, $tourist_tax),
+            'gross_total'   => $is_platform ? round($gross_total - $tourist_tax, 2) : $gross_total,
+            'tourist_tax'   => $tourist_tax,
             'display_total' => max(0.0, $gross_total),
             'is_platform'   => $is_platform,
             'platform_name' => $platform_name,
