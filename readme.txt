@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.39
+Stable tag: 1.5.40
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -191,10 +191,19 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 
 == Upgrade Notice ==
 
+= 1.5.40 =
+Update with Starter 1.6.39 and Premium 1.2.25 when installed. Guest app accounts now require email verification and explicit booking proof. POST-only booking lookup. Expired guest links can be requested again by delivery to the saved booking email.
+
 = 1.5.39 =
 Security update: old guest and receipt links are revoked. Update Starter to 1.6.38, Premium to 1.2.24 and DomiCheck to 1.0.101 together when installed. Reissue guest links and update external apps to use booking tokens.
 
 == Changelog ==
+
+= 1.5.40 =
+* Add mailbox-only recovery of expired or legacy guest links, with rate limits and no credentials in recovery responses.
+* Add recovery forms to invalid guest links and a reusable domilocus_guest_access_recovery shortcode.
+* Expose existing credentials to trusted callers without minting credentials while formatting bookings.
+* Prevent caching of guest account and authentication responses.
 
 = 1.5.39 =
 * Security: replace predictable booking and receipt links with expiring credentials backed by a random per-booking secret.

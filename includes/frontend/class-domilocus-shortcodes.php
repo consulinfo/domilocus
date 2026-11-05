@@ -315,7 +315,7 @@ class Domilocus_Shortcodes {
         $booking_key = isset($_GET['key']) ? sanitize_text_field(wp_unslash($_GET['key'])) : '';
         
         if (!$booking_id || !$booking_key) {
-            return '<p>' . __('Invalid booking confirmation link.', 'domilocus') . '</p>';
+            return '<p>' . __('Invalid booking confirmation link.', 'domilocus') . '</p>' . Domilocus_Guest_Access::recovery_form($booking_id);
         }
         
         $booking = Domilocus_Booking::get_booking($booking_id);
@@ -326,7 +326,7 @@ class Domilocus_Shortcodes {
         
         // Verify the expiring booking credential without creating a new one.
         if (!Domilocus_Guest_Access::verify($booking, $booking_key)) {
-            return '<p>' . __('Invalid booking confirmation link.', 'domilocus') . '</p>';
+            return '<p>' . __('Invalid booking confirmation link.', 'domilocus') . '</p>' . Domilocus_Guest_Access::recovery_form($booking_id);
         }
         
         $inactive_message = __('This booking is no longer available. For any questions please contact us directly.', 'domilocus');
