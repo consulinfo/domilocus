@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.37
+Stable tag: 1.5.38
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,10 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 6. Frontend booking form
 
 == Changelog ==
+
+= 1.5.38 =
+* Security: generate 128-bit random booking access codes and expand access_code storage to 64 characters.
+* Report access-code persistence errors instead of returning an unsaved code.
 
 = 1.5.37 =
 * Read tourist tax from the tax administration record, preserving manual exemptions and falling back to pricing for imports without tax meta.

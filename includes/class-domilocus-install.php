@@ -138,9 +138,19 @@ class Domilocus_Install {
 
             if (!in_array('access_code', $columns)) {
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
-                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN access_code varchar(20) DEFAULT NULL AFTER notes");
+                $wpdb->query("ALTER TABLE $bookings_table ADD COLUMN access_code varchar(64) DEFAULT NULL AFTER notes");
                 // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("ALTER TABLE $bookings_table ADD UNIQUE INDEX access_code (access_code)");
+            }
+
+            // Identifier comes exclusively from the WordPress table prefix, never request data.
+            // Escape the quoted identifier explicitly for compatibility with WordPress 6.0 (no %i).
+            $code_table = esc_sql(str_replace('`', '``', $bookings_table));
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Read live schema during migration; caching could hide a pending column upgrade. Identifier is escaped above.
+            $code_column = $wpdb->get_row($wpdb->prepare("SHOW COLUMNS FROM `$code_table` LIKE %s", 'access_code'));
+            if ($code_column && preg_match('/varchar\((\d+)\)/i', $code_column->Type, $size) && (int) $size[1] < 64) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Conditional schema upgrade required for 128-bit access codes; no result is suitable for caching. Identifier is escaped above.
+                $wpdb->query("ALTER TABLE `$code_table` MODIFY COLUMN access_code varchar(64) DEFAULT NULL");
             }
 
             if (!in_array('external_platform', $columns)) {
@@ -298,7 +308,7 @@ class Domilocus_Install {
             source varchar(50) DEFAULT 'manual',
             ical_feed_id bigint(20) DEFAULT NULL,
             notes text,
-            access_code varchar(20) DEFAULT NULL,
+            access_code varchar(64) DEFAULT NULL,
             external_platform varchar(50) DEFAULT NULL,
             ical_uid varchar(255) DEFAULT NULL,
             platform_booking_code varchar(100) DEFAULT NULL,

@@ -1193,9 +1193,9 @@ class Domilocus_Booking_Form {
             wp_send_json_error( 'Invalid request' );
         }
         global $wpdb;
-        // Genera codice univoco DML-XXXXXX
+        // Genera codice univoco a 128 bit
         do {
-            $code = 'DML-' . strtoupper( substr( bin2hex( random_bytes( 4 ) ), 0, 6 ) );
+            $code = 'DML-' . strtoupper( bin2hex( random_bytes( 16 ) ) );
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uniqueness check inside loop; caching would cause false positives.
             $exists = $wpdb->get_var( $wpdb->prepare(
                 "SELECT id FROM {$wpdb->prefix}domilocus_bookings WHERE access_code = %s",
@@ -1205,13 +1205,14 @@ class Domilocus_Booking_Form {
 
         $platform = isset( $_POST['external_platform'] ) ? sanitize_text_field( wp_unslash( $_POST['external_platform'] ) ) : '';
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-        $wpdb->update(
+        $saved = $wpdb->update(
             $wpdb->prefix . 'domilocus_bookings',
             array( 'access_code' => $code, 'external_platform' => $platform ),
             array( 'id' => $booking_id ),
             array( '%s', '%s' ),
             array( '%d' )
         );
+        if ($saved === false) { wp_send_json_error('Codice non salvato: verifica aggiornamento database.'); }
         wp_cache_delete( 'domilocus_booking_' . $booking_id, 'domilocus' );
         wp_send_json_success( array( 'code' => $code ) );
     }
