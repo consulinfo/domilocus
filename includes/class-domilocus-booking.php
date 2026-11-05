@@ -8,6 +8,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once __DIR__ . '/class-domilocus-guest-access.php';
+
 class Domilocus_Booking {
     
     /**
@@ -933,8 +935,7 @@ class Domilocus_Booking {
             return new WP_Error('domilocus_booking_not_found', __('Booking not found', 'domilocus'));
         }
 
-        $expected_key = self::generate_booking_key($booking_id, $booking->customer_email);
-        if (!hash_equals($expected_key, $booking_key)) {
+        if (!Domilocus_Guest_Access::verify($booking, $booking_key)) {
             return new WP_Error('domilocus_invalid_token', __('Invalid booking access token', 'domilocus'));
         }
 
@@ -1909,8 +1910,7 @@ class Domilocus_Booking {
             wp_send_json_error(__('Booking not found or already released.', 'domilocus'));
         }
 
-        $expected_key = self::generate_booking_key($booking_id, $booking->customer_email);
-        if (!hash_equals($expected_key, $booking_key)) {
+        if (!Domilocus_Guest_Access::verify($booking, $booking_key)) {
             wp_send_json_error(__('Invalid booking token.', 'domilocus'));
         }
 
@@ -2124,11 +2124,9 @@ class Domilocus_Booking {
      * Generate confirmation key for booking links
      */
     public static function generate_booking_key($booking_id, $customer_email) {
-        if (empty($booking_id) || empty($customer_email)) {
-            return '';
-        }
-
-        return md5($booking_id . strtolower(trim($customer_email)));
+        $booking = self::get_booking((int) $booking_id);
+        if (!$booking || strtolower(trim((string) $customer_email)) !== strtolower(trim((string) $booking->customer_email))) { return ''; }
+        return Domilocus_Guest_Access::issue($booking);
     }
 
     /**

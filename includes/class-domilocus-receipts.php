@@ -228,7 +228,11 @@ class Domilocus_Receipts {
             exit;
         }
 
-        $key = self::build_receipt_key($booking);
+        $key = isset($_POST['booking_key']) && is_string($_POST['booking_key']) ? sanitize_text_field(wp_unslash($_POST['booking_key'])) : '';
+        if (!Domilocus_Guest_Access::verify($booking, $key)) {
+            wp_safe_redirect(add_query_arg('dml_rcpt_err', 'access_denied', $redirect_to));
+            exit;
+        }
         $url = add_query_arg(
             array(
                 'booking_id' => (int) $booking->id,
@@ -257,7 +261,7 @@ class Domilocus_Receipts {
         $privacy_consent = isset($_POST['privacy_consent']) ? sanitize_text_field(wp_unslash($_POST['privacy_consent'])) : '';
 
         $booking = self::get_booking($booking_id);
-        if (!$booking || $post_booking_key === '' || !hash_equals(self::build_receipt_key($booking), $post_booking_key)) {
+        if (!$booking || $post_booking_key === '' || !Domilocus_Guest_Access::verify($booking, $post_booking_key)) {
             wp_safe_redirect(add_query_arg('dml_rcpt_err', 'access_denied', $redirect_to));
             exit;
         }
@@ -532,7 +536,7 @@ class Domilocus_Receipts {
 
         // If a valid key is present, allow access regardless of user role.
         // This covers guests AND admins clicking the link from the frontend confirmation page.
-        if ($key !== '' && hash_equals(self::build_receipt_key($booking), $key)) {
+        if ($key !== '' && Domilocus_Guest_Access::verify($booking, $key)) {
             return true;
         }
 
@@ -1389,26 +1393,10 @@ body { font-family: "Times New Roman", Times, serif; max-width: 920px; margin: 2
     }
 
     /**
-     * Build a stable, signed key for a booking that works even when customer_email is empty.
-     * Uses email when available (compatible with Domilocus_Booking::generate_booking_key),
-     * otherwise falls back to ical_uid or platform_booking_code.
-     * This key is used for the receipt download link (nopriv guests).
+     * Issue the same expiring guest credential used by the booking portal.
+     * Works for OTA bookings without email; legacy MD5/HMAC links are not accepted.
      */
     public static function build_receipt_key($booking) {
-        $id    = (int) $booking->id;
-        $email = strtolower(trim((string) (isset($booking->customer_email) ? $booking->customer_email : '')));
-        if ($email !== '') {
-            // Same algorithm as Domilocus_Booking::generate_booking_key — keeps backward-compat.
-            return md5($id . $email);
-        }
-        // OTA / iCal bookings with no email: sign with wp_salt so it's not guessable.
-        $uid = trim((string) (isset($booking->ical_uid) ? $booking->ical_uid : ''));
-        if ($uid === '') {
-            $uid = trim((string) (isset($booking->platform_booking_code) ? $booking->platform_booking_code : ''));
-        }
-        if ($uid === '') {
-            $uid = (string) $id;
-        }
-        return hash_hmac('md5', $id . '|' . $uid, wp_salt('secure_auth'));
+        return Domilocus_Guest_Access::issue($booking);
     }
 }

@@ -324,9 +324,8 @@ class Domilocus_Shortcodes {
             return '<p>' . __('Booking not found.', 'domilocus') . '</p>';
         }
         
-        // Verify booking key (simple hash of booking ID + email)
-        $expected_key = Domilocus_Booking::generate_booking_key($booking_id, $booking->customer_email);
-        if ($booking_key !== $expected_key) {
+        // Verify the expiring booking credential without creating a new one.
+        if (!Domilocus_Guest_Access::verify($booking, $booking_key)) {
             return '<p>' . __('Invalid booking confirmation link.', 'domilocus') . '</p>';
         }
         

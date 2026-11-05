@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.38
+Stable tag: 1.5.39
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -189,7 +189,17 @@ Premium add-ons are available at [domilocus.consulinfo.it](https://domilocus.con
 5. Settings panel
 6. Frontend booking form
 
+== Upgrade Notice ==
+
+= 1.5.39 =
+Security update: old guest and receipt links are revoked. Update Starter to 1.6.38, Premium to 1.2.24 and DomiCheck to 1.0.101 together when installed. Reissue guest links and update external apps to use booking tokens.
+
 == Changelog ==
+
+= 1.5.39 =
+* Security: replace predictable booking and receipt links with expiring credentials backed by a random per-booking secret.
+* Reject legacy MD5 keys across booking management and receipts; provide an administrator action to revoke current guest links and push registration.
+* Shared guest authentication for compatible Starter, Premium and DomiCheck updates.
 
 = 1.5.38 =
 * Security: generate 128-bit random booking access codes and expand access_code storage to 64 characters.
