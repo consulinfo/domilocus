@@ -199,12 +199,12 @@ class Domilocus_Booking_Form {
                                         </tr>
                                         <tr>
                                             <th scope="row">
-                                                <label for="customer_email"><?php esc_html_e('Emails', 'domilocus'); ?> <span class="required">*</span></label>
+                                                <label for="customer_email"><?php esc_html_e('Email prenotazione / portale', 'domilocus'); ?></label>
                                             </th>
                                             <td>
                                                 <input type="email" id="customer_email" name="customer_email" 
                                                        value="<?php echo esc_attr($defaults['customer_email']); ?>" 
-                                                       class="regular-text" required>
+                                                       class="regular-text"><p class="description">Facoltativa per OTA; l’email personale si raccoglie separatamente.</p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -624,18 +624,7 @@ class Domilocus_Booking_Form {
                                         $booking_code_label = __( 'Numero di prenotazione piattaforma', 'domilocus' );
                                     }
                                     ?>
-                                    <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#fff8e1;border-left:4px solid #f0a500;border-radius:3px">
-                                        <label for="platform_booking_code" style="font-size:11px;color:#555;display:block;margin-bottom:4px">
-                                            <?php echo esc_html( $booking_code_label ); ?>
-                                        </label>
-                                        <input type="text" id="platform_booking_code" name="platform_booking_code"
-                                               value="<?php echo esc_attr($platform_code); ?>"
-                                               class="widefat" style="font-family:monospace;font-size:15px;letter-spacing:1px"
-                                               placeholder="<?php esc_attr_e('Es. HMXY123456', 'domilocus'); ?>">
-                                        <p class="description" style="margin:4px 0 0;font-size:11px;">
-                                            <?php esc_html_e('Compilato automaticamente dall\'importazione iCal; puoi inserirlo o correggerlo a mano.', 'domilocus'); ?>
-                                        </p>
-                                    </div>
+                                    <!-- OTA reference is editable in the contract box for all plans. -->
                                     <?php if (!empty($ical_uid_val)) : ?>
                                     <div class="misc-pub-section" style="margin-bottom:12px;padding:10px 12px;background:#f0f4ff;border-left:4px solid #7b9cda;border-radius:3px">
                                         <span style="font-size:11px;color:#555;display:block;margin-bottom:4px"><?php esc_html_e('iCal UID (identificativo univoco feed)', 'domilocus'); ?></span>
@@ -873,7 +862,11 @@ class Domilocus_Booking_Form {
             exit;
         }
         
-        if (empty($customer_email)) {
+        $posted_source = sanitize_text_field(wp_unslash($_POST['booking_source'] ?? $_POST['source'] ?? 'admin'));
+        $posted_platform = sanitize_text_field(wp_unslash($_POST['booking_external_platform'] ?? $_POST['external_platform'] ?? ''));
+        $ota_input = $posted_platform !== '' || in_array($posted_source, array('booking','airbnb','vrbo','expedia','ota','ical_import','ical'), true);
+        Domilocus_OTA_Contract::validate_booking_input($booking_id);
+        if (($customer_email === '' && !$ota_input) || ($customer_email !== '' && !is_email($customer_email))) {
             wp_safe_redirect(add_query_arg('error', 'email_required', $redirect_url));
             exit;
         }
@@ -924,8 +917,8 @@ class Domilocus_Booking_Form {
             }
         }
 
-        if (in_array($normalized_source, array('admin', 'app_guest'), true)) {
-            $normalized_external_platform = '';
+        if ($normalized_external_platform !== '' && in_array($normalized_source, array('admin', 'app_guest'), true)) {
+            $normalized_source = 'ota';
         }
 
         $allowed_statuses = array('pending', 'confirmed', 'cancelled', 'completed', 'no_show');
@@ -969,6 +962,10 @@ class Domilocus_Booking_Form {
             'external_platform' => $normalized_external_platform,
             'source' => $normalized_source,
         );
+
+        if (isset($_POST['platform_booking_code'])) {
+            $booking_data['platform_booking_code'] = sanitize_text_field(wp_unslash($_POST['platform_booking_code']));
+        }
 
         // When editing an existing booking, preserve source and ical_uid so that
         // iCal sync can still match the record by UID on the next run and does not

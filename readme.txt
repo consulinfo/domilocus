@@ -4,7 +4,7 @@ Tags: booking, reservations, vacation-rentals, property-management, calendar
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.40
+Stable tag: 1.5.41
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -198,6 +198,13 @@ Update with Starter 1.6.39 and Premium 1.2.25 when installed. Guest app accounts
 Security update: old guest and receipt links are revoked. Update Starter to 1.6.38, Premium to 1.2.24 and DomiCheck to 1.0.101 together when installed. Reissue guest links and update external apps to use booking tokens.
 
 == Changelog ==
+
+= 1.5.41 =
+* Added: OTA rate plans per property, booking-specific conditions and personal signer email.
+* Added: review-first booking import from pasted text or a text PDF, processed locally in the browser.
+* Fixed: OTA bookings can be saved without a portal email; landlord identity uses existing general options.
+* Integration: update Starter to 1.6.40, Premium to 1.2.38 and Simple eSign to 1.1.7 for the unified document and OTP flow.
+* Validation: automated regression and PHP checks passed; full live check-in and email delivery still require testing.
 
 = 1.5.40 =
 * Add mailbox-only recovery of expired or legacy guest links, with rate limits and no credentials in recovery responses.
